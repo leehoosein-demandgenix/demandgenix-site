@@ -1,48 +1,13 @@
 ---
-const services = [
-  {
-    name: "Demand Gen Ignition",
-    price: "£3,500–£5,000",
-    duration: "3–4 weeks",
-    description: "Rapid diagnosis and 90-day plan: ICP & JTBD, messaging, funnel math, channel thesis, analytics plan, and experiment backlog.",
-    features: ["ICP & Jobs-to-be-Done mapping", "Messaging framework", "Funnel mathematics", "Channel strategy", "Analytics planning", "90-day experiment backlog"]
-  },
-  {
-    name: "Paid Media Tune-Up",
-    price: "£1,500–£2,500",
-    duration: "2–3 weeks",
-    description: "Audit + restructure of LinkedIn/Google, creative & landing playbook, and tracking fixes.",
-    features: ["LinkedIn & Google Ads audit", "Account restructuring", "Creative playbook", "Landing page optimization", "Tracking implementation", "Performance reporting setup"]
-  },
-  {
-    name: "CRO Sprint",
-    price: "£2,500–£5,000",
-    duration: "2–4 weeks",
-    description: "Baseline analytics & UX review, funnel mapping, hypothesis backlog, 2–3 live tests with measured lift.",
-    features: ["UX & analytics audit", "Funnel mapping", "Hypothesis prioritization", "A/B test implementation", "Statistical analysis", "Implementation briefs"]
-  },
-  {
-    name: "Analytics & Tracking Rebuild",
-    price: "£2,500–£6,000",
-    duration: "2–4 weeks",
-    description: "GA4/Tag Manager setup, consent mode integration, UTM governance, Looker Studio templates.",
-    features: ["GA4 & GTM configuration", "Consent mode setup", "UTM governance framework", "Dashboard templates", "Attribution modeling", "Reporting automation"]
-  },
-  {
-    name: "Fractional Head of Demand",
-    price: "£3,500–£6,000/mo",
-    duration: "Ongoing",
-    description: "1–2 days/week: strategy, experiment cadence, channel ownership, enablement.",
-    features: ["Strategic planning", "Team enablement", "Channel management", "Experiment oversight", "Performance reporting", "Board-ready insights"]
-  },
-  {
-    name: "Workshops & Training",
-    price: "£1,000–£1,800",
-    duration: "Half or full day",
-    description: "Positioning, ABM-lite, attribution literacy for sales & marketing, CRO fundamentals.",
-    features: ["Team training sessions", "Positioning workshops", "ABM methodology", "Attribution education", "CRO fundamentals", "Playbook delivery"]
-  }
-];
+import { getServices } from '../lib/sanity.js';
+
+let services;
+try {
+  services = await getServices();
+} catch (error) {
+  console.error('Error fetching services:', error);
+  services = [];
+}
 ---
 
 <section id="services" class="py-16 lg:py-24 bg-white">
@@ -57,7 +22,7 @@ const services = [
     </div>
     
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {services.map((service) => (
+      {services?.map((service) => (
         <div class="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
           <div class="mb-4">
             <h3 class="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
@@ -69,7 +34,7 @@ const services = [
             <p class="text-gray-600">{service.description}</p>
           </div>
           <ul class="space-y-2">
-            {service.features.map((feature) => (
+            {service.features?.map((feature) => (
               <li class="text-sm text-gray-700 flex items-center">
                 <svg class="w-4 h-4 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
