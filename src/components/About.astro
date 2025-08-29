@@ -1,4 +1,27 @@
 ---
+import { getAbout } from '../lib/sanity.js';
+
+let about;
+try {
+  about = await getAbout();
+} catch (error) {
+  console.error('Error fetching about:', error);
+  about = {
+    title: "Built for growing B2B companies, not enterprise bureaucracy",
+    content: [],
+    edgePoints: []
+  };
+}
+
+// Helper function to convert Sanity rich text to HTML
+function blocksToText(blocks) {
+  return blocks?.map(block => {
+    if (block._type === 'block') {
+      return block.children?.map(child => child.text).join('') || '';
+    }
+    return '';
+  }).join('\n\n') || '';
+}
 ---
 
 <section id="about" class="py-16 lg:py-24 bg-gray-50">
@@ -6,54 +29,29 @@
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div>
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-          Built for growing B2B companies, not enterprise bureaucracy
+          {about.title}
         </h2>
         <div class="space-y-4 text-lg text-gray-600">
-          <p>
-            Your demand gen isn't broken—it just needs the right approach for your growth stage. 
-            Think of it like trying to fit into your startup t-shirt after three funding rounds... things change!
-          </p>
-          <p>
-            We specialize in helping seed-to-Series C teams prove ROI with measurement-first execution, 
-            AI-enhanced insights, and clear artifacts that outlast the engagement.
-          </p>
-          <p>
-            No six-month commitments, no enterprise bloat—just focused sprints that deliver 
-            outcomes you can track and playbooks you can execute.
-          </p>
+          {blocksToText(about.content).split('\n\n').map(paragraph => (
+            <p>{paragraph}</p>
+          ))}
         </div>
       </div>
       
       <div class="bg-white rounded-lg p-8 shadow-sm">
         <h3 class="text-xl font-semibold text-gray-900 mb-6">Our Edge</h3>
         <ul class="space-y-4">
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-primary-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-            <div>
-              <div class="font-medium text-gray-900">AI-Enhanced Execution</div>
-              <div class="text-gray-600">Cutting-edge tools with human insight and strategic oversight</div>
-            </div>
-          </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-primary-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-            <div>
-              <div class="font-medium text-gray-900">Measurement-First Methodology</div>
-              <div class="text-gray-600">Evidence over ego, results over rhetoric—every decision backed by data</div>
-            </div>
-          </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-primary-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-            <div>
-              <div class="font-medium text-gray-900">Boutique Agility</div>
-              <div class="text-gray-600">Fast decisions, direct access, lean execution without agency overhead</div>
-            </div>
-          </li>
+          {about.edgePoints?.map((point) => (
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-primary-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <div>
+                <div class="font-medium text-gray-900">{point.title}</div>
+                <div class="text-gray-600">{point.description}</div>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
