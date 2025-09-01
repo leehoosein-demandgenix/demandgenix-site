@@ -11,6 +11,11 @@
   --color-gray-600: #475569;
   --color-gray-900: #0f172a;
   
+/* Update font family to Plus Jakarta Sans */
+  --font-family-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-font-family: "Plus Jakarta Sans",
+/* Optional: Ensure the font applies globally */
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
