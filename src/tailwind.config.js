@@ -7,7 +7,7 @@ export default {
         primary: {
           50: '#eff6ff',
           500: '#3b82f6',
-          600: '#2563eb',
+          600: '#ea580c',
           700: '#1d4ed8'
         },
         gray: {
@@ -19,6 +19,11 @@ export default {
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       }
+      .bg-green {
+        background-color: #059669 !important;
+      }
+  
+
     },
   },
   plugins: [],
