@@ -151,6 +151,14 @@
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
+      
+      // Dispatch event when HubSpot is loaded
+      script.onload = () => {
+        // Wait a bit for HubSpot to initialize
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('hubspot-loaded'));
+        }, 1000);
+      };
     }
   }
 
@@ -162,6 +170,8 @@
     hideBanner();
     loadAnalytics();
     loadHubSpot();
+    // Dispatch consent change event
+    window.dispatchEvent(new CustomEvent('cookie-consent-changed'));
   });
 
   declineBtn.addEventListener('click', () => {
@@ -169,6 +179,8 @@
     setCookie(ANALYTICS_COOKIE, 'false');
     setCookie(MARKETING_COOKIE, 'false');
     hideBanner();
+    // Dispatch consent change event
+    window.dispatchEvent(new CustomEvent('cookie-consent-changed'));
   });
 
   settingsBtn.addEventListener('click', showModal);
@@ -186,6 +198,8 @@
     if (marketingCheckbox.checked) {
       loadHubSpot();
     }
+    // Dispatch consent change event
+    window.dispatchEvent(new CustomEvent('cookie-consent-changed'));
   });
 
   // Initialize
