@@ -50,7 +50,7 @@
           <div class="flex-1">
             <h3 class="font-semibold">Analytics Cookies</h3>
             <p class="text-sm text-gray-600 mt-1">
-              Help us understand how visitors interact with our website.
+              Help us understand how visitors interact with our website (Google Analytics).
             </p>
           </div>
           <input type="checkbox" id="analytics-cookies" class="mt-1">
@@ -61,7 +61,7 @@
           <div class="flex-1">
             <h3 class="font-semibold">Marketing Cookies</h3>
             <p class="text-sm text-gray-600 mt-1">
-              Used to track visitors across websites for marketing purposes.
+              Used for lead tracking, form analytics, and marketing automation (HubSpot, LinkedIn, Google Ads).
             </p>
           </div>
           <input type="checkbox" id="marketing-cookies" class="mt-1">
@@ -143,6 +143,17 @@
     }
   }
 
+  function loadHubSpot() {
+    if (getCookie(MARKETING_COOKIE) === 'true') {
+      // Load HubSpot tracking script
+      const script = document.createElement('script');
+      script.src = 'https://js.hs-scripts.com/146805802.js';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  }
+
   // Event listeners
   acceptBtn.addEventListener('click', () => {
     setCookie(COOKIE_NAME, 'accepted');
@@ -150,6 +161,7 @@
     setCookie(MARKETING_COOKIE, 'true');
     hideBanner();
     loadAnalytics();
+    loadHubSpot();
   });
 
   declineBtn.addEventListener('click', () => {
@@ -171,6 +183,9 @@
     if (analyticsCheckbox.checked) {
       loadAnalytics();
     }
+    if (marketingCheckbox.checked) {
+      loadHubSpot();
+    }
   });
 
   // Initialize
@@ -178,5 +193,6 @@
     setTimeout(showBanner, 1000); // Show after 1 second
   } else {
     loadAnalytics(); // Load analytics if previously consented
+    loadHubSpot(); // Load HubSpot if previously consented
   }
 </script>
