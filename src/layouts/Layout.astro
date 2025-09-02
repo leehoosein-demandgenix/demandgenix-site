@@ -22,6 +22,12 @@ const { title, description = "Demand gen for B2B SaaS—AI utilisation, clean me
   </head>
   <body class="font-sans">
     <slot />
+        <!-- Import Cookie Consent Component -->
+    <script>
+      import('../components/CookieConsent.astro').then(() => {
+        // Cookie consent will auto-initialize
+      });
+    </script>
   </body>
 </html>
 

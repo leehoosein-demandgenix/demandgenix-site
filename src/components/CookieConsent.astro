@@ -1,0 +1,182 @@
+---
+---
+
+<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 shadow-lg z-50 transform translate-y-full transition-transform duration-300">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex-1">
+      <p class="text-sm">
+        We use cookies to enhance your experience and analyze our site traffic. 
+        By clicking "Accept All", you consent to our use of cookies. 
+        <a href="/privacy-policy" class="underline hover:text-gray-300">Learn more</a>
+      </p>
+    </div>
+    <div class="flex gap-3 flex-shrink-0">
+      <button id="cookie-decline" class="px-4 py-2 text-sm border border-gray-600 rounded hover:bg-gray-800 transition-colors">
+        Decline
+      </button>
+      <button id="cookie-settings" class="px-4 py-2 text-sm border border-gray-600 rounded hover:bg-gray-800 transition-colors">
+        Settings
+      </button>
+      <button id="cookie-accept" class="px-4 py-2 text-sm bg-primary-600 rounded hover:bg-primary-700 transition-colors">
+        Accept All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Cookie Settings Modal -->
+<div id="cookie-modal" class="fixed inset-0 bg-black bg-opacity-50 z-60 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4">Cookie Settings</h2>
+      <p class="text-gray-600 mb-6">
+        Choose which cookies you'd like to accept. You can change these settings at any time.
+      </p>
+      
+      <div class="space-y-6">
+        <!-- Essential Cookies -->
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="font-semibold">Essential Cookies</h3>
+            <p class="text-sm text-gray-600 mt-1">
+              Required for the website to function properly. Cannot be disabled.
+            </p>
+          </div>
+          <input type="checkbox" checked disabled class="mt-1">
+        </div>
+        
+        <!-- Analytics Cookies -->
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="font-semibold">Analytics Cookies</h3>
+            <p class="text-sm text-gray-600 mt-1">
+              Help us understand how visitors interact with our website.
+            </p>
+          </div>
+          <input type="checkbox" id="analytics-cookies" class="mt-1">
+        </div>
+        
+        <!-- Marketing Cookies -->
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="font-semibold">Marketing Cookies</h3>
+            <p class="text-sm text-gray-600 mt-1">
+              Used to track visitors across websites for marketing purposes.
+            </p>
+          </div>
+          <input type="checkbox" id="marketing-cookies" class="mt-1">
+        </div>
+      </div>
+      
+      <div class="flex gap-3 mt-8">
+        <button id="save-settings" class="flex-1 bg-primary-600 text-white py-2 px-4 rounded hover:bg-primary-700 transition-colors">
+          Save Settings
+        </button>
+        <button id="close-modal" class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cookie management functionality
+  const COOKIE_NAME = 'cookie-consent';
+  const ANALYTICS_COOKIE = 'analytics-consent';
+  const MARKETING_COOKIE = 'marketing-consent';
+
+  // Get elements
+  const banner = document.getElementById('cookie-banner');
+  const modal = document.getElementById('cookie-modal');
+  const acceptBtn = document.getElementById('cookie-accept');
+  const declineBtn = document.getElementById('cookie-decline');
+  const settingsBtn = document.getElementById('cookie-settings');
+  const saveSettingsBtn = document.getElementById('save-settings');
+  const closeModalBtn = document.getElementById('close-modal');
+  const analyticsCheckbox = document.getElementById('analytics-cookies');
+  const marketingCheckbox = document.getElementById('marketing-cookies');
+
+  // Cookie utilities
+  function setCookie(name, value, days = 365) {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+  }
+
+  function getCookie(name) {
+    return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+  }
+
+  function showBanner() {
+    banner.classList.remove('translate-y-full');
+  }
+
+  function hideBanner() {
+    banner.classList.add('translate-y-full');
+  }
+
+  function showModal() {
+    modal.classList.remove('hidden');
+    // Load current settings
+    analyticsCheckbox.checked = getCookie(ANALYTICS_COOKIE) === 'true';
+    marketingCheckbox.checked = getCookie(MARKETING_COOKIE) === 'true';
+  }
+
+  function hideModal() {
+    modal.classList.add('hidden');
+  }
+
+  function loadAnalytics() {
+    if (getCookie(ANALYTICS_COOKIE) === 'true') {
+      // Load Google Analytics
+      const script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4KS1WFE7DG';
+      script.async = true;
+      document.head.appendChild(script);
+      
+      script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4KS1WFE7DG');
+      };
+    }
+  }
+
+  // Event listeners
+  acceptBtn.addEventListener('click', () => {
+    setCookie(COOKIE_NAME, 'accepted');
+    setCookie(ANALYTICS_COOKIE, 'true');
+    setCookie(MARKETING_COOKIE, 'true');
+    hideBanner();
+    loadAnalytics();
+  });
+
+  declineBtn.addEventListener('click', () => {
+    setCookie(COOKIE_NAME, 'declined');
+    setCookie(ANALYTICS_COOKIE, 'false');
+    setCookie(MARKETING_COOKIE, 'false');
+    hideBanner();
+  });
+
+  settingsBtn.addEventListener('click', showModal);
+  closeModalBtn.addEventListener('click', hideModal);
+
+  saveSettingsBtn.addEventListener('click', () => {
+    setCookie(COOKIE_NAME, 'customized');
+    setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
+    setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
+    hideModal();
+    hideBanner();
+    if (analyticsCheckbox.checked) {
+      loadAnalytics();
+    }
+  });
+
+  // Initialize
+  if (!getCookie(COOKIE_NAME)) {
+    setTimeout(showBanner, 1000); // Show after 1 second
+  } else {
+    loadAnalytics(); // Load analytics if previously consented
+  }
+</script>
