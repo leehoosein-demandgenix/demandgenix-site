@@ -2,9 +2,18 @@
 export interface Props {
   title: string;
   description?: string;
+  keywords?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
 }
 
-const { title, description = "Demand gen for B2B SaaS—AI utilisation, clean measurement, sharp creative, experiments that compound." } = Astro.props;
+const { 
+  title, 
+  description = "Manchester-based demand gen consultancy helping B2B SaaS companies (Seed to Series C) scale efficiently. Fixed-scope sprints, fractional leadership, AI utilization.", 
+  keywords = "demand generation, B2B marketing, SaaS marketing, conversion optimization, fractional marketing, Manchester marketing agency, AI marketing, growth marketing, marketing analytics",
+  ogImage = "/og-image.jpg",
+  canonicalUrl = Astro.url.href
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -12,9 +21,33 @@ const { title, description = "Demand gen for B2B SaaS—AI utilisation, clean me
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="DemandGenix Limited" />
+    
+    <!-- Geographic Meta -->
+    <meta name="geo.region" content="GB-MAN" />
+    <meta name="geo.placename" content="Manchester" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DemandGenix" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
