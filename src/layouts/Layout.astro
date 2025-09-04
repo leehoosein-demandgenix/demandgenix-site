@@ -44,9 +44,28 @@ const {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+     <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#059669">
+    <meta name="msapplication-TileColor" content="#059669">
+    
+    <!-- iOS specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DemandGenix">
     
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Standard favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  
+    <!-- Apple -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+    <!-- Android -->
+    <link rel="manifest" href="/manifest.json">
     
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
