@@ -5,60 +5,30 @@ import type { APIRoute } from 'astro';
 
 // Static pages configuration
 const staticPages = [
-  {
-    url: '/',
-    priority: '1.0',
-    changefreq: 'weekly',
-    lastmod: new Date().toISOString().split('T')[0]
-  },
-  {
-    url: '/about/',
-    priority: '0.8',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/services/',
-    priority: '0.9',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/services/demand-generation/',
-    priority: '0.9',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/services/conversion-optimization/',
-    priority: '0.9',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/services/fractional-marketing/',
-    priority: '0.9',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/services/marketing-analytics/',
-    priority: '0.9',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/contact/',
-    priority: '0.7',
-    changefreq: 'monthly',
-    lastmod: '2024-12-01'
-  },
-  {
-    url: '/blog/',
-    priority: '0.8',
-    changefreq: 'weekly',
-    lastmod: new Date().toISOString().split('T')[0]
-  }
+    { 
+      url: '', 
+      priority: '1.0', 
+      changefreq: 'monthly',
+      lastmod: new Date().toISOString().split('T')[0]
+    },
+    { 
+      url: '/contact', 
+      priority: '0.9', 
+      changefreq: 'monthly',
+      lastmod: new Date().toISOString().split('T')[0]
+    },
+    { 
+      url: '/privacy-policy', 
+      priority: '0.5', 
+      changefreq: 'yearly',
+      lastmod: new Date().toISOString().split('T')[0]
+    },
+    { 
+      url: '/cookie-policy', 
+      priority: '0.5', 
+      changefreq: 'yearly',
+      lastmod: new Date().toISOString().split('T')[0]
+    }
 ];
 
 // Function to fetch dynamic content from Sanity (when implemented)
