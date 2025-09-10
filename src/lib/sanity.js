@@ -57,3 +57,100 @@ export async function getFeaturedTestimonials() {
     }
   `)
 }
+
+// Blog functions
+export async function getAllBlogPosts() {
+  return await client.fetch(`
+    *[_type == "blogPost" && isPublished == true] | order(publishDate desc) {
+      _id,
+      title,
+      slug,
+      excerpt,
+      publishDate,
+      category,
+      tags,
+      author,
+      readingTime,
+      isFeatured,
+      "heroImage": heroImage{
+        "url": asset->url,
+        "alt": alt
+      }
+    }
+  `)
+}
+
+export async function getFeaturedBlogPosts(limit = 3) {
+  return await client.fetch(`
+    *[_type == "blogPost" && isPublished == true && isFeatured == true] | order(publishDate desc)[0...${limit}] {
+      _id,
+      title,
+      slug,
+      excerpt,
+      publishDate,
+      category,
+      author,
+      readingTime,
+      "heroImage": heroImage{
+        "url": asset->url,
+        "alt": alt
+      }
+    }
+  `)
+}
+
+export async function getBlogPostBySlug(slug) {
+  return await client.fetch(`
+    *[_type == "blogPost" && slug.current == $slug && isPublished == true][0] {
+      _id,
+      title,
+      slug,
+      excerpt,
+      content[]{
+        ...,
+        markDefs[]{
+          ...,
+          _type == "link" => {
+            _type,
+            _key,
+            href
+          }
+        },
+        children[]{
+          ...,
+          marks[]
+        }
+      },
+      publishDate,
+      category,
+      tags,
+      author,
+      readingTime,
+      metaTitle,
+      metaDescription,
+      "heroImage": heroImage{
+        "url": asset->url,
+        "alt": alt
+      }
+    }
+  `, { slug })
+}
+
+export async function getRecentBlogPosts(limit = 6) {
+  return await client.fetch(`
+    *[_type == "blogPost" && isPublished == true] | order(publishDate desc)[0...${limit}] {
+      _id,
+      title,
+      slug,
+      excerpt,
+      publishDate,
+      category,
+      author,
+      readingTime,
+      "heroImage": heroImage{
+        "url": asset->url,
+        "alt": alt
+      }
+    }
+  `)
+}
