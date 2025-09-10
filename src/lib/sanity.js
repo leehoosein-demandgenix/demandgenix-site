@@ -154,3 +154,10 @@ export async function getRecentBlogPosts(limit = 6) {
     }
   `)
 }
+
+export const client = createClient({
+  projectId: 'fv5q0f3v',
+  dataset: 'production',
+  useCdn: false, // Disable CDN to get fresh data
+  apiVersion: '2024-01-01',
+})/* Force rebuild Wed 10 Sep 2025 16:39:34 BST */
