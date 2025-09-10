@@ -19,25 +19,25 @@ export async function GET() {
      lastmod: new Date().toISOString().split('T')[0]
    },
    { 
-     url: '/contact', 
+     url: '/contact/', 
      priority: '0.9', 
      changefreq: 'monthly',
      lastmod: new Date().toISOString().split('T')[0]
    },
    { 
-     url: '/blog', 
+     url: '/blog/', 
      priority: '0.8', 
      changefreq: 'weekly',
      lastmod: new Date().toISOString().split('T')[0]
    },
    { 
-     url: '/privacy-policy', 
+     url: '/privacy-policy/', 
      priority: '0.5', 
      changefreq: 'yearly',
      lastmod: new Date().toISOString().split('T')[0]
    },
    { 
-     url: '/cookie-policy', 
+     url: '/cookie-policy/', 
      priority: '0.5', 
      changefreq: 'yearly',
      lastmod: new Date().toISOString().split('T')[0]
@@ -46,7 +46,7 @@ export async function GET() {
 
  // Blog post pages
  const blogPages = blogPosts.map(post => ({
-   url: `/blog/${post.slug.current}`,
+   url: `/blog/${post.slug.current}/`,
    priority: '0.7',
    changefreq: 'monthly',
    lastmod: post.publishDate
