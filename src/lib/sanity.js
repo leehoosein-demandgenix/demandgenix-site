@@ -27,3 +27,33 @@ export async function getContact() {
 export async function getSiteSettings() {
   return await client.fetch(`*[_type == "siteSettings"][0]`)
 }
+// Testimonials functions
+export async function getTestimonials() {
+  return await client.fetch(`
+    *[_type == "testimonial"] {
+      name,
+      title,
+      company,
+      recommendation,
+      linkedinUrl,
+      relationship,
+      order,
+      isPublic,
+      "profilePhoto": profilePhoto.asset->url
+    } | order(order asc)
+  `)
+}
+
+export async function getFeaturedTestimonials() {
+  return await client.fetch(`
+    *[_type == "testimonial" && isPublic == true] | order(order asc)[0..2] {
+      name,
+      title,
+      company,
+      recommendation,
+      linkedinUrl,
+      relationship,
+      "profilePhoto": profilePhoto.asset->url
+    }
+  `)
+}
