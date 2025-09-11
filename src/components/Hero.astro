@@ -17,10 +17,9 @@ try {
 }
 ---
 
-<section class="bg-gray-50 py-16 lg:py-24">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center">
-      <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6" set:html={hero.title}></h1>
+<section class="hero-bg py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto px-4 text-center">
+    <h1 class="hero-headline text-4xl md:text-5xl lg:text-6xl font-bold text-forest-green mb-6" set:html={hero.title}></h1>
       <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
         {hero.subtitle}
         <span class="block mt-2">{hero.description}</span>
@@ -36,3 +35,132 @@ try {
     </div>
   </div>
 </section>
+
+<style>
+.hero-bg {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #F8FAFC 0%,
+    #FFFFFF 50%, 
+    #F8FAFC 100%
+  );
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(5, 150, 105, 0.08) 0%,     /* Forest Green */
+    rgba(234, 88, 12, 0.06) 25%,    /* Warm Orange */
+    rgba(124, 58, 237, 0.05) 50%,   /* Royal Purple */
+    rgba(5, 150, 105, 0.08) 75%,    /* Forest Green */
+    rgba(234, 88, 12, 0.06) 100%    /* Warm Orange */
+  );
+  background-size: 400% 400%;
+  animation: brandColorCycle 12s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(5, 150, 105, 0.04) 20%,    /* Forest Green */
+    rgba(234, 88, 12, 0.03) 40%,    /* Warm Orange */
+    rgba(5, 150, 105, 0.04) 60%,    /* Forest Green */
+    rgba(124, 58, 237, 0.02) 80%,   /* Royal Purple */
+    transparent 100%
+  );
+  animation: waveMove 8s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-headline {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #059669; /* Forest Green */
+  letter-spacing: -0.025em;
+}
+
+@keyframes brandColorCycle {
+  0% {
+    background-position: 0% 50%;
+  }
+  33% {
+    background-position: 100% 25%;
+  }
+  66% {
+    background-position: 0% 75%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveMove {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(30px) rotate(0.5deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-headline {
+    line-height: 1.25;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-headline {
+    line-height: 1.2;
+  }
+}
+
+/* Optional: Add a subtle pulse to enhance the brand color cycling */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-bg::before {
+    animation: brandColorCycle 12s ease-in-out infinite, subtlePulse 6s ease-in-out infinite;
+  }
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg::before,
+  .hero-bg::after {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+</style>
