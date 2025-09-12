@@ -1,15 +1,15 @@
 ---
+// src/pages/contact.astro
+// Complete DemandGenix contact page - just copy and paste this entire file
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
 ---
+
 <Layout 
   title="Contact DemandGenix | Free Demand Gen Consultation"
   description="Get expert help with your B2B demand generation challenges. Free 30-minute diagnostic call to identify what's holding you back."
   keywords="demand generation consultation, B2B marketing help, SaaS marketing, conversion optimization"
 >
-<Header />
-
   <main class="contact-main">
     <div class="contact-page-header">
       <h1>Ready to scale your demand gen?</h1>
@@ -64,7 +64,20 @@ import Header from '../components/Header.astro';
               <div class="error-message" id="email-error">Please enter a valid email address</div>
             </div>
 
-             <div class="form-group">
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                class="form-input" 
+                placeholder="+44 7XXX XXXXXX"
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
               <label for="company" class="form-label">Company <span class="required">*</span></label>
               <input 
                 type="text" 
@@ -76,7 +89,56 @@ import Header from '../components/Header.astro';
               >
               <div class="error-message" id="company-error">Please enter your company name</div>
             </div>
+
+            <div class="form-group">
+              <label for="jobtitle" class="form-label">Job Title <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="jobtitle" 
+                name="jobtitle" 
+                class="form-input" 
+                placeholder="e.g., Head of Marketing"
+                required
+              >
+              <div class="error-message" id="jobtitle-error">Please enter your job title</div>
+            </div>
           </div>
+
+          <div class="form-group full-width">
+            <label for="company_size" class="form-label">Company Size</label>
+            <select id="company_size" name="company_size" class="form-input">
+              <option value="">Select company size</option>
+              <option value="1-10">1-10 employees</option>
+              <option value="11-50">11-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-500">201-500 employees</option>
+              <option value="501+">501+ employees</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="challenge" class="form-label">What's your biggest demand gen challenge? <span class="required">*</span></label>
+            <textarea 
+              id="challenge" 
+              name="challenge" 
+              class="form-input form-textarea" 
+              placeholder="Tell us about your current challenges with lead generation, conversion rates, attribution, or scaling demand..."
+              required
+            ></textarea>
+            <div class="error-message" id="challenge-error">Please describe your main challenge</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="timeline" class="form-label">When are you looking to get started?</label>
+            <select id="timeline" name="timeline" class="form-input">
+              <option value="">Select timeline</option>
+              <option value="asap">ASAP - Within 2 weeks</option>
+              <option value="month">Within a month</option>
+              <option value="quarter">Within this quarter</option>
+              <option value="exploring">Just exploring options</option>
+            </select>
+          </div>
+
           <!-- Hidden fields for tracking -->
           <input type="hidden" name="lead_source" value="Website Contact Form">
           <input type="hidden" name="page_url" id="page_url">
@@ -148,6 +210,8 @@ import Header from '../components/Header.astro';
 </Layout>
 
 <style>
+  /* Import DemandGenix brand font */
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
   /* DemandGenix Brand Colors from Brand Guidelines */
   :root {
@@ -384,17 +448,43 @@ import Header from '../components/Header.astro';
 
   /* Mobile responsiveness */
   @media (max-width: 1024px) {
+    .hero-title {
+      font-size: 40px;
+    }
+    
+    .hero-subtitle {
+      font-size: 18px;
+    }
+    
     .contact-container {
       gap: 32px;
     }
     
     .form-container,
-    .proof-container {
-      padding: 32px;
+    .proof-container,
+    .what-happens-next {
+      padding: 28px;
     }
   }
 
   @media (max-width: 768px) {
+    .hero-section {
+      min-height: 50vh;
+    }
+    
+    .hero-content {
+      padding: 60px 20px;
+    }
+    
+    .hero-title {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    
+    .hero-subtitle {
+      font-size: 16px;
+    }
+    
     .contact-main {
       padding: 16px;
     }
@@ -405,7 +495,8 @@ import Header from '../components/Header.astro';
     }
     
     .form-container,
-    .proof-container {
+    .proof-container,
+    .what-happens-next {
       padding: 24px;
     }
     
@@ -414,12 +505,30 @@ import Header from '../components/Header.astro';
       gap: 0;
     }
     
-    .contact-page-header h1 {
+    .contact-info-section {
+      gap: 16px;
+    }
+    
+    .contact-info-card {
+      padding: 16px;
+    }
+    
+    .next-steps {
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
       font-size: 28px;
     }
     
-    .contact-page-header {
-      margin-bottom: 32px;
+    .hero-subtitle {
+      font-size: 15px;
+    }
+    
+    .hero-content {
+      padding: 40px 16px;
     }
   }
 
