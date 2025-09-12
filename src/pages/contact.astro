@@ -10,6 +10,152 @@ import CookieConsent from '../components/CookieConsent.astro';
   description="Get in touch with DemandGenix for a free 30-minute demand generation consultation. Book a call or send us a message today."
 >
   <Header />
+   <style>
+        /* DemandGenix Brand Colors */
+        :root {
+            --forest-green: #059669;
+            --forest-green-dark: #047857;
+            --warm-orange: #EA580C;
+            --charcoal-grey: #374151;
+            --warm-grey: #6B7280;
+            --light-grey: #F8FAFC;
+        }
+
+        .demandgenix-form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--charcoal-grey);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            color: var(--warm-grey);
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--charcoal-grey);
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 6px;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            font-size: 16px;
+            color: var(--charcoal-grey);
+            background: white;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--warm-grey);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            width: 100%;
+            background: var(--forest-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 24px;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .form-submit:hover {
+            background: var(--forest-green-dark);
+        }
+
+        .form-submit:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+        }
+
+        .required {
+            color: var(--warm-orange);
+        }
+
+        .error-message {
+            color: #DC2626;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .success-message {
+            background: #ECFDF5;
+            border: 1px solid #D1FAE5;
+            color: #065F46;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .privacy-note {
+            font-size: 12px;
+            color: var(--warm-grey);
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.4;
+        }
+
+        .privacy-note a {
+            color: var(--forest-green);
+            text-decoration: none;
+        }
+
+        .privacy-note a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .demandgenix-form-container {
+                margin: 16px;
+                padding: 24px;
+            }
+        }
+    </style>
   <main class="py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Hero Section -->
@@ -37,22 +183,71 @@ import CookieConsent from '../components/CookieConsent.astro';
   </p>
   
   <!-- HubSpot Form Container -->
-  <div id="hubspot-form-container">
-    <!-- Loading skeleton - will be replaced by form -->
-    <div class="skeleton-loader animate-pulse">
-      <div class="space-y-4">
-        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-        <div class="h-10 bg-gray-200 rounded"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-        <div class="h-10 bg-gray-200 rounded"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-        <div class="h-10 bg-gray-200 rounded"></div>
-        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-        <div class="h-24 bg-gray-200 rounded"></div>
-        <div class="h-10 bg-primary-200 rounded"></div>
-      </div>
-    </div>
-  </div>
+  <form id="contact-form" action="#" method="POST">
+            <div class="form-group">
+                <label for="firstname" class="form-label">First Name <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    id="firstname" 
+                    name="firstname" 
+                    class="form-input" 
+                    placeholder="Your first name"
+                    required
+                >
+                <div class="error-message" id="firstname-error">Please enter your first name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="lastname" class="form-label">Last Name <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    id="lastname" 
+                    name="lastname" 
+                    class="form-input" 
+                    placeholder="Your last name"
+                    required
+                >
+                <div class="error-message" id="lastname-error">Please enter your last name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email <span class="required">*</span></label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="your.email@company.com"
+                    required
+                >
+                <div class="error-message" id="email-error">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="company" class="form-label">Company <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    id="company" 
+                    name="company" 
+                    class="form-input" 
+                    placeholder="Your company name"
+                    required
+                >
+                <div class="error-message" id="company-error">Please enter your company name</div>
+            </div>
+            <!-- Hidden field for lead source -->
+            <input type="hidden" name="lead_source" value="Website Contact Form">
+
+            <button type="submit" class="form-submit" id="submit-btn">
+                Get Started - Free Consultation
+            </button>
+
+            <p class="privacy-note">
+                We respect your privacy. By submitting this form, you agree to our 
+                <a href="/privacy-policy">Privacy Policy</a>. 
+                We'll only use your information to respond to your inquiry and send relevant updates.
+            </p>
+        </form>
 </div>
         <!-- Contact Information -->
         <div class="space-y-8">
@@ -259,3 +454,72 @@ import CookieConsent from '../components/CookieConsent.astro';
     checkAndLoadHubSpotForm();
   });
 </script>
+ <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/146805802.js"></script>
+
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const submitBtn = document.getElementById('submit-btn');
+            const successMessage = document.getElementById('success-message');
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            
+            // Validate form
+            let isValid = true;
+            const requiredFields = ['firstname', 'lastname', 'email', 'company'];
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field);
+                const error = document.getElementById(field + '-error');
+                
+                if (!input.value.trim()) {
+                    error.style.display = 'block';
+                    isValid = false;
+                }
+            });
+            
+            // Email validation
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value && !emailRegex.test(email.value)) {
+                document.getElementById('email-error').textContent = 'Please enter a valid email address';
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // Submit to HubSpot (if tracking code is installed, this will be captured)
+            // You can also use HubSpot's Forms API here
+            
+            // For demo purposes, simulate successful submission
+            setTimeout(() => {
+                form.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Track with HubSpot if available
+                if (typeof hbspt !== 'undefined') {
+                    hbspt.forms.create({
+                        portalId: "146805802",
+                        formId: "2e5d9771-a003-488e-a7d3-87aeb942301c",
+                        target: '#hubspot-form-target',
+                        submitButtonClass: 'hidden-submit',
+                        onFormSubmit: function($form) {
+                            // Form submitted successfully
+                        }
+                    });
+                }
+            }, 1000);
+        });
+    </script>
