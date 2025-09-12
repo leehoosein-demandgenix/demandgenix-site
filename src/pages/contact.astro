@@ -176,13 +176,16 @@ import CookieConsent from '../components/CookieConsent.astro';
       </div>
 
       <div class="grid lg:grid-cols-2 gap-16 items-start">
-        <div id="contact-form" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div id="contact-form-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
   <h2 class="text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
   <p class="text-gray-600 mb-6">
     Fill out the form below and we'll get back to you within 24 hours.
   </p>
   
-  <!-- HubSpot Form Container -->
+  <!-- Form Container -->
+   <div id="success-message" class="success-message">
+  Thanks — we’ve got your details and will reply within 24 hours.
+</div>
   <form id="contact-form" action="/api/contact" method="POST">
             <div class="form-group">
                 <label for="firstname" class="form-label">First Name <span class="required">*</span></label>
@@ -251,6 +254,35 @@ import CookieConsent from '../components/CookieConsent.astro';
 </div>
         <!-- Contact Information -->
         <div class="space-y-8">
+          <!-- What to Expect -->
+          <div class="bg-primary-50 rounded-lg p-8">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">What to Expect</h3>
+            <div class="space-y-4">
+              <div class="flex items-start">
+                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">1</div>
+                <div>
+                  <h4 class="font-medium text-gray-900">Quick Response</h4>
+                  <p class="text-sm text-gray-600">We'll get back to you within 24 hours (usually much faster)</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">2</div>
+                <div>
+                  <h4 class="font-medium text-gray-900">Discovery Call</h4>
+                  <p class="text-sm text-gray-600">30-minute call to understand your challenges and goals</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">3</div>
+                <div>
+                  <h4 class="font-medium text-gray-900">Tailored Proposal</h4>
+                  <p class="text-sm text-gray-600">Custom proposal with clear outcomes and transparent pricing</p>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Contact Details -->
           <div class="bg-gray-50 rounded-lg p-8">
             <h3 class="text-xl font-semibold text-gray-900 mb-6">Get in Touch</h3>
@@ -291,35 +323,7 @@ import CookieConsent from '../components/CookieConsent.astro';
             </div>
           </div>
 
-          <!-- What to Expect -->
-          <div class="bg-primary-50 rounded-lg p-8">
-            <h3 class="text-xl font-semibold text-gray-900 mb-6">What to Expect</h3>
-            <div class="space-y-4">
-              <div class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">1</div>
-                <div>
-                  <h4 class="font-medium text-gray-900">Quick Response</h4>
-                  <p class="text-sm text-gray-600">We'll get back to you within 24 hours (usually much faster)</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">2</div>
-                <div>
-                  <h4 class="font-medium text-gray-900">Discovery Call</h4>
-                  <p class="text-sm text-gray-600">30-minute call to understand your challenges and goals</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">3</div>
-                <div>
-                  <h4 class="font-medium text-gray-900">Tailored Proposal</h4>
-                  <p class="text-sm text-gray-600">Custom proposal with clear outcomes and transparent pricing</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -328,198 +332,86 @@ import CookieConsent from '../components/CookieConsent.astro';
   <CookieConsent />
 </Layout>
 
-<!-- HubSpot Form Loading Script -->
-<script>
-  let hubspotFormLoaded = false;
-
-  function getCookie(name) {
-    return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
-  }
-
-  function checkAndLoadHubSpotForm() {
-    const marketingConsent = getCookie('marketing-consent');
-    console.log('Marketing consent:', marketingConsent);
-    
-    if (marketingConsent === 'true') {
-      loadHubSpotFormScript();
-    } else {
-      showConsentMessage();
-    }
-  }
-
-  function loadHubSpotFormScript() {
-    if (hubspotFormLoaded) return;
-    
-    console.log('Loading HubSpot Forms script directly...');
-    
-    // Load the HubSpot Forms API script directly
-    const script = document.createElement('script');
-    script.src = 'https://js.hsforms.net/forms/embed/v2.js';
-    script.async = true;
-    document.head.appendChild(script);
-    
-    script.onload = () => {
-      console.log('HubSpot Forms script loaded');
-      // Wait a moment for the API to initialize
-      setTimeout(() => {
-        if (window.hbspt && window.hbspt.forms) {
-          createHubSpotForm();
-        } else {
-          console.error('HubSpot forms API not available');
-          showErrorMessage();
-        }
-      }, 500);
-    };
-    
-    script.onerror = () => {
-      console.error('Failed to load HubSpot Forms script');
-      showErrorMessage();
-    };
-  }
-
-  function createHubSpotForm() {
-  console.log('Creating HubSpot form...');
-  
-  // Clear the container completely
-  const container = document.getElementById('hubspot-form-container');
-  container.innerHTML = '';
-  
-  try {
-    window.hbspt.forms.create({
-      region: "eu1",
-      portalId: "146805802", 
-      formId: "2e5d9771-a003-488e-a7d3-87aeb942301c",
-      target: "#hubspot-form-container",
-      onFormReady: function() {
-        console.log('HubSpot form loaded successfully!');
-        hubspotFormLoaded = true;
-      },
-      // ... rest of your CSS and config
-    });
-  } catch (error) {
-    console.error('Error creating HubSpot form:', error);
-    showErrorMessage();
-  }
-}
-
-
-  function showConsentMessage() {
-    document.getElementById('hubspot-form-container').innerHTML = `
-      <div class="text-center p-8 bg-gray-50 rounded-lg">
-        <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Cookie Consent Required</h3>
-        <p class="text-gray-600 mb-4">
-          To display our contact form, we need your consent to use marketing cookies for form functionality and lead tracking.
-        </p>
-        <button onclick="document.getElementById('cookie-modal').classList.remove('hidden')" 
-                class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors">
-          Manage Cookie Settings
-        </button>
-        <div class="mt-4 pt-4 border-t border-gray-200">
-          <p class="text-sm text-gray-500 mb-2">Or contact us directly:</p>
-          <a href="mailto:hello@demandgenix.uk" class="text-primary-600 hover:underline">hello@demandgenix.uk</a>
-        </div>
-      </div>
-    `;
-  }
-
-  function showErrorMessage() {
-    document.getElementById('hubspot-form-container').innerHTML = `
-      <div class="text-center p-8 bg-red-50 rounded-lg">
-        <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <h3 class="text-lg font-medium text-red-900 mb-2">Form Loading Error</h3>
-        <p class="text-red-600 mb-4">
-          We're having trouble loading our contact form. Please contact us directly:
-        </p>
-        <a href="mailto:hello@demandgenix.uk" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
-          Send Email Instead
-        </a>
-      </div>
-    `;
-  }
-
-  // Initialize when page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded, checking form status...');
-    checkAndLoadHubSpotForm();
-  });
-
-  // Listen for cookie consent changes
-  window.addEventListener('cookie-consent-changed', function() {
-    console.log('Cookie consent changed, reloading form...');
-    checkAndLoadHubSpotForm();
-  });
-</script>
  <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/146805802.js"></script>
+<script>
+   // Helper to read cookies safely
+   function getCookie(name) {
+     return document.cookie.split('; ').find(r => r.startsWith(name + '='))?.split('=')[1];
+   }
 
-    <script>
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const form = this;
-            const submitBtn = document.getElementById('submit-btn');
-            const successMessage = document.getElementById('success-message');
-            
-            // Clear previous errors
-            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-            
-            // Validate form
-            let isValid = true;
-            const requiredFields = ['firstname', 'lastname', 'email', 'company'];
-            
-            requiredFields.forEach(field => {
-                const input = document.getElementById(field);
-                const error = document.getElementById(field + '-error');
-                
-                if (!input.value.trim()) {
-                    error.style.display = 'block';
-                    isValid = false;
-                }
-            });
-            
-            // Email validation
-            const email = document.getElementById('email');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (email.value && !emailRegex.test(email.value)) {
-                document.getElementById('email-error').textContent = 'Please enter a valid email address';
-                document.getElementById('email-error').style.display = 'block';
-                isValid = false;
-            }
-            
-            if (!isValid) return;
-            
-            // Disable submit button
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-            
-            // Collect form data
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData);
-            
-            // Submit to HubSpot (if tracking code is installed, this will be captured)
-            // You can also use HubSpot's Forms API here
-            
-            // For demo purposes, simulate successful submission
-            setTimeout(() => {
-                form.style.display = 'none';
-                successMessage.style.display = 'block';
-                
-                // Track with HubSpot if available
-                if (typeof hbspt !== 'undefined') {
-                    hbspt.forms.create({
-                        portalId: "146805802",
-                        formId: "2e5d9771-a003-488e-a7d3-87aeb942301c",
-                        target: '#hubspot-form-target',
-                        submitButtonClass: 'hidden-submit',
-                        onFormSubmit: function($form) {
-                            // Form submitted successfully
-                        }
-                    });
-                }
-            }, 1000);
-        });
-    </script>
+   document.getElementById('contact-form').addEventListener('submit', async function (e) {
+     e.preventDefault();
+
+     const form = /** @type {HTMLFormElement} */(this);
+     const submitBtn = document.getElementById('submit-btn');
+     const successMessage = document.getElementById('success-message');
+
+     // Clear previous errors
+     document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+     // Validate
+     let isValid = true;
+     ['firstname','lastname','email','company'].forEach(field => {
+       const input = document.getElementById(field);
+       const error = document.getElementById(field + '-error');
+       if (!input.value.trim()) { error.style.display = 'block'; isValid = false; }
+     });
+     const email = document.getElementById('email');
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+     if (email.value && !emailRegex.test(email.value)) {
+       const el = document.getElementById('email-error');
+       el.textContent = 'Please enter a valid email address';
+       el.style.display = 'block';
+       isValid = false;
+     }
+     if (!isValid) return;
+
+     submitBtn.disabled = true;
+     submitBtn.textContent = 'Sending...';
+
+     const fd = new FormData(form); // now a real HTMLFormElement ✅
+     const hutk = getCookie('hubspotutk'); // may be undefined if no marketing consent
+
+     // Build HubSpot Forms API payload
+     const payload = {
+       fields: [
+         { name: 'firstname', value: fd.get('firstname') || '' },
+         { name: 'lastname',  value: fd.get('lastname')  || '' },
+         { name: 'email',     value: fd.get('email')     || '' },
+         { name: 'company',   value: fd.get('company')   || '' },
+         { name: 'lead_source', value: fd.get('lead_source') || 'Website Contact Form' }
+       ],
+       context: {
+         hutk,                              // tracking cookie (if present)
+         pageUri:  window.location.href,
+         pageName: document.title
+       }
+     };
+
+     try {
+       // EU data center endpoint
+       const hsRes = await fetch('https://api-eu1.hsforms.com/submissions/v3/integration/submit/146805802/2e5d9771-a003-488e-a7d3-87aeb942301c', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(payload)
+       });
+
+       if (!hsRes.ok) {
+         // Optional: log details or fall back to your own /api/contact
+         console.error('HubSpot submit failed', await hsRes.text());
+         throw new Error('HubSpot submit failed');
+       }
+
+       // Success UX
+       form.reset();
+       form.style.display = 'none';
+       successMessage.style.display = 'block';
+     } catch (err) {
+       console.error(err);
+       submitBtn.disabled = false;
+       submitBtn.textContent = 'Get Started - Free Consultation';
+       alert('Sorry—something went wrong submitting the form. Please email hello@demandgenix.uk.');
+     }
+   });
+ </script>
+    

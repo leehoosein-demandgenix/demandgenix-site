@@ -15,7 +15,7 @@ export async function GET() {
    { 
      url: '', 
      priority: '1.0', 
-     changefreq: 'monthly',
+     changefreq: 'weekly',
      lastmod: new Date().toISOString().split('T')[0]
    },
    { 
