@@ -12,14 +12,19 @@ const {
   description = "Manchester-based demand gen consultancy helping growing companies scale efficiently. Fixed-scope sprints, fractional leadership, AI utilization.", 
   keywords = "demand generation, B2B marketing, SaaS marketing, conversion optimization, fractional marketing, Manchester marketing agency, AI marketing, growth marketing, marketing analytics",
   ogImage = "/og-image.jpg",
-  canonicalUrl = Astro.url.href
+  canonicalUrl
 } = Astro.props;
+
+// Fix canonical URL to always use production domain
+const SITE_URL = "https://demandgenix.uk";
+const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,7 +39,7 @@ const {
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={`${SITE_URL}${ogImage}`} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="DemandGenix" />
@@ -43,7 +48,7 @@ const {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={`${SITE_URL}${ogImage}`} />
 
      <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#059669">
@@ -55,7 +60,7 @@ const {
     <meta name="apple-mobile-web-app-title" content="DemandGenix">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href={canonicalUrl} />
+    <link rel="canonical" href={finalCanonicalUrl} />
 
     <!-- Standard favicon -->
     <link rel="icon" href="../favicon.ico" sizes="32x32">
@@ -71,6 +76,21 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300&display=swap" rel="stylesheet">
+     <!-- Structured Data -->
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "DemandGenix Limited",
+      "url": SITE_URL,
+      "description": description,
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@demandgenix.uk",
+        "contactType": "customer service"
+      }
+    })}
+  </script>
   </head>
   <body class="font-sans">
     <slot />
