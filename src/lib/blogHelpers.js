@@ -97,3 +97,131 @@ export function blocksToHtml(blocks) {
     return '';
   }).join('');
 }
+
+// Fixed content converter with proper list detection
+export function blocksToHtml(blocks) {
+  if (!blocks) return '';
+  
+  let html = '';
+  let currentList = null;
+  let currentListType = null;
+  
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    
+    if (block._type === 'block') {
+      const style = block.style || 'normal';
+      
+      // Get mark definitions for this block
+      const markDefs = block.markDefs || [];
+      
+      const children = block.children?.map(child => {
+        let text = child.text || '';
+        
+        if (child.marks && child.marks.length > 0) {
+          child.marks.forEach(mark => {
+            if (typeof mark === 'string') {
+              // Handle annotation marks by finding the markDef
+              const markDef = markDefs.find(def => def._key === mark);
+              if (markDef && markDef._type === 'link') {
+                const target = markDef.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '';
+                text = `<a href="${markDef.href}" ${target} class="text-primary-600 hover:text-primary-700 underline decoration-2 underline-offset-2">${text}</a>`;
+              }
+              // Handle regular string marks
+              else if (mark === 'strong') {
+                text = `<strong>${text}</strong>`;
+              } else if (mark === 'em') {
+                text = `<em>${text}</em>`;
+              } else if (mark === 'code') {
+                text = `<code class="bg-gray-100 px-1 rounded">${text}</code>`;
+              }
+            }
+          });
+        }
+        
+        return text;
+      }).join('') || '';
+      
+      // FIXED: Check for listItem property instead of style
+      if (block.listItem === 'bullet' || block.listItem === 'number') {
+        const listType = block.listItem === 'bullet' ? 'ul' : 'ol';
+        
+        // If we're starting a new list or switching list types
+        if (currentListType !== listType) {
+          // Close previous list if it exists
+          if (currentList !== null) {
+            html += `</${currentListType}>`;
+          }
+          // Start new list
+          html += `<${listType}>`;
+          currentList = [];
+          currentListType = listType;
+        }
+        
+        // Add list item
+        html += `<li>${children}</li>`;
+        
+        // Check if next block is also a list item
+        const nextBlock = blocks[i + 1];
+        const isLastBlock = i === blocks.length - 1;
+        const nextIsListItem = nextBlock && nextBlock._type === 'block' && 
+                              (nextBlock.listItem === 'bullet' || nextBlock.listItem === 'number');
+        
+        // If this is the last list item, close the list
+        if (isLastBlock || !nextIsListItem) {
+          html += `</${currentListType}>`;
+          currentList = null;
+          currentListType = null;
+        }
+      } else {
+        // Close any open list before processing non-list content
+        if (currentList !== null) {
+          html += `</${currentListType}>`;
+          currentList = null;
+          currentListType = null;
+        }
+        
+        // Apply block styles for non-list content
+        switch (style) {
+          case 'h2': 
+            html += `<h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">${children}</h2>`;
+            break;
+          case 'h3': 
+            html += `<h3 class="text-2xl font-semibold mt-10 mb-4 text-gray-900">${children}</h3>`;
+            break;
+          case 'h4': 
+            html += `<h4 class="text-xl font-medium mt-8 mb-3 text-gray-900">${children}</h4>`;
+            break;
+          case 'blockquote': 
+            html += `<blockquote class="border-l-4 border-primary-600 bg-primary-50 pl-6 pr-4 py-4 my-8 italic text-gray-800">${children}</blockquote>`;
+            break;
+          default: 
+            html += `<p class="mb-6 leading-relaxed text-gray-700">${children}</p>`;
+            break;
+        }
+      }
+    } else if (block._type === 'image' && block.asset) {
+      // Close any open list before processing image
+      if (currentList !== null) {
+        html += `</${currentListType}>`;
+        currentList = null;
+        currentListType = null;
+      }
+      
+      const caption = block.caption ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` : '';
+      html += `
+        <figure class="my-10">
+          <img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />
+          ${caption}
+        </figure>
+      `;
+    }
+  }
+  
+  // Close any remaining open list
+  if (currentList !== null) {
+    html += `</${currentListType}>`;
+  }
+  
+  return html;
+}
