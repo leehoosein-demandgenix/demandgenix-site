@@ -34,46 +34,39 @@ export function getCategoryLabel(category) {
   return labels[category] || category;
 }
 
-// More robust content converter
+// Robust content converter with proper handling of all block types
 export function blocksToHtml(blocks) {
-  if (!blocks) return '';
+  if (!blocks || !Array.isArray(blocks)) return '';
   
   return blocks.map(block => {
+    if (!block || !block._type) return '';
+
     if (block._type === 'block') {
       const style = block.style || 'normal';
       
       // Get mark definitions for this block
       const markDefs = block.markDefs || [];
       
-      const children = block.children?.map(child => {
-        let text = child.text || '';
+      // Check if this is a list block
+      if (block.listItem) {
+        const children = processChildren(block.children, markDefs);
+        const listType = block.listItem;
+        const level = block.level || 1;
+        const indent = '  '.repeat(level - 1);
         
-        if (child.marks && child.marks.length > 0) {
-          child.marks.forEach(mark => {
-            if (typeof mark === 'string') {
-              // Handle annotation marks by finding the markDef
-              const markDef = markDefs.find(def => def._key === mark);
-              if (markDef && markDef._type === 'link') {
-                const target = markDef.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '';
-                text = `<a href="${markDef.href}" ${target} class="text-primary-600 hover:text-primary-700 underline decoration-2 underline-offset-2">${text}</a>`;
-              }
-              // Handle regular string marks
-              else if (mark === 'strong') {
-                text = `<strong>${text}</strong>`;
-              } else if (mark === 'em') {
-                text = `<em>${text}</em>`;
-              } else if (mark === 'code') {
-                text = `<code class="bg-gray-100 px-1 rounded">${text}</code>`;
-              }
-            }
-          });
+        if (listType === 'bullet') {
+          return `${indent}<li class="mb-2 leading-relaxed text-gray-700">${children}</li>`;
+        } else if (listType === 'number') {
+          return `${indent}<li class="mb-2 leading-relaxed text-gray-700">${children}</li>`;
         }
-        
-        return text;
-      }).join('') || '';
+      }
+      
+      const children = processChildren(block.children, markDefs);
       
       // Apply block styles
       switch (style) {
+        case 'h1':
+          return `<h1 class="text-4xl font-bold mt-12 mb-8 text-gray-900">${children}</h1>`;
         case 'h2': 
           return `<h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">${children}</h2>`;
         case 'h3': 
@@ -85,7 +78,27 @@ export function blocksToHtml(blocks) {
         default: 
           return `<p class="mb-6 leading-relaxed text-gray-700">${children}</p>`;
       }
-    } else if (block._type === 'image' && block.asset) {
+    } 
+    
+    // Handle list wrapper blocks
+    else if (block._type === 'list') {
+      const listType = block.listType || 'bullet';
+      const items = block.items || [];
+      
+      const listItems = items.map(item => {
+        const children = processChildren(item.children, item.markDefs || []);
+        return `<li class="mb-2 leading-relaxed text-gray-700">${children}</li>`;
+      }).join('');
+      
+      if (listType === 'bullet') {
+        return `<ul class="list-disc pl-6 mb-6">${listItems}</ul>`;
+      } else {
+        return `<ol class="list-decimal pl-6 mb-6">${listItems}</ol>`;
+      }
+    }
+    
+    // Handle image blocks
+    else if (block._type === 'image' && block.asset) {
       const caption = block.caption ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` : '';
       return `
         <figure class="my-10">
@@ -94,134 +107,39 @@ export function blocksToHtml(blocks) {
         </figure>
       `;
     }
+    
     return '';
   }).join('');
 }
 
-// Fixed content converter with proper list detection
-export function blocksToHtml(blocks) {
-  if (!blocks) return '';
+// Helper function to process children with marks
+function processChildren(children, markDefs) {
+  if (!children || !Array.isArray(children)) return '';
   
-  let html = '';
-  let currentList = null;
-  let currentListType = null;
-  
-  for (let i = 0; i < blocks.length; i++) {
-    const block = blocks[i];
+  return children.map(child => {
+    let text = child.text || '';
     
-    if (block._type === 'block') {
-      const style = block.style || 'normal';
-      
-      // Get mark definitions for this block
-      const markDefs = block.markDefs || [];
-      
-      const children = block.children?.map(child => {
-        let text = child.text || '';
-        
-        if (child.marks && child.marks.length > 0) {
-          child.marks.forEach(mark => {
-            if (typeof mark === 'string') {
-              // Handle annotation marks by finding the markDef
-              const markDef = markDefs.find(def => def._key === mark);
-              if (markDef && markDef._type === 'link') {
-                const target = markDef.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '';
-                text = `<a href="${markDef.href}" ${target} class="text-primary-600 hover:text-primary-700 underline decoration-2 underline-offset-2">${text}</a>`;
-              }
-              // Handle regular string marks
-              else if (mark === 'strong') {
-                text = `<strong>${text}</strong>`;
-              } else if (mark === 'em') {
-                text = `<em>${text}</em>`;
-              } else if (mark === 'code') {
-                text = `<code class="bg-gray-100 px-1 rounded">${text}</code>`;
-              }
-            }
-          });
-        }
-        
-        return text;
-      }).join('') || '';
-      
-      // FIXED: Check for listItem property instead of style
-      if (block.listItem === 'bullet' || block.listItem === 'number') {
-        const listType = block.listItem === 'bullet' ? 'ul' : 'ol';
-        
-        // If we're starting a new list or switching list types
-        if (currentListType !== listType) {
-          // Close previous list if it exists
-          if (currentList !== null) {
-            html += `</${currentListType}>`;
+    if (child.marks && child.marks.length > 0) {
+      child.marks.forEach(mark => {
+        if (typeof mark === 'string') {
+          // Handle annotation marks by finding the markDef
+          const markDef = markDefs.find(def => def._key === mark);
+          if (markDef && markDef._type === 'link') {
+            const target = markDef.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '';
+            text = `<a href="${markDef.href}" ${target} class="text-primary-600 hover:text-primary-700 underline decoration-2 underline-offset-2">${text}</a>`;
           }
-          // Start new list
-          html += `<${listType}>`;
-          currentList = [];
-          currentListType = listType;
+          // Handle regular string marks
+          else if (mark === 'strong') {
+            text = `<strong>${text}</strong>`;
+          } else if (mark === 'em') {
+            text = `<em>${text}</em>`;
+          } else if (mark === 'code') {
+            text = `<code class="bg-gray-100 px-1 rounded">${text}</code>`;
+          }
         }
-        
-        // Add list item
-        html += `<li>${children}</li>`;
-        
-        // Check if next block is also a list item
-        const nextBlock = blocks[i + 1];
-        const isLastBlock = i === blocks.length - 1;
-        const nextIsListItem = nextBlock && nextBlock._type === 'block' && 
-                              (nextBlock.listItem === 'bullet' || nextBlock.listItem === 'number');
-        
-        // If this is the last list item, close the list
-        if (isLastBlock || !nextIsListItem) {
-          html += `</${currentListType}>`;
-          currentList = null;
-          currentListType = null;
-        }
-      } else {
-        // Close any open list before processing non-list content
-        if (currentList !== null) {
-          html += `</${currentListType}>`;
-          currentList = null;
-          currentListType = null;
-        }
-        
-        // Apply block styles for non-list content
-        switch (style) {
-          case 'h2': 
-            html += `<h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">${children}</h2>`;
-            break;
-          case 'h3': 
-            html += `<h3 class="text-2xl font-semibold mt-10 mb-4 text-gray-900">${children}</h3>`;
-            break;
-          case 'h4': 
-            html += `<h4 class="text-xl font-medium mt-8 mb-3 text-gray-900">${children}</h4>`;
-            break;
-          case 'blockquote': 
-            html += `<blockquote class="border-l-4 border-primary-600 bg-primary-50 pl-6 pr-4 py-4 my-8 italic text-gray-800">${children}</blockquote>`;
-            break;
-          default: 
-            html += `<p class="mb-6 leading-relaxed text-gray-700">${children}</p>`;
-            break;
-        }
-      }
-    } else if (block._type === 'image' && block.asset) {
-      // Close any open list before processing image
-      if (currentList !== null) {
-        html += `</${currentListType}>`;
-        currentList = null;
-        currentListType = null;
-      }
-      
-      const caption = block.caption ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` : '';
-      html += `
-        <figure class="my-10">
-          <img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />
-          ${caption}
-        </figure>
-      `;
+      });
     }
-  }
-  
-  // Close any remaining open list
-  if (currentList !== null) {
-    html += `</${currentListType}>`;
-  }
-  
-  return html;
+    
+    return text;
+  }).join('');
 }
