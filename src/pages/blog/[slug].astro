@@ -27,12 +27,46 @@ if (!post) {
 }
 
 const contentHtml = blocksToHtml(post.content);
+
+// Create blog-specific structured data
+const SITE_URL = "https://demandgenix.uk";
+const blogStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.title,
+  "description": post.excerpt,
+  "image": post.heroImage ? `${post.heroImage.url}` : `${SITE_URL}/og-image.jpg`,
+  "author": {
+    "@type": "Person",
+    "name": post.author
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DemandGenix Limited",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${SITE_URL}/favicon.svg`
+    }
+  },
+  "datePublished": post.publishDate,
+  "dateModified": post.publishDate,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `${SITE_URL}/blog/${post.slug.current}/`
+  },
+  "articleSection": getCategoryLabel(post.category),
+  "keywords": post.tags || [],
+  "inLanguage": "en-GB"
+};
 ---
 
 <Layout 
   title={post.metaTitle || `${post.title} | DemandGenix Blog`}
   description={post.metaDescription || post.excerpt}
 >
+  <!-- Add blog-specific structured data -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogStructuredData)}></script>
+  
   <Header />
   
   <main>

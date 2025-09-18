@@ -14,12 +14,45 @@ try {
 } catch (error) {
   console.error('Error fetching blog posts:', error);
 }
+
+// Create blog section structured data
+const SITE_URL = "https://demandgenix.uk";
+const blogSectionStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "DemandGenix Blog",
+  "description": "Expert insights on B2B SaaS demand generation, conversion optimization, and marketing growth strategies from DemandGenix.",
+  "url": `${SITE_URL}/blog/`,
+  "publisher": {
+    "@type": "Organization",
+    "name": "DemandGenix Limited",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${SITE_URL}/favicon.svg`
+    }
+  },
+  "inLanguage": "en-GB",
+  "blogPost": allPosts.slice(0, 10).map(post => ({
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt,
+    "url": `${SITE_URL}/blog/${post.slug.current}/`,
+    "datePublished": post.publishDate,
+    "author": {
+      "@type": "Person",
+      "name": post.author
+    }
+  }))
+};
 ---
 
 <Layout 
   title="Blog - Demand Gen Insights & B2B Marketing Tips | DemandGenix"
   description="Expert insights on B2B SaaS demand generation, conversion optimization, and marketing growth strategies from DemandGenix."
 >
+  <!-- Add blog section structured data -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogSectionStructuredData)}></script>
+  
   <Header />
   
   <main>
