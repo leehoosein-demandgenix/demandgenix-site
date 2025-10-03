@@ -19,12 +19,6 @@ export default {
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       }
-      .bg-green {
-        background-color: #059669 !important;
-      }
-      
-  
-
     },
   },
   plugins: [],

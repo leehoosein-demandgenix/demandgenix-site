@@ -1,13 +1,73 @@
 ---
-import { getServices } from '../lib/sanity.js';
+// src/components/Services.astro - Updated version
+import { getServices, getFeaturedServicePages } from '../lib/sanity.js';
 
-let services;
+let services = [];
+let servicePages = [];
+
 try {
-  services = await getServices();
+  // Get both traditional services and service pages
+  services = await getServices() || [];
+  servicePages = await getFeaturedServicePages(4) || [];
 } catch (error) {
   console.error('Error fetching services:', error);
-  services = [];
+  
+  // Fallback to default services if CMS is unavailable
+  services = [
+    {
+      name: "Demand Gen Ignition",
+      duration: "3-4 weeks",
+      description: "Rapid diagnosis and 90-day plan: ICP & JTBD, messaging, funnel math, channel thesis, analytics plan, and experiment backlog.",
+      features: [
+        "Complete demand gen audit and diagnosis",
+        "ICP refinement with jobs-to-be-done mapping", 
+        "Messaging framework that actually converts",
+        "90-day execution roadmap",
+        "Channel strategy tailored to your growth stage",
+        "Attribution plan that proves ROI"
+      ]
+    },
+    {
+      name: "Paid Media Tune-Up", 
+      duration: "2-3 weeks",
+      description: "Audit + restructure of LinkedIn/Google, creative & landing playbook, and tracking fixes.",
+      features: [
+        "Full audit of LinkedIn and Google Ads",
+        "Campaign restructure with new creative direction",
+        "Landing page optimization recommendations", 
+        "Tracking implementation and measurement setup",
+        "60-day testing roadmap"
+      ]
+    },
+    {
+      name: "CRO Sprint",
+      duration: "2-4 weeks", 
+      description: "Baseline analytics & UX review, funnel mapping, hypothesis backlog, 2-3 live tests, and implementation briefs.",
+      features: [
+        "Conversion funnel analysis and mapping",
+        "UX review and optimization recommendations",
+        "A/B testing setup and execution",
+        "Landing page and form optimization",
+        "Measurable conversion rate improvements"
+      ]
+    },
+    {
+      name: "Fractional Head of Demand",
+      duration: "Ongoing",
+      description: "1-2 days/week: strategy, experiment cadence, channel ownership, enablement.",
+      features: [
+        "Strategic oversight of all demand gen activities",
+        "Monthly experiment planning and execution", 
+        "Channel ownership and optimization",
+        "Team leadership and capability building",
+        "Board-ready reporting and insights"
+      ]
+    }
+  ];
 }
+
+// Combine and prioritize service pages over traditional services if available
+const displayServices = servicePages.length > 0 ? servicePages : services;
 ---
 
 <section id="services" class="py-16 lg:py-24 bg-white section-divider">
@@ -22,35 +82,89 @@ try {
     </div>
     
     <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {services?.map((service) => (
+      {displayServices.map((service) => (
         <div class="service-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
           <div class="mb-4">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
-            <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
-              <!-- <span class="font-medium text-primary-600">{service.price}</span>
-              <span>•</span> -->
-              <span>{service.duration}</span>
-            </div>
-            <p class="text-gray-600">{service.description}</p>
+            <!-- Handle both service page and traditional service formats -->
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+              {service.title || service.name}
+            </h3>
+            
+            {/* Service page format */}
+            {service.primaryService && (
+              <>
+                <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                  {service.primaryService.investment && (
+                    <span class="font-medium text-primary-600">{service.primaryService.investment}</span>
+                  )}
+                  {service.primaryService.duration && (
+                    <>
+                      <span>•</span>
+                      <span>{service.primaryService.duration}</span>
+                    </>
+                  )}
+                </div>
+                <p class="text-gray-600 mb-4">
+                  {service.primaryService.description || service.heroSection?.subheading}
+                </p>
+                {service.primaryService.deliverables && service.primaryService.deliverables.length > 0 && (
+                  <ul class="space-y-2">
+                    {service.primaryService.deliverables.map((deliverable) => (
+                      <li class="text-sm text-gray-700 flex items-center">
+                        <svg class="w-4 h-4 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        {deliverable}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div class="mt-4">
+                  <a href={`/services/${service.slug?.current}`} 
+                     class="text-primary-600 hover:text-primary-700 font-medium text-sm">
+                    Learn More →
+                  </a>
+                </div>
+              </>
+            )}
+            
+            {/* Traditional service format */}
+            {!service.primaryService && (
+              <>
+                {service.duration && (
+                  <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                    <span>{service.duration}</span>
+                  </div>
+                )}
+                <p class="text-gray-600 mb-4">{service.description}</p>
+                {service.features && service.features.length > 0 && (
+                  <ul class="space-y-2">
+                    {service.features.map((feature) => (
+                      <li class="text-sm text-gray-700 flex items-center">
+                        <svg class="w-4 h-4 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
           </div>
-          <ul class="space-y-2">
-            {service.features?.map((feature) => (
-              <li class="text-sm text-gray-700 flex items-center">
-                <svg class="w-4 h-4 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                {feature}
-              </li>
-            ))}
-          </ul>
         </div>
       ))}
     </div>
     
     <div class="text-center mt-12">
-      <a href="#contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
+      <a href="/contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
         Discuss Your Project
       </a>
+      <div class="mt-4">
+        <a href="/services" class="text-primary-600 hover:text-primary-700 font-medium">
+          View All Services →
+        </a>
+      </div>
     </div>
   </div>
 </section>

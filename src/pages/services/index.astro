@@ -1,0 +1,307 @@
+---
+// src/pages/services/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getAllServicePages } from '../../lib/sanity.js';
+
+let servicePages = [];
+try {
+  servicePages = await getAllServicePages();
+} catch (error) {
+  console.error('Error fetching service pages:', error);
+}
+
+// If no service pages available, show default services
+const defaultServices = [
+  {
+    title: "Demand Generation",
+    slug: { current: "demand-generation" },
+    heroSection: {
+      headline: "Scale your pipeline without scaling your problems",
+      subheading: "Get the demand gen strategy and execution you need to hit growth targets—without the enterprise overhead."
+    },
+    serviceOfferings: [
+      {
+        name: "Demand Gen Ignition",
+        investment: "£3,500–£5,000",
+        duration: "3-4 weeks",
+        description: "Complete demand gen audit and 90-day execution plan"
+      }
+    ]
+  },
+  {
+    title: "Conversion Rate Optimization",
+    slug: { current: "conversion-optimization" }, 
+    heroSection: {
+      headline: "Turn more visitors into customers",
+      subheading: "Data-driven CRO that improves your funnel performance and proves ROI at every stage."
+    },
+    serviceOfferings: [
+      {
+        name: "CRO Sprint",
+        investment: "£2,500–£5,000", 
+        duration: "2-4 weeks",
+        description: "Systematic testing program to improve conversion rates"
+      }
+    ]
+  },
+  {
+    title: "Analytics & Measurement",
+    slug: { current: "analytics-measurement" },
+    heroSection: {
+      headline: "Clean tracking that actually works", 
+      subheading: "Get attribution clarity and measurement systems that prove marketing ROI."
+    },
+    serviceOfferings: [
+      {
+        name: "Analytics Rebuild",
+        investment: "£3,000–£6,000",
+        duration: "2-4 weeks", 
+        description: "Complete tracking infrastructure and dashboard setup"
+      }
+    ]
+  },
+  {
+    title: "Fractional Leadership",
+    slug: { current: "fractional-leadership" },
+    heroSection: {
+      headline: "Senior demand gen expertise without the full-time commitment",
+      subheading: "Strategic oversight and execution for growing teams that need experienced leadership."
+    },
+    serviceOfferings: [
+      {
+        name: "Fractional Head of Demand",
+        investment: "£4,000–£7,000/month",
+        duration: "Ongoing",
+        description: "1-2 days per week of senior strategic leadership and execution"
+      }
+    ]
+  }
+];
+
+const displayServices = servicePages.length > 0 ? servicePages : defaultServices;
+---
+
+<Layout 
+  title="B2B SaaS Demand Generation Services | DemandGenix"
+  description="Comprehensive demand generation services for B2B SaaS companies. From strategy sprints to fractional leadership - fixed-scope, measurement-first execution."
+  keywords="demand generation services, B2B SaaS marketing, conversion optimization, fractional marketing, paid media management"
+>
+  <Header />
+  
+  <main>
+    <!-- Services Hero -->
+    <section class="py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Services That Scale With Your Business
+          </h1>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            From rapid diagnostic sprints to ongoing fractional leadership—choose the support that matches your growth stage and objectives.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
+              Discuss Your Needs
+            </a>
+            <a href="#services-overview" class="text-secondary-600 hover:text-primary-700 font-medium">
+              Explore Services ↓
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section id="services-overview" class="py-16 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 mb-16">
+          {displayServices.map((service) => (
+            <div class="service-card bg-white border border-gray-200 rounded-lg p-8 hover:border-primary-300 hover:shadow-lg transition-all duration-300">
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                  {service.title}
+                </h2>
+                <p class="text-gray-600 leading-relaxed">
+                  {service.heroSection?.subheading || service.serviceOfferings?.[0]?.description}
+                </p>
+              </div>
+
+              {service.serviceOfferings && service.serviceOfferings.length > 0 && (
+                <div class="mb-6">
+                  <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="font-semibold text-gray-900 mb-2">
+                      {service.serviceOfferings[0].name}
+                    </h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                      {service.serviceOfferings[0].investment && (
+                        <span class="font-medium text-primary-600">
+                          {service.serviceOfferings[0].investment}
+                        </span>
+                      )}
+                      {service.serviceOfferings[0].duration && (
+                        <>
+                          <span>•</span>
+                          <span>{service.serviceOfferings[0].duration}</span>
+                        </>
+                      )}
+                    </div>
+                    <p class="text-sm text-gray-700">
+                      {service.serviceOfferings[0].description}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div class="flex items-center justify-between">
+                <a href={`/services/${service.slug.current}`} 
+                   class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors">
+                  Learn More
+                </a>
+                {service.serviceOfferings && service.serviceOfferings.length > 1 && (
+                  <span class="text-sm text-gray-500">
+                    +{service.serviceOfferings.length - 1} more option{service.serviceOfferings.length > 2 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- How We Work -->
+    <section class="py-16 bg-gray-50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">How We Work</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Every engagement follows our measurement-first methodology—from diagnosis to delivery.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Execute</h3>
+            <p class="text-gray-600">Implement quick wins while building sustainable growth systems</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Transfer</h3>
+            <p class="text-gray-600">Complete handoff with documentation, training, and ongoing support options</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Choose Our Approach -->
+    <section class="py-16 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Approach</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Built for growing B2B companies, not enterprise bureaucracy.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Measurement-First</h3>
+            <p class="text-gray-600">Every recommendation backed by data. Clean attribution and ROI tracking from day one.</p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Growth-Stage Focused</h3>
+            <p class="text-gray-600">Strategies designed for seed to Series C constraints, not enterprise complexity.</p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">AI-Enhanced Execution</h3>
+            <p class="text-gray-600">Cutting-edge tools with human insight. We test what AI suggests, implement what works.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Getting Started -->
+    <section class="py-16 bg-primary-600 text-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+          Ready to Scale Your Demand Generation?
+        </h2>
+        <p class="text-xl mb-8 opacity-90">
+          Book a free 30-minute diagnostic call. We'll audit your current approach and identify the biggest opportunities for improvement.
+        </p>
+        
+        <div class="bg-white/10 backdrop-blur rounded-lg p-6 mb-8 max-w-2xl mx-auto">
+          <h3 class="text-lg font-semibold mb-4">What to expect in your diagnostic call:</h3>
+          <ul class="text-left space-y-2 text-white/90">
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Current funnel performance analysis
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Attribution and measurement gaps assessment
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Prioritized improvement recommendations
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Clear next steps (whether we work together or not)
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact" class="bg-white text-primary-600 px-8 py-4 rounded-lg text-lg font-medium hover:bg-gray-100 transition-colors">
+            Book Your Free Diagnostic Call
+          </a>
+          <a href="mailto:hello@demandgenix.uk" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-white hover:text-primary-600 transition-colors">
+            Ask a Question
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+.service-card {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+}
+</style>

@@ -1,0 +1,352 @@
+---
+// src/pages/services/[slug].astro - Now with Why Choose Us
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getAllServicePages, getServicePageBySlug } from '../../lib/sanity.js';
+
+// Helper function to convert Sanity rich text to HTML
+function blocksToHtml(blocks) {
+  if (!blocks) return '';
+  
+  let html = '';
+  let currentList = null;
+  
+  blocks.forEach((block, index) => {
+    if (block._type === 'block') {
+      const style = block.style || 'normal';
+      const listItem = block.listItem || null;
+      
+      const children = block.children?.map(child => {
+        let text = child.text || '';
+        
+        if (child.marks && child.marks.length > 0) {
+          child.marks.forEach(mark => {
+            if (mark === 'strong') text = `<strong>${text}</strong>`;
+            else if (mark === 'em') text = `<em>${text}</em>`;
+          });
+        }
+        
+        return text;
+      }).join('') || '';
+      
+      if (listItem) {
+        if (currentList !== listItem) {
+          if (currentList) html += currentList === 'bullet' ? '</ul>' : '</ol>';
+          html += listItem === 'bullet' ? '<ul class="space-y-2 my-6">' : '<ol class="space-y-2 my-6 list-decimal list-inside">';
+          currentList = listItem;
+        }
+        
+        if (listItem === 'bullet') {
+          html += `<li class="flex items-start">
+            <svg class="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-700">${children}</span>
+          </li>`;
+        } else {
+          html += `<li class="text-gray-700">${children}</li>`;
+        }
+      } else {
+        if (currentList) {
+          html += currentList === 'bullet' ? '</ul>' : '</ol>';
+          currentList = null;
+        }
+        
+        switch (style) {
+          case 'h3': 
+            html += `<h3 class="text-xl font-semibold mt-8 mb-4 text-gray-900">${children}</h3>`;
+            break;
+          case 'blockquote': 
+            html += `<blockquote class="border-l-4 border-primary-600 bg-primary-50 pl-6 pr-4 py-4 my-6 italic text-gray-800">${children}</blockquote>`;
+            break;
+          default: 
+            html += `<p class="mb-4 leading-relaxed text-gray-700">${children}</p>`;
+        }
+      }
+    }
+    
+    if (index === blocks.length - 1 && currentList) {
+      html += currentList === 'bullet' ? '</ul>' : '</ol>';
+    }
+  });
+  
+  return html;
+}
+
+export async function getStaticPaths() {
+  let pages = [];
+  try {
+    pages = await getAllServicePages();
+  } catch (error) {
+    console.error('Error fetching service pages:', error);
+  }
+  
+  if (pages.length === 0) {
+    return [
+      {
+        params: { slug: 'demand-generation' },
+        props: { 
+          page: {
+            title: 'Demand Generation',
+            heroSection: {
+              headline: 'Scale your pipeline without scaling your problems',
+              primaryCta: 'Start with a Free Diagnostic',
+              primaryCtaLink: '/contact'
+            }
+          }
+        }
+      }
+    ];
+  }
+  
+  return pages.map((page) => ({
+    params: { slug: page.slug.current },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+---
+
+<Layout 
+  title={page.metaTitle || `${page.title} | DemandGenix`}
+  description={page.metaDescription || page.heroSection?.subheading || ''}
+>
+  <Header />
+  
+  <main>
+    <!-- Hero Section -->
+    {page.heroSection && (
+      <section class="py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-4xl mx-auto text-center">
+            <nav class="mb-8">
+              <ol class="flex items-center justify-center space-x-2 text-sm text-gray-500">
+                <li><a href="/" class="hover:text-gray-700">Home</a></li>
+                <li>→</li>
+                <li><a href="/services" class="hover:text-gray-700">Services</a></li>
+                <li>→</li>
+                <li class="text-gray-900">{page.title}</li>
+              </ol>
+            </nav>
+
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              {page.heroSection.headline}
+            </h1>
+            
+            {page.heroSection.subheading && (
+              <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                {page.heroSection.subheading}
+              </p>
+            )}
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              {page.heroSection.primaryCta && (
+                <a href={page.heroSection.primaryCtaLink || '/contact'} 
+                   class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
+                  {page.heroSection.primaryCta}
+                </a>
+              )}
+              {page.heroSection.secondaryCta && (
+                <a href={page.heroSection.secondaryCtaLink || '#services'} 
+                   class="text-secondary-600 hover:text-primary-700 font-medium">
+                  {page.heroSection.secondaryCta} →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Problem Section -->
+    {page.problemSection && (
+      <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {page.problemSection.headline && (
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+              {page.problemSection.headline}
+            </h2>
+          )}
+          <div class="prose prose-lg max-w-none" set:html={blocksToHtml(page.problemSection.content)}></div>
+        </div>
+      </section>
+    )}
+
+    <!-- Solution Overview -->
+    {page.solutionOverview && (
+      <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {page.solutionOverview.headline && (
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+              {page.solutionOverview.headline}
+            </h2>
+          )}
+          <div class="prose prose-lg max-w-none" set:html={blocksToHtml(page.solutionOverview.content)}></div>
+        </div>
+      </section>
+    )}
+
+    <!-- Service Offerings -->
+    {page.serviceOfferings && page.serviceOfferings.length > 0 && (
+      <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">Service Options</h2>
+          
+          <div class="grid lg:grid-cols-2 gap-8">
+            {page.serviceOfferings.map((service) => (
+              <div class={`service-card bg-white p-8 rounded-lg shadow-lg border-2 transition-all duration-300 ${service.featured ? 'border-secondary-600 transform scale-105' : 'border-gray-200 hover:border-primary-300'}`}>
+                {service.featured && service.subtitle && (
+                  <div class="bg-secondary-600 text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
+                    {service.subtitle}
+                  </div>
+                )}
+                
+                <div class="mb-6">
+                  <h3 class="text-2xl font-semibold text-gray-900 mb-2">{service.name}</h3>
+                  
+                  <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    {service.investment && (
+                      <span class="font-semibold text-primary-600 text-lg">{service.investment}</span>
+                    )}
+                    {service.duration && (
+                      <>
+                        <span>•</span>
+                        <span>{service.duration}</span>
+                      </>
+                    )}
+                  </div>
+                  
+                  {service.description && (
+                    <p class="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
+                  )}
+                </div>
+                
+                {service.deliverables && service.deliverables.length > 0 && (
+                  <div class="mb-6">
+                    <h4 class="font-semibold text-gray-900 mb-3">What you get:</h4>
+                    <ul class="space-y-2">
+                      {service.deliverables.map((deliverable) => (
+                        <li class="text-sm text-gray-700 flex items-start">
+                          <svg class="w-4 h-4 text-primary-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                          </svg>
+                          {deliverable}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {service.perfectFor && (
+                  <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-700">
+                      <span class="font-medium text-gray-900">Perfect for:</span> {service.perfectFor}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Process Section -->
+    {page.processSection && page.processSection.steps && (
+      <section class="py-16 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {page.processSection.headline && (
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">
+              {page.processSection.headline}
+            </h2>
+          )}
+          
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {page.processSection.steps.map((step, index) => (
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="w-12 h-12 bg-primary-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                  {index + 1}
+                </div>
+                {step.timeline && (
+                  <div class="text-sm text-primary-600 font-medium mb-2">{step.timeline}</div>
+                )}
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Why Choose Us -->
+    {page.whyChooseUs && page.whyChooseUs.points && (
+      <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {page.whyChooseUs.headline && (
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">
+              {page.whyChooseUs.headline}
+            </h2>
+          )}
+          
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {page.whyChooseUs.points.map((point) => (
+              <div class="text-center">
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">{point.title}</h3>
+                <p class="text-gray-600 leading-relaxed">{point.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Debug Section -->
+    <section class="py-8 bg-gray-100">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-xl font-semibold mb-4">🔧 Development Status</h2>
+        <div class="bg-white p-4 rounded-lg">
+          <p class="mb-2">✅ Hero Section: Complete</p>
+          <p class="mb-2">✅ Problem Section: Complete</p>
+          <p class="mb-2">✅ Solution Overview: Complete</p>
+          <p class="mb-2">✅ Service Offerings: Complete</p>
+          <p class="mb-2">✅ Process Section: Complete</p>
+          <p class="mb-2">✅ Why Choose Us: Complete</p>
+          <p class="mb-2">⏳ Results & Proof: Coming next</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+.service-card {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 6px rgba(5, 150, 105, 0.12),
+    0 10px 20px rgba(0, 0, 0, 0.08),
+    0 20px 40px rgba(5, 150, 105, 0.04);
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+  color: #374151;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+</style>

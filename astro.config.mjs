@@ -1,10 +1,9 @@
-// @ts-check
+// astro.config.mjs - Fixed for Tailwind v4
 import { defineConfig } from 'astro/config';
-
 import tailwindcss from '@tailwindcss/vite';
 
-// https://astro.build/config
 export default defineConfig({
+  site: 'https://demandgenix.uk',
   vite: {
     plugins: [tailwindcss()]
   }

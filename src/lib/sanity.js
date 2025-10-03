@@ -154,5 +154,139 @@ export async function getRecentBlogPosts(limit = 6) {
     }
   `)
 }
-/* Force rebuild Wed 10 Sep 2025 16:40:57 BST */
-/* Force rebuild Fri 12 Sep 2025 12:43:29 BST */
+
+// Service Pages functions
+export async function getAllServicePages() {
+  return await client.fetch(`
+    *[_type == "servicePage" && isPublished == true] | order(order asc) {
+      _id,
+      title,
+      slug,
+      metaTitle,
+      metaDescription,
+      heroSection,
+      problemSection,
+      solutionOverview,
+      serviceOfferings,
+      processSection {
+        headline,
+        steps[] {
+          title,
+          description,
+          timeline
+        }
+      },
+      whyChooseUs {
+        headline,
+        points[] {
+          title,
+          description
+        }
+      },
+      resultsSection {
+        headline,
+        metrics,
+        testimonial {
+          quote,
+          author,
+          title,
+          company
+        }
+      },
+      order
+    }
+  `)
+}
+
+export async function getServicePageBySlug(slug) {
+  return await client.fetch(`
+    *[_type == "servicePage" && slug.current == $slug && isPublished == true][0] {
+      _id,
+      title,
+      slug,
+      metaTitle,
+      metaDescription,
+      heroSection,
+      problemSection,
+      solutionOverview,
+      serviceOfferings[] {
+        name,
+        subtitle,
+        duration,
+        investment,
+        description,
+        deliverables,
+        perfectFor,
+        featured
+      },
+      processSection {
+        headline,
+        steps[] {
+          title,
+          description,
+          timeline
+        }
+      },
+      whyChooseUs {
+        headline,
+        points[] {
+          title,
+          description
+        }
+      },
+      resultsSection {
+        headline,
+        metrics,
+        testimonial {
+          quote,
+          author,
+          title,
+          company
+        }
+      },
+      gettingStarted {
+        headline,
+        content,
+        primaryCta,
+        primaryCtaLink
+      },
+      faqSection {
+        headline,
+        faqs[] {
+          question,
+          answer
+        }
+      },
+      finalCta {
+        headline,
+        description,
+        primaryCta,
+        primaryCtaLink,
+        secondaryCta,
+        secondaryCtaLink
+      }
+    }
+  `, { slug })
+}
+
+// Get featured service pages for homepage
+export async function getFeaturedServicePages(limit = 3) {
+  return await client.fetch(`
+    *[_type == "servicePage" && isPublished == true] | order(order asc)[0...${limit}] {
+      _id,
+      title,
+      slug,
+      heroSection {
+        headline,
+        subheading
+      },
+      "primaryService": serviceOfferings[0] {
+        name,
+        investment,
+        duration,
+        description,
+        deliverables[0..2]
+      }
+    }
+  `)
+}
