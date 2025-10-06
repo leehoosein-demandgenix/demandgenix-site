@@ -25,7 +25,7 @@
 </div>
 
 <!-- Cookie Settings Modal -->
-<div id="cookie-modal" class="fixed inset-0 bg-black bg-opacity-50 z-60 hidden flex items-center justify-center p-4">
+<div id="cookie-modal" class="fixed inset-0 bg-black bg-opacity-50 z-60 hidden items-center justify-center p-4">
   <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
     <div class="p-6">
       <h2 class="text-2xl font-bold mb-4">Cookie Settings</h2>
@@ -80,183 +80,176 @@
   </div>
 </div>
 
-<script>
+<script is:inline>
+  console.log('🍪 CookieConsent: Script loaded');
+  
   // Cookie management for Zaraz
   const COOKIE_NAME = 'cookie-consent';
   const ANALYTICS_COOKIE = 'analytics-consent';
   const MARKETING_COOKIE = 'marketing-consent';
 
-  // Get elements
-  const banner = document.getElementById('cookie-banner');
-  const modal = document.getElementById('cookie-modal');
-  const acceptBtn = document.getElementById('cookie-accept');
-  const declineBtn = document.getElementById('cookie-decline');
-  const settingsBtn = document.getElementById('cookie-settings');
-  const saveSettingsBtn = document.getElementById('save-settings');
-  const closeModalBtn = document.getElementById('close-modal');
-  const analyticsCheckbox = document.getElementById('analytics-cookies');
-  const marketingCheckbox = document.getElementById('marketing-cookies');
-
   // Cookie utilities
   function setCookie(name, value, days = 365) {
     const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
     document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+    console.log(`🍪 Set cookie: ${name}=${value}`);
   }
 
   function getCookie(name) {
-    return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+    const value = document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+    console.log(`🍪 Get cookie: ${name}=${value || 'not found'}`);
+    return value;
   }
 
   function showBanner() {
-    banner.classList.remove('translate-y-full');
+    console.log('🍪 Showing banner');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.classList.remove('translate-y-full');
+    } else {
+      console.error('🍪 Banner element not found!');
+    }
   }
 
   function hideBanner() {
-    banner.classList.add('translate-y-full');
+    console.log('🍪 Hiding banner');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.classList.add('translate-y-full');
+    }
   }
 
   function showModal() {
-    modal.classList.remove('hidden');
-    // Load current settings
-    analyticsCheckbox.checked = getCookie(ANALYTICS_COOKIE) === 'true';
-    marketingCheckbox.checked = getCookie(MARKETING_COOKIE) === 'true';
+    console.log('🍪 Showing modal');
+    const modal = document.getElementById('cookie-modal');
+    const analyticsCheckbox = document.getElementById('analytics-cookies');
+    const marketingCheckbox = document.getElementById('marketing-cookies');
+    
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      // Load current settings
+      if (analyticsCheckbox) analyticsCheckbox.checked = getCookie(ANALYTICS_COOKIE) === 'true';
+      if (marketingCheckbox) marketingCheckbox.checked = getCookie(MARKETING_COOKIE) === 'true';
+    }
   }
 
   function hideModal() {
-    modal.classList.add('hidden');
+    console.log('🍪 Hiding modal');
+    const modal = document.getElementById('cookie-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
   }
 
   // Update Zaraz consent
   function updateZarazConsent(analytics, marketing) {
-    if (window.zaraz && window.zaraz.consent) {
-      // Set Google Consent Mode v2
-      window.zaraz.consent.set({
-        analytics_storage: analytics ? 'granted' : 'denied',
-        ad_storage: marketing ? 'granted' : 'denied',
-        ad_user_data: marketing ? 'granted' : 'denied',
-        ad_personalization: marketing ? 'granted' : 'denied'
-      });
-      
-      // Also set Zaraz's internal consent
-      window.zaraz.consent.setAll(analytics && marketing);
+    console.log(`🍪 Updating Zaraz consent: analytics=${analytics}, marketing=${marketing}`);
+    
+    if (typeof window.zaraz !== 'undefined' && window.zaraz.consent) {
+      try {
+        // Set Google Consent Mode v2
+        window.zaraz.consent.set({
+          analytics_storage: analytics ? 'granted' : 'denied',
+          ad_storage: marketing ? 'granted' : 'denied',
+          ad_user_data: marketing ? 'granted' : 'denied',
+          ad_personalization: marketing ? 'granted' : 'denied'
+        });
+        console.log('🍪 Zaraz consent updated successfully');
+      } catch (e) {
+        console.error('🍪 Error updating Zaraz consent:', e);
+      }
+    } else {
+      console.warn('🍪 Zaraz not loaded yet, consent will be applied when Zaraz initializes');
     }
   }
 
-  // Event listeners
-  acceptBtn.addEventListener('click', () => {
-    setCookie(COOKIE_NAME, 'accepted');
-    setCookie(ANALYTICS_COOKIE, 'true');
-    setCookie(MARKETING_COOKIE, 'true');
-    hideBanner();
-    updateZarazConsent(true, true);
-  });
-
-  declineBtn.addEventListener('click', () => {
-    setCookie(COOKIE_NAME, 'declined');
-    setCookie(ANALYTICS_COOKIE, 'false');
-    setCookie(MARKETING_COOKIE, 'false');
-    hideBanner();
-    updateZarazConsent(false, false);
-  });
-
-  settingsBtn.addEventListener('click', showModal);
-  closeModalBtn.addEventListener('click', hideModal);
-
-  saveSettingsBtn.addEventListener('click', () => {
-    setCookie(COOKIE_NAME, 'customized');
-    setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
-    setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
-    hideModal();
-    hideBanner();
-    updateZarazConsent(analyticsCheckbox.checked, marketingCheckbox.checked);
-  });
-
   // Initialize immediately - don't wait for DOMContentLoaded
-// (Astro loads scripts after DOM is ready anyway)
-(function initializeCookieConsent() {
-  console.log('🍪 Initializing cookie consent');
-  console.log('🍪 Document ready state:', document.readyState);
-  
-  // Get elements
-  const banner = document.getElementById('cookie-banner');
-  const modal = document.getElementById('cookie-modal');
-  const acceptBtn = document.getElementById('cookie-accept');
-  const declineBtn = document.getElementById('cookie-decline');
-  const settingsBtn = document.getElementById('cookie-settings');
-  const saveSettingsBtn = document.getElementById('save-settings');
-  const closeModalBtn = document.getElementById('close-modal');
-  const analyticsCheckbox = document.getElementById('analytics-cookies');
-  const marketingCheckbox = document.getElementById('marketing-cookies');
+  (function initializeCookieConsent() {
+    console.log('🍪 Initializing cookie consent');
+    console.log('🍪 Document ready state:', document.readyState);
+    
+    // Get elements
+    const banner = document.getElementById('cookie-banner');
+    const modal = document.getElementById('cookie-modal');
+    const acceptBtn = document.getElementById('cookie-accept');
+    const declineBtn = document.getElementById('cookie-decline');
+    const settingsBtn = document.getElementById('cookie-settings');
+    const saveSettingsBtn = document.getElementById('save-settings');
+    const closeModalBtn = document.getElementById('close-modal');
+    const analyticsCheckbox = document.getElementById('analytics-cookies');
+    const marketingCheckbox = document.getElementById('marketing-cookies');
 
-  console.log('🍪 Elements check:', {
-    banner: !!banner,
-    modal: !!modal,
-    acceptBtn: !!acceptBtn,
-    declineBtn: !!declineBtn
-  });
-
-  if (!banner || !acceptBtn || !declineBtn) {
-    console.error('🍪 Critical elements not found, retrying in 100ms');
-    setTimeout(initializeCookieConsent, 100);
-    return;
-  }
-
-  // Event listeners
-  acceptBtn.addEventListener('click', () => {
-    console.log('🍪 Accept clicked');
-    setCookie(COOKIE_NAME, 'accepted');
-    setCookie(ANALYTICS_COOKIE, 'true');
-    setCookie(MARKETING_COOKIE, 'true');
-    hideBanner();
-    updateZarazConsent(true, true);
-  });
-
-  declineBtn.addEventListener('click', () => {
-    console.log('🍪 Decline clicked');
-    setCookie(COOKIE_NAME, 'declined');
-    setCookie(ANALYTICS_COOKIE, 'false');
-    setCookie(MARKETING_COOKIE, 'false');
-    hideBanner();
-    updateZarazConsent(false, false);
-  });
-
-  if (settingsBtn) {
-    settingsBtn.addEventListener('click', showModal);
-  }
-  
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', hideModal);
-  }
-
-  if (saveSettingsBtn && analyticsCheckbox && marketingCheckbox) {
-    saveSettingsBtn.addEventListener('click', () => {
-      console.log('🍪 Save settings clicked');
-      setCookie(COOKIE_NAME, 'customized');
-      setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
-      setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
-      hideModal();
-      hideBanner();
-      updateZarazConsent(analyticsCheckbox.checked, marketingCheckbox.checked);
+    console.log('🍪 Elements check:', {
+      banner: !!banner,
+      modal: !!modal,
+      acceptBtn: !!acceptBtn,
+      declineBtn: !!declineBtn
     });
-  }
 
-  // Check for existing consent
-  const consent = getCookie(COOKIE_NAME);
-  console.log('🍪 Consent check result:', consent || 'none');
-  
-  if (!consent) {
-    console.log('🍪 No consent found, showing banner in 1 second');
-    setTimeout(() => {
-      console.log('🍪 Timer fired, calling showBanner()');
-      showBanner();
-    }, 1000);
-  } else {
-    console.log(`🍪 Existing consent found: ${consent}`);
-    // Apply saved consent to Zaraz
-    const analytics = getCookie(ANALYTICS_COOKIE) === 'true';
-    const marketing = getCookie(MARKETING_COOKIE) === 'true';
-    console.log('🍪 Applying saved consent:', { analytics, marketing });
-    updateZarazConsent(analytics, marketing);
-  }
-})();
+    if (!banner || !acceptBtn || !declineBtn) {
+      console.error('🍪 Critical elements not found, retrying in 100ms');
+      setTimeout(initializeCookieConsent, 100);
+      return;
+    }
+
+    // Event listeners
+    acceptBtn.addEventListener('click', () => {
+      console.log('🍪 Accept clicked');
+      setCookie(COOKIE_NAME, 'accepted');
+      setCookie(ANALYTICS_COOKIE, 'true');
+      setCookie(MARKETING_COOKIE, 'true');
+      hideBanner();
+      updateZarazConsent(true, true);
+    });
+
+    declineBtn.addEventListener('click', () => {
+      console.log('🍪 Decline clicked');
+      setCookie(COOKIE_NAME, 'declined');
+      setCookie(ANALYTICS_COOKIE, 'false');
+      setCookie(MARKETING_COOKIE, 'false');
+      hideBanner();
+      updateZarazConsent(false, false);
+    });
+
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', showModal);
+    }
+    
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', hideModal);
+    }
+
+    if (saveSettingsBtn && analyticsCheckbox && marketingCheckbox) {
+      saveSettingsBtn.addEventListener('click', () => {
+        console.log('🍪 Save settings clicked');
+        setCookie(COOKIE_NAME, 'customized');
+        setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
+        setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
+        hideModal();
+        hideBanner();
+        updateZarazConsent(analyticsCheckbox.checked, marketingCheckbox.checked);
+      });
+    }
+
+    // Check for existing consent
+    const consent = getCookie(COOKIE_NAME);
+    console.log('🍪 Consent check result:', consent || 'none');
+    
+    if (!consent) {
+      console.log('🍪 No consent found, showing banner in 1 second');
+      setTimeout(() => {
+        console.log('🍪 Timer fired, calling showBanner()');
+        showBanner();
+      }, 1000);
+    } else {
+      console.log(`🍪 Existing consent found: ${consent}`);
+      // Apply saved consent to Zaraz
+      const analytics = getCookie(ANALYTICS_COOKIE) === 'true';
+      const marketing = getCookie(MARKETING_COOKIE) === 'true';
+      console.log('🍪 Applying saved consent:', { analytics, marketing });
+      updateZarazConsent(analytics, marketing);
+    }
+  })();
 </script>

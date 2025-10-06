@@ -1,4 +1,6 @@
 ---
+import CookieConsent from '../components/CookieConsent.astro';
+
 export interface Props {
   title: string;
   description?: string;
@@ -18,33 +20,6 @@ const {
 // Fix canonical URL to always use production domain
 const SITE_URL = "https://demandgenix.uk";
 const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
-
-// Create structured data object
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "DemandGenix Limited",
-  "url": SITE_URL,
-  "description": description,
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "email": "hello@demandgenix.uk",
-    "contactType": "customer service"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Manchester",
-    "addressCountry": "GB"
-  },
-  "foundingDate": "2024",
-  "knowsAbout": [
-    "Demand Generation",
-    "B2B Marketing",
-    "SaaS Marketing",
-    "Conversion Rate Optimization",
-    "Marketing Analytics"
-  ]
-};
 ---
 
 <!DOCTYPE html>
@@ -90,8 +65,8 @@ const structuredData = {
     <link rel="canonical" href={finalCanonicalUrl} />
 
     <!-- Standard favicon -->
-    <link rel="icon" href="../favicon.ico" sizes="32x32">
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   
     <!-- Apple -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -100,8 +75,19 @@ const structuredData = {
     <link rel="manifest" href="/manifest.json">
     
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
-
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "DemandGenix Limited",
+      "url": SITE_URL,
+      "description": description,
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@demandgenix.uk",
+        "contactType": "customer service"
+      }
+    })} />
+  
     <!-- Preload critical font weights -->
     <link rel="preload" href="/fonts/plus-jakarta-sans-v12-latin-300.woff2" as="font" type="font/woff2" crossorigin>
     <script>
@@ -114,12 +100,7 @@ const structuredData = {
   
   <body class="font-sans">
     <slot />
-    <!-- Import Cookie Consent Component -->
-    <script>
-      import('../components/CookieConsent.astro').then(() => {
-        // Cookie consent will auto-initialize
-      });
-    </script>
+    <CookieConsent />
   </body>
 </html>
 
