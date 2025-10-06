@@ -61,7 +61,7 @@
           <div class="flex-1">
             <h3 class="font-semibold">Marketing Cookies</h3>
             <p class="text-sm text-gray-600 mt-1">
-              Used for lead tracking, form analytics, and marketing automation (HubSpot, LinkedIn, Google Ads).
+              Used for lead tracking and marketing automation (HubSpot, LinkedIn).
             </p>
           </div>
           <input type="checkbox" id="marketing-cookies" class="mt-1">
@@ -81,7 +81,7 @@
 </div>
 
 <script>
-  // Cookie management functionality
+  // Cookie management for Zaraz
   const COOKIE_NAME = 'cookie-consent';
   const ANALYTICS_COOKIE = 'analytics-consent';
   const MARKETING_COOKIE = 'marketing-consent';
@@ -126,39 +126,19 @@
     modal.classList.add('hidden');
   }
 
-  function loadAnalytics() {
-    if (getCookie(ANALYTICS_COOKIE) === 'true') {
-      // Load Google Analytics
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4KS1WFE7DG';
-      script.async = true;
-      document.head.appendChild(script);
+  // Update Zaraz consent
+  function updateZarazConsent(analytics, marketing) {
+    if (window.zaraz && window.zaraz.consent) {
+      // Set Google Consent Mode v2
+      window.zaraz.consent.set({
+        analytics_storage: analytics ? 'granted' : 'denied',
+        ad_storage: marketing ? 'granted' : 'denied',
+        ad_user_data: marketing ? 'granted' : 'denied',
+        ad_personalization: marketing ? 'granted' : 'denied'
+      });
       
-      script.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-4KS1WFE7DG');
-      };
-    }
-  }
-
-  function loadHubSpot() {
-    if (getCookie(MARKETING_COOKIE) === 'true') {
-      // Load HubSpot tracking script
-      const script = document.createElement('script');
-      script.src = 'https://js.hs-scripts.com/146805802.js';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-      
-      // Dispatch event when HubSpot is loaded
-      script.onload = () => {
-        // Wait a bit for HubSpot to initialize
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('hubspot-loaded'));
-        }, 1000);
-      };
+      // Also set Zaraz's internal consent
+      window.zaraz.consent.setAll(analytics && marketing);
     }
   }
 
@@ -168,10 +148,7 @@
     setCookie(ANALYTICS_COOKIE, 'true');
     setCookie(MARKETING_COOKIE, 'true');
     hideBanner();
-    loadAnalytics();
-    loadHubSpot();
-    // Dispatch consent change event
-    window.dispatchEvent(new CustomEvent('cookie-consent-changed'));
+    updateZarazConsent(true, true);
   });
 
   declineBtn.addEventListener('click', () => {
@@ -179,8 +156,7 @@
     setCookie(ANALYTICS_COOKIE, 'false');
     setCookie(MARKETING_COOKIE, 'false');
     hideBanner();
-    // Dispatch consent change event
-    window.dispatchEvent(new CustomEvent('cookie-consent-changed'));
+    updateZarazConsent(false, false);
   });
 
   settingsBtn.addEventListener('click', showModal);
@@ -192,21 +168,21 @@
     setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
     hideModal();
     hideBanner();
-    if (analyticsCheckbox.checked) {
-      loadAnalytics();
-    }
-    if (marketingCheckbox.checked) {
-      loadHubSpot();
-    }
-    // Dispatch consent change event
-    window.dispatchEvent(new CustomEvent('cookie-consent-changed'));
+    updateZarazConsent(analyticsCheckbox.checked, marketingCheckbox.checked);
   });
 
-  // Initialize
-  if (!getCookie(COOKIE_NAME)) {
-    setTimeout(showBanner, 1000); // Show after 1 second
-  } else {
-    loadAnalytics(); // Load analytics if previously consented
-    loadHubSpot(); // Load HubSpot if previously consented
-  }
+  // Initialize on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const consent = getCookie(COOKIE_NAME);
+    
+    if (!consent) {
+      // No consent yet - show banner after 1 second
+      setTimeout(showBanner, 1000);
+    } else {
+      // Apply saved consent to Zaraz
+      const analytics = getCookie(ANALYTICS_COOKIE) === 'true';
+      const marketing = getCookie(MARKETING_COOKIE) === 'true';
+      updateZarazConsent(analytics, marketing);
+    }
+  });
 </script>

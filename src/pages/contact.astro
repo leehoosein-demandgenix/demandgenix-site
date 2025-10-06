@@ -332,7 +332,6 @@ import CookieConsent from '../components/CookieConsent.astro';
   <CookieConsent />
 </Layout>
 
- <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/146805802.js"></script>
 <script>
    // Helper to read cookies safely
    function getCookie(name) {
@@ -406,12 +405,21 @@ import CookieConsent from '../components/CookieConsent.astro';
        form.reset();
        form.style.display = 'none';
        successMessage.style.display = 'block';
-     } catch (err) {
+     } 
+     catch (err) {
        console.error(err);
        submitBtn.disabled = false;
        submitBtn.textContent = 'Get Started - Free Consultation';
        alert('Sorry—something went wrong submitting the form. Please email hello@demandgenix.uk.');
      }
+     // Track conversion in Zaraz (GA4, LinkedIn, etc.)
+    if (window.zaraz) {
+      window.zaraz.track('form_submit', {
+        form_name: 'contact_form',
+        form_location: 'contact_page',
+        lead_source: fd.get('lead_source') || 'Website Contact Form'
+      });
+    }
    });
  </script>
     
