@@ -34,4 +34,21 @@
       © 2025 DemandGenix Limited. All rights reserved.
     </div>
   </div>
+  <script>
+    // Track email link clicks globally
+    document.addEventListener('DOMContentLoaded', () => {
+      const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+      
+      emailLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (window.zaraz) {
+            window.zaraz.track('email_click', {
+              email_address: link.href.replace('mailto:', ''),
+              page_location: window.location.pathname
+            });
+          }
+        });
+      });
+    });
+  </script>
 </footer>
