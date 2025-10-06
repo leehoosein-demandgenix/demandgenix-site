@@ -171,18 +171,92 @@
     updateZarazConsent(analyticsCheckbox.checked, marketingCheckbox.checked);
   });
 
-  // Initialize on page load
-  window.addEventListener('DOMContentLoaded', () => {
-    const consent = getCookie(COOKIE_NAME);
-    
-    if (!consent) {
-      // No consent yet - show banner after 1 second
-      setTimeout(showBanner, 1000);
-    } else {
-      // Apply saved consent to Zaraz
-      const analytics = getCookie(ANALYTICS_COOKIE) === 'true';
-      const marketing = getCookie(MARKETING_COOKIE) === 'true';
-      updateZarazConsent(analytics, marketing);
-    }
+  // Initialize immediately - don't wait for DOMContentLoaded
+// (Astro loads scripts after DOM is ready anyway)
+(function initializeCookieConsent() {
+  console.log('🍪 Initializing cookie consent');
+  console.log('🍪 Document ready state:', document.readyState);
+  
+  // Get elements
+  const banner = document.getElementById('cookie-banner');
+  const modal = document.getElementById('cookie-modal');
+  const acceptBtn = document.getElementById('cookie-accept');
+  const declineBtn = document.getElementById('cookie-decline');
+  const settingsBtn = document.getElementById('cookie-settings');
+  const saveSettingsBtn = document.getElementById('save-settings');
+  const closeModalBtn = document.getElementById('close-modal');
+  const analyticsCheckbox = document.getElementById('analytics-cookies');
+  const marketingCheckbox = document.getElementById('marketing-cookies');
+
+  console.log('🍪 Elements check:', {
+    banner: !!banner,
+    modal: !!modal,
+    acceptBtn: !!acceptBtn,
+    declineBtn: !!declineBtn
   });
+
+  if (!banner || !acceptBtn || !declineBtn) {
+    console.error('🍪 Critical elements not found, retrying in 100ms');
+    setTimeout(initializeCookieConsent, 100);
+    return;
+  }
+
+  // Event listeners
+  acceptBtn.addEventListener('click', () => {
+    console.log('🍪 Accept clicked');
+    setCookie(COOKIE_NAME, 'accepted');
+    setCookie(ANALYTICS_COOKIE, 'true');
+    setCookie(MARKETING_COOKIE, 'true');
+    hideBanner();
+    updateZarazConsent(true, true);
+  });
+
+  declineBtn.addEventListener('click', () => {
+    console.log('🍪 Decline clicked');
+    setCookie(COOKIE_NAME, 'declined');
+    setCookie(ANALYTICS_COOKIE, 'false');
+    setCookie(MARKETING_COOKIE, 'false');
+    hideBanner();
+    updateZarazConsent(false, false);
+  });
+
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', showModal);
+  }
+  
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', hideModal);
+  }
+
+  if (saveSettingsBtn && analyticsCheckbox && marketingCheckbox) {
+    saveSettingsBtn.addEventListener('click', () => {
+      console.log('🍪 Save settings clicked');
+      setCookie(COOKIE_NAME, 'customized');
+      setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
+      setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
+      hideModal();
+      hideBanner();
+      updateZarazConsent(analyticsCheckbox.checked, marketingCheckbox.checked);
+    });
+  }
+
+  // Check for existing consent
+  const consent = getCookie(COOKIE_NAME);
+  console.log('🍪 Consent check result:', consent || 'none');
+  
+  if (!consent) {
+    console.log('🍪 No consent found, showing banner in 1 second');
+    setTimeout(() => {
+      console.log('🍪 Timer fired, calling showBanner()');
+      showBanner();
+    }, 1000);
+  } else {
+    console.log(`🍪 Existing consent found: ${consent}`);
+    // Apply saved consent to Zaraz
+    const analytics = getCookie(ANALYTICS_COOKIE) === 'true';
+    const marketing = getCookie(MARKETING_COOKIE) === 'true';
+    console.log('🍪 Applying saved consent:', { analytics, marketing });
+    updateZarazConsent(analytics, marketing);
+  }
+})();
 </script>
