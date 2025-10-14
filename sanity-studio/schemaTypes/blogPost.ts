@@ -104,7 +104,25 @@ export default defineType({
         },
         {
           type: 'threeColumnBlock'
+        },
+        {
+      type: 'code',
+      title: 'Code Block',
+      options: {
+        language: 'javascript',
+        languageAlternatives: [
+          { title: 'JavaScript', value: 'javascript' },
+          { title: 'TypeScript', value: 'typescript' },
+          { title: 'HTML', value: 'html' },
+          { title: 'CSS', value: 'css' },
+          { title: 'JSON', value: 'json' },
+          { title: 'Python', value: 'python' },
+          { title: 'Bash', value: 'bash' },
+          { title: 'SQL', value: 'sql' }
+        ],
+        withFilename: true
         }
+      }
       ]
     }),
     defineField({

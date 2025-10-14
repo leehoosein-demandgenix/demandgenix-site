@@ -151,9 +151,33 @@ export function blocksToHtml(blocks) {
 export function processListItems(html) {
   if (!html) return '';
   
-  // Wrap consecutive <li> items in <ul> tags
+  // Only wrap <li> items that are NOT inside a <nav> or breadcrumb element
+  // Look for consecutive <li> items that don't have navigation context
+  
+  // First, protect breadcrumb/nav lists from being wrapped
+  const protectedSections = [];
+  let protectedIndex = 0;
+  
+  // Replace nav sections with placeholders
+  html = html.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, (match) => {
+    const placeholder = `<!--PROTECTED_NAV_${protectedIndex}-->`;
+    protectedSections[protectedIndex] = match;
+    protectedIndex++;
+    return placeholder;
+  });
+  
+  // Now wrap consecutive <li> items that aren't in protected sections
   html = html.replace(/(<li[^>]*>.*?<\/li>\s*)+/gs, (match) => {
+    // Check if this is already wrapped in ul/ol
+    if (match.includes('<ul') || match.includes('<ol')) {
+      return match;
+    }
     return `<ul class="list-disc list-outside ml-6 mb-6 space-y-2">${match}</ul>`;
+  });
+  
+  // Restore protected sections
+  protectedSections.forEach((section, index) => {
+    html = html.replace(`<!--PROTECTED_NAV_${index}-->`, section);
   });
   
   return html;
