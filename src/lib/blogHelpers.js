@@ -34,47 +34,50 @@ export function getCategoryLabel(category) {
   return labels[category] || category;
 }
 
+function processTextMarks(child, markDefs) {
+  let text = child.text || '';
+  
+  if (!child.marks || child.marks.length === 0) {
+    return text;
+  }
+  
+  child.marks.forEach(mark => {
+    if (typeof mark === 'string') {
+      const markDef = markDefs.find(def => def._key === mark);
+      
+      if (markDef && markDef._type === 'link' && markDef.href) {
+        const target = markDef.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '';
+        text = `<a href="${markDef.href}" ${target} class="text-primary-600 hover:text-primary-700 underline decoration-2 underline-offset-2">${text}</a>`;
+      } else if (mark === 'strong') {
+        text = `<strong>${text}</strong>`;
+      } else if (mark === 'em') {
+        text = `<em>${text}</em>`;
+      } else if (mark === 'code') {
+        text = `<code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">${text}</code>`;
+      }
+    }
+  });
+  
+  return text;
+}
+
+function processBlockChildren(children, markDefs) {
+  if (!children) return '';
+  
+  return children.map(child => processTextMarks(child, markDefs)).join('');
+}
+
 // More robust content converter
 export function blocksToHtml(blocks) {
   if (!blocks) return '';
   
   return blocks.map(block => {
+    // Handle regular block elements
     if (block._type === 'block') {
       const style = block.style || 'normal';
-      
-      // Get mark definitions for this block
       const markDefs = block.markDefs || [];
+      const children = processBlockChildren(block.children, markDefs);
       
-      const children = block.children?.map(child => {
-        let text = child.text || '';
-        
-        if (child.marks && child.marks.length > 0) {
-          child.marks.forEach(mark => {
-            if (typeof mark === 'string') {
-              // Handle annotation marks by finding the markDef
-              const markDef = markDefs.find(def => def._key === mark);
-              if (markDef && markDef._type === 'link') {
-                // Add null check for href
-                const href = markDef.href || '#';
-                const target = href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '';
-                text = `<a href="${href}" ${target} class="text-primary-600 hover:text-primary-700 underline decoration-2 underline-offset-2">${text}</a>`;
-              }
-              // Handle regular string marks
-              else if (mark === 'strong') {
-                text = `<strong>${text}</strong>`;
-              } else if (mark === 'em') {
-                text = `<em>${text}</em>`;
-              } else if (mark === 'code') {
-                text = `<code class="bg-gray-100 px-1 rounded">${text}</code>`;
-              }
-            }
-          });
-        }
-        
-        return text;
-      }).join('') || '';
-      
-      // Apply block styles
       switch (style) {
         case 'h2': 
           return `<h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">${children}</h2>`;
@@ -87,15 +90,71 @@ export function blocksToHtml(blocks) {
         default: 
           return `<p class="mb-6 leading-relaxed text-gray-700">${children}</p>`;
       }
-    } else if (block._type === 'image' && block.asset) {
-      const caption = block.caption ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` : '';
-      return `
-        <figure class="my-10">
-          <img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />
-          ${caption}
-        </figure>
-      `;
     }
+    
+    // Handle numbered lists
+    if (block.listItem === 'number') {
+      const markDefs = block.markDefs || [];
+      const children = processBlockChildren(block.children, markDefs);
+      return `<li class="mb-3 leading-relaxed">${children}</li>`;
+    }
+    
+    // Handle bullet lists
+    if (block.listItem === 'bullet') {
+      const markDefs = block.markDefs || [];
+      const children = processBlockChildren(block.children, markDefs);
+      return `<li class="mb-3 leading-relaxed">${children}</li>`;
+    }
+    
+    // Handle code blocks
+    if (block._type === 'code') {
+      const code = block.code || '';
+      const escapedCode = code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+      
+      return `<pre class="my-8 p-4 bg-gray-900 rounded-lg overflow-x-auto"><code class="text-sm text-gray-100 font-mono">${escapedCode}</code></pre>`;
+    }
+    
+    // Handle images
+    if (block._type === 'image' && block.asset && block.asset.url) {
+      const caption = block.caption ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` : '';
+      return `<figure class="my-10"><img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />${caption}</figure>`;
+    }
+    
+    // Handle three column blocks
+    if (block._type === 'threeColumnBlock') {
+      if (!block.columns || block.columns.length !== 3) {
+        return '';
+      }
+      
+      let html = '<div class="three-column-grid">';
+      
+      block.columns.forEach(column => {
+        const title = column.title || '';
+        const content = column.content || '';
+        html += `<div class="column-card"><h4>${title}</h4><p>${content}</p></div>`;
+      });
+      
+      html += '</div>';
+      return html;
+    }
+    
     return '';
   }).join('');
+}
+
+// Helper function to wrap consecutive list items in proper list tags
+export function processListItems(html) {
+  if (!html) return '';
+  
+  // Wrap consecutive <li> items in <ul> tags
+  html = html.replace(/(<li[^>]*>.*?<\/li>\s*)+/gs, (match) => {
+    return `<ul class="list-disc list-outside ml-6 mb-6 space-y-2">${match}</ul>`;
+  });
+  
+  return html;
 }

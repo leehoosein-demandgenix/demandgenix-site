@@ -108,6 +108,13 @@ export async function getBlogPostBySlug(slug) {
       excerpt,
       content[]{
         ...,
+        _type == "threeColumnBlock" => {
+          _type,
+          columns[]{
+            title,
+            content
+          }
+        },
         markDefs[]{
           ...,
           _type == "link" => {

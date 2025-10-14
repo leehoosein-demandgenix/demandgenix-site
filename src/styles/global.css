@@ -308,3 +308,44 @@ h1 {
 .prose li {
   @apply text-gray-700 leading-relaxed;
 }
+
+/* Three column layout for specific blog sections */
+.three-column-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .three-column-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.three-column-grid .column-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.three-column-grid .column-card:hover {
+  border-color: #059669;
+  box-shadow: 0 4px 6px rgba(5, 150, 105, 0.1);
+}
+
+.three-column-grid .column-card h4 {
+  color: #059669;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+
+.three-column-grid .column-card p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}

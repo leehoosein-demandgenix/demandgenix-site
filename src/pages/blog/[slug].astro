@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getAllBlogPosts, getBlogPostBySlug } from '../../lib/sanity.js';
-import { formatDate, getCategoryColor, getCategoryLabel, blocksToHtml } from '../../lib/blogHelpers.js';
+import { formatDate, getCategoryColor, getCategoryLabel, blocksToHtml, processListItems } from '../../lib/blogHelpers.js';
 
 export async function getStaticPaths() {
   const posts = await getAllBlogPosts();
@@ -26,7 +26,9 @@ if (!post) {
   return Astro.redirect('/404');
 }
 
-const contentHtml = blocksToHtml(post.content);
+// Process content with list wrapping
+let contentHtml = blocksToHtml(post.content);
+contentHtml = processListItems(contentHtml);
 
 // Create blog-specific structured data
 const SITE_URL = "https://demandgenix.uk";
@@ -66,7 +68,59 @@ const blogStructuredData = {
 >
   <!-- Add blog-specific structured data -->
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogStructuredData)}></script>
-  
+  <style>
+  /* Enhanced list styling */
+  article :global(ul) {
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  article :global(ol) {
+    list-style-type: decimal;
+    list-style-position: outside;
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  article :global(li) {
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+    line-height: 1.75;
+  }
+
+  article :global(h3 + ul),
+  article :global(h3 + ol) {
+    margin-top: 1rem;
+  }
+
+  /* Code block styling */
+  article :global(pre) {
+    background-color: #1f2937;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+
+  article :global(pre code) {
+    color: #f3f4f6;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  /* Inline code styling */
+  article :global(code:not(pre code)) {
+    background-color: #f3f4f6;
+    color: #1f2937;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+</style>
   <Header />
   
   <main>

@@ -1,15 +1,17 @@
-export default {
+import { defineType, defineField } from 'sanity'
+
+export default defineType({
   name: 'blogPost',
   title: 'Blog Posts',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'title',
       title: 'Post Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required().max(80).warning('Shorter titles are better for SEO')
-    },
-    {
+      validation: (Rule) => Rule.required().max(80).warning('Shorter titles are better for SEO')
+    }),
+    defineField({
       name: 'slug',
       title: 'URL Slug',
       type: 'slug',
@@ -17,17 +19,17 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required()
-    },
-    {
+      validation: (Rule) => Rule.required()
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'text',
       rows: 3,
-      validation: (Rule: any) => Rule.required().max(200),
+      validation: (Rule) => Rule.required().max(200),
       description: 'Brief summary for preview cards and meta description'
-    },
-    {
+    }),
+    defineField({
       name: 'heroImage',
       title: 'Hero Image',
       type: 'image',
@@ -39,11 +41,11 @@ export default {
           name: 'alt',
           type: 'string',
           title: 'Alt Text',
-          validation: (Rule: any) => Rule.required()
+          validation: (Rule) => Rule.required()
         }
       ]
-    },
-    {
+    }),
+    defineField({
       name: 'content',
       title: 'Blog Content',
       type: 'array',
@@ -60,7 +62,7 @@ export default {
           lists: [
             {title: 'Bullet', value: 'bullet'},
             {title: 'Numbered', value: 'number'}
-            ],
+          ],
           marks: {
             decorators: [
               {title: 'Strong', value: 'strong'},
@@ -91,7 +93,7 @@ export default {
               name: 'alt',
               type: 'string',
               title: 'Alt Text',
-              validation: (Rule: any) => Rule.required()
+              validation: (Rule) => Rule.required()
             },
             {
               name: 'caption',
@@ -99,22 +101,25 @@ export default {
               title: 'Caption (Optional)'
             }
           ]
+        },
+        {
+          type: 'threeColumnBlock'
         }
       ]
-    },
-    {
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'string',
       initialValue: 'Lee Hussein'
-    },
-    {
+    }),
+    defineField({
       name: 'publishDate',
       title: 'Publish Date',
       type: 'date',
-      validation: (Rule: any) => Rule.required()
-    },
-    {
+      validation: (Rule) => Rule.required()
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
@@ -129,8 +134,8 @@ export default {
           {title: 'Industry Insights', value: 'industry-insights'}
         ]
       }
-    },
-    {
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
@@ -138,39 +143,39 @@ export default {
       options: {
         layout: 'tags'
       }
-    },
-    {
+    }),
+    defineField({
       name: 'metaTitle',
       title: 'Meta Title (SEO)',
       type: 'string',
-      validation: (Rule: any) => Rule.max(60).warning('Keep under 60 characters for optimal SEO')
-    },
-    {
+      validation: (Rule) => Rule.max(60).warning('Keep under 60 characters for optimal SEO')
+    }),
+    defineField({
       name: 'metaDescription',
       title: 'Meta Description (SEO)',
       type: 'text',
-      validation: (Rule: any) => Rule.max(160).warning('Keep under 160 characters for optimal SEO')
-    },
-    {
+      validation: (Rule) => Rule.max(160).warning('Keep under 160 characters for optimal SEO')
+    }),
+    defineField({
       name: 'isPublished',
       title: 'Published',
       type: 'boolean',
       initialValue: false,
       description: 'Toggle to publish/unpublish this post'
-    },
-    {
+    }),
+    defineField({
       name: 'isFeatured',
       title: 'Featured Post',
       type: 'boolean',
       initialValue: false,
       description: 'Featured posts appear prominently on the blog page'
-    },
-    {
+    }),
+    defineField({
       name: 'readingTime',
       title: 'Reading Time (minutes)',
       type: 'number',
       description: 'Estimated reading time in minutes'
-    }
+    })
   ],
   preview: {
     select: {
@@ -179,7 +184,7 @@ export default {
       media: 'heroImage',
       published: 'isPublished'
     },
-    prepare(selection: any) {
+    prepare(selection) {
       const {title, author, published} = selection
       return {
         title: title,
@@ -199,4 +204,4 @@ export default {
       by: [{field: 'title', direction: 'asc'}]
     }
   ]
-}
+})
