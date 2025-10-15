@@ -3,7 +3,7 @@ import { createClient } from '@sanity/client'
 export const client = createClient({
   projectId: 'fv5q0f3v',
   dataset: 'production',
-  useCdn: true,
+  useCdn: false, // Keep false for now to avoid caching issues
   apiVersion: '2024-01-01',
 })
 
@@ -27,6 +27,7 @@ export async function getContact() {
 export async function getSiteSettings() {
   return await client.fetch(`*[_type == "siteSettings"][0]`)
 }
+
 // Testimonials functions
 export async function getTestimonials() {
   return await client.fetch(`
@@ -108,49 +109,24 @@ export async function getBlogPostBySlug(slug) {
       excerpt,
       content[]{
         ...,
-        _type == "block" => {
-          _type,
-          _key,
-          style,
-          listItem,
-          level,
-          children[]{
-            _type,
-            _key,
-            text,
-            marks
-          },
-          markDefs[]{
-            _key,
-            _type,
-            _type == "link" => {
-              href
-            }
-          }
-        },
-        _type == "codeBlock" => {
-          _type,
-          _key,
-          code,
-          language,
-          filename
-        },
         _type == "threeColumnBlock" => {
           _type,
-          _key,
           columns[]{
             title,
             content
           }
         },
-        _type == "image" => {
-          _type,
-          _key,
-          "asset": {
-            "url": asset->url
-          },
-          alt,
-          caption
+        markDefs[]{
+          ...,
+          _type == "link" => {
+            _type,
+            _key,
+            href
+          }
+        },
+        children[]{
+          ...,
+          marks[]
         }
       },
       publishDate,
@@ -186,5 +162,6 @@ export async function getRecentBlogPosts(limit = 6) {
     }
   `)
 }
+
 /* Force rebuild Wed 10 Sep 2025 16:40:57 BST */
 /* Force rebuild Fri 12 Sep 2025 12:43:29 BST */

@@ -73,7 +73,7 @@ export function blocksToHtml(blocks) {
   
   return blocks.map(block => {
     // Handle code blocks FIRST (before other checks)
-    if (block._type === 'codeBlock') {
+if (block._type === 'code' || block._type === 'codeBlock') {
       const code = block.code || '';
       const language = block.language || 'text';
       const filename = block.filename || '';
@@ -92,14 +92,13 @@ export function blocksToHtml(blocks) {
       return `<div class="code-block-wrapper my-8">${filenameHtml}<pre class="${filename ? '' : 'rounded-t-lg'} rounded-b-lg p-4 bg-gray-900 overflow-x-auto" data-language="${language}"><code class="text-sm text-gray-100 font-mono">${escapedCode}</code></pre></div>`;
     }
     
-    // Handle images
-    if (block._type === 'image' && block.asset && block.asset.url) {
-      const caption = block.caption 
-        ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` 
-        : '';
-      return `<figure class="my-10"><img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />${caption}</figure>`;
-    }
-    
+   // Handle images
+if (block._type === 'image' && block.asset && block.asset.url) {
+  const caption = block.caption 
+    ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` 
+    : '';
+  return `<figure class="my-10"><img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />${caption}</figure>`;
+}
     // Handle three column blocks
     if (block._type === 'threeColumnBlock') {
       if (!block.columns || block.columns.length !== 3) {
