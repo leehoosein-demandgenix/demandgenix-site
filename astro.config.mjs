@@ -5,12 +5,14 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://demandgenix.uk',
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      cssCodeSplit: false
+    }
   },
   build: {
-    assets: '_astro'
+    assets: '_astro',
+    inlineStylesheets: 'auto'
   },
-  compressHTML: true,
-  // Image optimization is enabled by default in Astro 5!
-  // No additional config needed
+  compressHTML: true
 });
