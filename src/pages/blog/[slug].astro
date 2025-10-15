@@ -28,7 +28,9 @@ if (!post) {
 
 // Process content with list wrapping
 let contentHtml = blocksToHtml(post.content);
+console.log('Before processListItems - contains blog-list-item:', contentHtml.includes('blog-list-item'));
 contentHtml = processListItems(contentHtml);
+console.log('After processListItems - contains <ul>:', contentHtml.includes('<ul'));
 
 // Create blog-specific structured data
 const SITE_URL = "https://demandgenix.uk";
@@ -147,6 +149,20 @@ const blogStructuredData = {
   nav :global(li::before) {
     content: none !important;
   }
+  /* Fix bullet alignment to match paragraph text */
+article :global(ul) {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin-left: 1.5rem;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+article :global(ul li) {
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+  line-height: 1.75;
+}
 </style>
   <Header />
   

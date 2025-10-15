@@ -154,98 +154,13 @@ if (block._type === 'image' && block.asset && block.asset.url) {
 export function processListItems(html) {
   if (!html) return '';
   
-  // Protect navigation/breadcrumb lists
-  const protectedSections = [];
-  let protectedIndex = 0;
-  
-  html = html.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, (match) => {
-    const placeholder = `<!--PROTECTED_NAV_${protectedIndex}-->`;
-    protectedSections[protectedIndex] = match;
-    protectedIndex++;
-    return placeholder;
+  // Simple regex to wrap consecutive list items with data-list-type attribute
+  html = html.replace(/(<li[^>]*data-list-type="bullet"[^>]*>.*?<\/li>\s*)+/gs, (match) => {
+    return `<ul class="list-disc list-outside pl-5 mb-6 space-y-2">${match}</ul>`;
   });
   
-  // Split HTML into lines for processing
-  const lines = html.split('\n');
-  const processed = [];
-  let inList = false;
-  let currentListType = null;
-  let listBuffer = [];
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    
-    // Skip empty lines
-    if (!line) continue;
-    
-    // Check if this is a blog list item
-    const isBulletItem = line.includes('data-list-type="bullet"');
-    const isNumberItem = line.includes('data-list-type="number"');
-    
-    if (isBulletItem || isNumberItem) {
-      const itemType = isBulletItem ? 'bullet' : 'number';
-      
-      // Starting a new list or continuing same type
-      if (!inList) {
-        inList = true;
-        currentListType = itemType;
-        listBuffer = [];
-      } else if (currentListType !== itemType) {
-        // Different list type - close previous list and start new one
-        const listTag = currentListType === 'bullet' ? 'ul' : 'ol';
-        const listClass = currentListType === 'bullet' 
-          ? 'list-disc list-outside ml-6 mb-6 space-y-2'
-          : 'list-decimal list-outside ml-6 mb-6 space-y-2';
-        
-        processed.push(`<${listTag} class="${listClass}">`);
-        processed.push(...listBuffer);
-        processed.push(`</${listTag}>`);
-        
-        // Start new list
-        currentListType = itemType;
-        listBuffer = [];
-      }
-      
-      listBuffer.push(line);
-    } else {
-      // Not a list item
-      if (inList) {
-        // Close the current list
-        const listTag = currentListType === 'bullet' ? 'ul' : 'ol';
-        const listClass = currentListType === 'bullet' 
-          ? 'list-disc list-outside ml-6 mb-6 space-y-2'
-          : 'list-decimal list-outside ml-6 mb-6 space-y-2';
-        
-        processed.push(`<${listTag} class="${listClass}">`);
-        processed.push(...listBuffer);
-        processed.push(`</${listTag}>`);
-        
-        inList = false;
-        currentListType = null;
-        listBuffer = [];
-      }
-      
-      processed.push(line);
-    }
-  }
-  
-  // Close any remaining list
-  if (inList && listBuffer.length > 0) {
-    const listTag = currentListType === 'bullet' ? 'ul' : 'ol';
-    const listClass = currentListType === 'bullet' 
-      ? 'list-disc list-outside ml-6 mb-6 space-y-2'
-      : 'list-decimal list-outside ml-6 mb-6 space-y-2';
-    
-    processed.push(`<${listTag} class="${listClass}">`);
-    processed.push(...listBuffer);
-    processed.push(`</${listTag}>`);
-  }
-  
-  html = processed.join('\n');
-  
-  // Restore protected sections
-  protectedSections.forEach((section, index) => {
-    html = html.replace(`<!--PROTECTED_NAV_${index}-->`, section);
+  html = html.replace(/(<li[^>]*data-list-type="number"[^>]*>.*?<\/li>\s*)+/gs, (match) => {
+    return `<ol class="list-decimal list-outside pl-5 mb-6 space-y-2">${match}</ol>`;
   });
   
   return html;
