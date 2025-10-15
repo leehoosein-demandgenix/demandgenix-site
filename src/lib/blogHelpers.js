@@ -53,7 +53,7 @@ function processTextMarks(child, markDefs) {
       } else if (mark === 'em') {
         text = `<em>${text}</em>`;
       } else if (mark === 'code') {
-        text = `<code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800">${text}</code>`;
+        text = `<code class="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-800 border border-gray-200">${text}</code>`;
       }
     }
   });
@@ -72,43 +72,12 @@ export function blocksToHtml(blocks) {
   if (!blocks) return '';
   
   return blocks.map(block => {
-    // Handle regular block elements
-    if (block._type === 'block') {
-      const style = block.style || 'normal';
-      const markDefs = block.markDefs || [];
-      const children = processBlockChildren(block.children, markDefs);
-      
-      switch (style) {
-        case 'h2': 
-          return `<h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">${children}</h2>`;
-        case 'h3': 
-          return `<h3 class="text-2xl font-semibold mt-10 mb-4 text-gray-900">${children}</h3>`;
-        case 'h4': 
-          return `<h4 class="text-xl font-medium mt-8 mb-3 text-gray-900">${children}</h4>`;
-        case 'blockquote': 
-          return `<blockquote class="border-l-4 border-primary-600 bg-primary-50 pl-6 pr-4 py-4 my-8 italic text-gray-800">${children}</blockquote>`;
-        default: 
-          return `<p class="mb-6 leading-relaxed text-gray-700">${children}</p>`;
-      }
-    }
-    
-    // Handle numbered lists
-    if (block.listItem === 'number') {
-      const markDefs = block.markDefs || [];
-      const children = processBlockChildren(block.children, markDefs);
-      return `<li class="mb-3 leading-relaxed">${children}</li>`;
-    }
-    
-    // Handle bullet lists
-    if (block.listItem === 'bullet') {
-      const markDefs = block.markDefs || [];
-      const children = processBlockChildren(block.children, markDefs);
-      return `<li class="mb-3 leading-relaxed">${children}</li>`;
-    }
-    
-    // Handle code blocks
-    if (block._type === 'code') {
+    // Handle code blocks FIRST (before other checks)
+    if (block._type === 'codeBlock') {
       const code = block.code || '';
+      const language = block.language || 'text';
+      const filename = block.filename || '';
+      
       const escapedCode = code
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -116,12 +85,18 @@ export function blocksToHtml(blocks) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
       
-      return `<pre class="my-8 p-4 bg-gray-900 rounded-lg overflow-x-auto"><code class="text-sm text-gray-100 font-mono">${escapedCode}</code></pre>`;
+      const filenameHtml = filename 
+        ? `<div class="text-xs text-gray-400 bg-gray-800 px-4 py-2 rounded-t-lg font-mono">${filename}</div>` 
+        : '';
+      
+      return `<div class="code-block-wrapper my-8">${filenameHtml}<pre class="${filename ? '' : 'rounded-t-lg'} rounded-b-lg p-4 bg-gray-900 overflow-x-auto" data-language="${language}"><code class="text-sm text-gray-100 font-mono">${escapedCode}</code></pre></div>`;
     }
     
     // Handle images
     if (block._type === 'image' && block.asset && block.asset.url) {
-      const caption = block.caption ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` : '';
+      const caption = block.caption 
+        ? `<figcaption class="text-center text-sm text-gray-600 mt-3 italic">${block.caption}</figcaption>` 
+        : '';
       return `<figure class="my-10"><img src="${block.asset.url}" alt="${block.alt || ''}" class="w-full rounded-lg shadow-lg" />${caption}</figure>`;
     }
     
@@ -143,6 +118,35 @@ export function blocksToHtml(blocks) {
       return html;
     }
     
+    // Handle list items (bullet or numbered)
+    if (block.listItem === 'bullet' || block.listItem === 'number') {
+      const markDefs = block.markDefs || [];
+      const children = processBlockChildren(block.children, markDefs);
+      const listType = block.listItem;
+      
+      return `<li class="mb-3 leading-relaxed blog-list-item" data-list-type="${listType}">${children}</li>`;
+    }
+    
+    // Handle regular block elements
+    if (block._type === 'block') {
+      const style = block.style || 'normal';
+      const markDefs = block.markDefs || [];
+      const children = processBlockChildren(block.children, markDefs);
+      
+      switch (style) {
+        case 'h2': 
+          return `<h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">${children}</h2>`;
+        case 'h3': 
+          return `<h3 class="text-2xl font-semibold mt-10 mb-4 text-gray-900">${children}</h3>`;
+        case 'h4': 
+          return `<h4 class="text-xl font-medium mt-8 mb-3 text-gray-900">${children}</h4>`;
+        case 'blockquote': 
+          return `<blockquote class="border-l-4 border-primary-600 bg-primary-50 pl-6 pr-4 py-4 my-8 italic text-gray-800">${children}</blockquote>`;
+        default: 
+          return `<p class="mb-6 leading-relaxed text-gray-700">${children}</p>`;
+      }
+    }
+    
     return '';
   }).join('');
 }
@@ -151,14 +155,10 @@ export function blocksToHtml(blocks) {
 export function processListItems(html) {
   if (!html) return '';
   
-  // Only wrap <li> items that are NOT inside a <nav> or breadcrumb element
-  // Look for consecutive <li> items that don't have navigation context
-  
-  // First, protect breadcrumb/nav lists from being wrapped
+  // Protect navigation/breadcrumb lists
   const protectedSections = [];
   let protectedIndex = 0;
   
-  // Replace nav sections with placeholders
   html = html.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, (match) => {
     const placeholder = `<!--PROTECTED_NAV_${protectedIndex}-->`;
     protectedSections[protectedIndex] = match;
@@ -166,14 +166,83 @@ export function processListItems(html) {
     return placeholder;
   });
   
-  // Now wrap consecutive <li> items that aren't in protected sections
-  html = html.replace(/(<li[^>]*>.*?<\/li>\s*)+/gs, (match) => {
-    // Check if this is already wrapped in ul/ol
-    if (match.includes('<ul') || match.includes('<ol')) {
-      return match;
+  // Split HTML into lines for processing
+  const lines = html.split('\n');
+  const processed = [];
+  let inList = false;
+  let currentListType = null;
+  let listBuffer = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Skip empty lines
+    if (!line) continue;
+    
+    // Check if this is a blog list item
+    const isBulletItem = line.includes('data-list-type="bullet"');
+    const isNumberItem = line.includes('data-list-type="number"');
+    
+    if (isBulletItem || isNumberItem) {
+      const itemType = isBulletItem ? 'bullet' : 'number';
+      
+      // Starting a new list or continuing same type
+      if (!inList) {
+        inList = true;
+        currentListType = itemType;
+        listBuffer = [];
+      } else if (currentListType !== itemType) {
+        // Different list type - close previous list and start new one
+        const listTag = currentListType === 'bullet' ? 'ul' : 'ol';
+        const listClass = currentListType === 'bullet' 
+          ? 'list-disc list-outside ml-6 mb-6 space-y-2'
+          : 'list-decimal list-outside ml-6 mb-6 space-y-2';
+        
+        processed.push(`<${listTag} class="${listClass}">`);
+        processed.push(...listBuffer);
+        processed.push(`</${listTag}>`);
+        
+        // Start new list
+        currentListType = itemType;
+        listBuffer = [];
+      }
+      
+      listBuffer.push(line);
+    } else {
+      // Not a list item
+      if (inList) {
+        // Close the current list
+        const listTag = currentListType === 'bullet' ? 'ul' : 'ol';
+        const listClass = currentListType === 'bullet' 
+          ? 'list-disc list-outside ml-6 mb-6 space-y-2'
+          : 'list-decimal list-outside ml-6 mb-6 space-y-2';
+        
+        processed.push(`<${listTag} class="${listClass}">`);
+        processed.push(...listBuffer);
+        processed.push(`</${listTag}>`);
+        
+        inList = false;
+        currentListType = null;
+        listBuffer = [];
+      }
+      
+      processed.push(line);
     }
-    return `<ul class="list-disc list-outside ml-6 mb-6 space-y-2">${match}</ul>`;
-  });
+  }
+  
+  // Close any remaining list
+  if (inList && listBuffer.length > 0) {
+    const listTag = currentListType === 'bullet' ? 'ul' : 'ol';
+    const listClass = currentListType === 'bullet' 
+      ? 'list-disc list-outside ml-6 mb-6 space-y-2'
+      : 'list-decimal list-outside ml-6 mb-6 space-y-2';
+    
+    processed.push(`<${listTag} class="${listClass}">`);
+    processed.push(...listBuffer);
+    processed.push(`</${listTag}>`);
+  }
+  
+  html = processed.join('\n');
   
   // Restore protected sections
   protectedSections.forEach((section, index) => {

@@ -108,24 +108,49 @@ export async function getBlogPostBySlug(slug) {
       excerpt,
       content[]{
         ...,
+        _type == "block" => {
+          _type,
+          _key,
+          style,
+          listItem,
+          level,
+          children[]{
+            _type,
+            _key,
+            text,
+            marks
+          },
+          markDefs[]{
+            _key,
+            _type,
+            _type == "link" => {
+              href
+            }
+          }
+        },
+        _type == "codeBlock" => {
+          _type,
+          _key,
+          code,
+          language,
+          filename
+        },
         _type == "threeColumnBlock" => {
           _type,
+          _key,
           columns[]{
             title,
             content
           }
         },
-        markDefs[]{
-          ...,
-          _type == "link" => {
-            _type,
-            _key,
-            href
-          }
-        },
-        children[]{
-          ...,
-          marks[]
+        _type == "image" => {
+          _type,
+          _key,
+          "asset": {
+            "url": asset->url
+          },
+          alt,
+          caption
         }
       },
       publishDate,
