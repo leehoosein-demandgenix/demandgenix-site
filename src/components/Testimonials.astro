@@ -1,5 +1,6 @@
 ---
 import { getTestimonials } from '../lib/sanity.js';
+import { optimizeSanityImage } from '../lib/imageHelpers.js';
 
 let testimonials;
 try {
@@ -28,8 +29,16 @@ try {
             <div class="flex items-center mb-4">
               {testimonial.profilePhoto ? (
                 <img 
-                  src={testimonial.profilePhoto} 
+                  src={optimizeSanityImage(testimonial.profilePhoto, { 
+                    width: 96, 
+                    height: 96, 
+                    fit: 'crop' 
+                  })}
                   alt={testimonial.name || 'Recommender'} 
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
                   class="w-12 h-12 rounded-full mr-4 object-cover"
                 />
               ) : (

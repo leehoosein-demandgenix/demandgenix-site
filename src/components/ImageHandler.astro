@@ -1,32 +1,70 @@
 ---
-// ImageHandler.astro - Responsive image component
+// src/components/ImageHandler.astro
 import { Image } from 'astro:assets';
 
-export interface Props {
+interface Props {
   src: string;
   alt: string;
+  width?: number;
+  height?: number;
   class?: string;
+  loading?: 'lazy' | 'eager';
+  quality?: number;
+  format?: 'webp' | 'avif' | 'png' | 'jpg';
 }
 
-const { src, alt, class: className } = Astro.props;
+const { 
+  src, 
+  alt, 
+  width = 800,
+  height,
+  class: className = '',
+  loading = 'lazy',
+  quality = 80,
+  format = 'webp'
+} = Astro.props;
+
+// Check if it's an external URL (Sanity, etc.)
+const isExternal = src.startsWith('http') || src.startsWith('//');
 ---
 
-<Image
-  src={src}
-  alt={alt}
-  class={className}
-  widths={[320, 640, 768, 1024, 1280, 1920]}
-  sizes="(max-width: 320px) 320px, (max-width: 640px) 640px, (max-width: 768px) 768px, (max-width: 1024px) 1024px, (max-width: 1280px) 1280px, 1920px"
-  format="webp"
-  quality={80}
-  loading="lazy"
-  decoding="async"
-/>
+{isExternal ? (
+  <!-- For external images like Sanity CMS -->
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    loading={loading}
+    decoding="async"
+  />
+) : (
+  <!-- For local images - Astro will optimize these -->
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    loading={loading}
+    decoding="async"
+  />
+)}
+```
 
-<!-- Usage in your pages:
-<ImageHandler 
-  src="/path/to/your/image.jpg" 
-  alt="Description" 
-  class="responsive-image"
-/>
--->
+---
+
+### Step 4: Move Images to `src/assets/` Directory
+
+Create this structure:
+```
+src/
+├── assets/
+│   └── images/
+│       ├── og-image.jpg
+│       └── (any other local images)
+public/
+├── favicon.svg
+├── android-chrome-192x192.png
+└── (keep favicons and static assets here)

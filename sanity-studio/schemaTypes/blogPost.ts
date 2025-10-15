@@ -129,7 +129,7 @@ export default defineType({
       name: 'author',
       title: 'Author',
       type: 'string',
-      initialValue: 'Lee Hussein'
+      initialValue: 'Lee Hoosein'
     }),
     defineField({
       name: 'publishDate',

@@ -4,6 +4,8 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getAllBlogPosts, getFeaturedBlogPosts } from '../../lib/sanity.js';
 import { formatDate, getCategoryColor, getCategoryLabel } from '../../lib/blogHelpers.js';
+import { optimizeSanityImage } from '../../lib/imageHelpers.js';
+
 
 let allPosts = [];
 let featuredPosts = [];
@@ -79,8 +81,16 @@ const blogSectionStructuredData = {
               <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                 {post.heroImage && (
                   <img 
-                    src={post.heroImage.url} 
+                    src={optimizeSanityImage(post.heroImage.url, { 
+                      width: 800, 
+                      height: 400, 
+                      fit: 'crop' 
+                    })}
                     alt={post.heroImage.alt}
+                    width="800"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-48 object-cover"
                   />
                 )}
@@ -129,8 +139,16 @@ const blogSectionStructuredData = {
               <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                 {post.heroImage && (
                   <img 
-                    src={post.heroImage.url} 
+                    src={optimizeSanityImage(post.heroImage.url, { 
+                      width: 800, 
+                      height: 400, 
+                      fit: 'crop' 
+                    })}
                     alt={post.heroImage.alt}
+                    width="800"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-48 object-cover"
                   />
                 )}
