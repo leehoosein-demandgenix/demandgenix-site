@@ -185,6 +185,10 @@ import Footer from '../components/Footer.astro';
    <div id="success-message" class="success-message">
   Thanks — we’ve got your details and will reply within 24 hours.
 </div>
+<div id="no-consent-message" class="success-message" style="background: #FEF3C7; border-color: #FDE68A; color: #92400E; display: none;">
+  <strong>Privacy Settings Notice</strong><br>
+  To respect your cookie preferences, please email us directly at <a href="mailto:hello@demandgenix.uk" class="underline font-medium">hello@demandgenix.uk</a> with your inquiry. We'll respond within 24 hours.
+</div>
   <form id="contact-form" action="/api/contact" method="POST">
             <div class="form-group">
                 <label for="firstname" class="form-label">First Name <span class="required">*</span></label>
@@ -336,12 +340,29 @@ import Footer from '../components/Footer.astro';
      return document.cookie.split('; ').find(r => r.startsWith(name + '='))?.split('=')[1];
    }
 
+   // Check consent status
+   function hasMarketingConsent() {
+     return getCookie('marketing-consent') === 'true';
+   }
+
+   function hasAnalyticsConsent() {
+     return getCookie('analytics-consent') === 'true';
+   }
+
    document.getElementById('contact-form').addEventListener('submit', async function (e) {
      e.preventDefault();
 
      const form = /** @type {HTMLFormElement} */(this);
      const submitBtn = document.getElementById('submit-btn');
      const successMessage = document.getElementById('success-message');
+
+     // Check if user has given marketing consent
+     if (!hasMarketingConsent()) {
+       // Show message asking them to email instead
+        document.getElementById('no-consent-message').style.display = 'block';
+        document.getElementById('no-consent-message').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+       return;
+     }
 
      // Clear previous errors
      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
@@ -366,8 +387,8 @@ import Footer from '../components/Footer.astro';
      submitBtn.disabled = true;
      submitBtn.textContent = 'Sending...';
 
-     const fd = new FormData(form); // now a real HTMLFormElement ✅
-     const hutk = getCookie('hubspotutk'); // may be undefined if no marketing consent
+     const fd = new FormData(form);
+     const hutk = getCookie('hubspotutk');
 
      // Build HubSpot Forms API payload
      const payload = {
@@ -379,7 +400,7 @@ import Footer from '../components/Footer.astro';
          { name: 'lead_source', value: fd.get('lead_source') || 'Website Contact Form' }
        ],
        context: {
-         hutk,                              // tracking cookie (if present)
+         hutk,
          pageUri:  window.location.href,
          pageName: document.title
        }
@@ -394,9 +415,17 @@ import Footer from '../components/Footer.astro';
        });
 
        if (!hsRes.ok) {
-         // Optional: log details or fall back to your own /api/contact
          console.error('HubSpot submit failed', await hsRes.text());
          throw new Error('HubSpot submit failed');
+       }
+
+       // Track conversion in Zaraz ONLY if analytics consent given
+       if (hasAnalyticsConsent() && window.zaraz) {
+         window.zaraz.track('form_submit', {
+           form_name: 'contact_form',
+           form_location: 'contact_page',
+           lead_source: fd.get('lead_source') || 'Website Contact Form'
+         });
        }
 
        // Success UX
@@ -410,14 +439,5 @@ import Footer from '../components/Footer.astro';
        submitBtn.textContent = 'Get Started - Free Consultation';
        alert('Sorry—something went wrong submitting the form. Please email hello@demandgenix.uk.');
      }
-     // Track conversion in Zaraz (GA4, LinkedIn, etc.)
-    if (window.zaraz) {
-      window.zaraz.track('form_submit', {
-        form_name: 'contact_form',
-        form_location: 'contact_page',
-        lead_source: fd.get('lead_source') || 'Website Contact Form'
-      });
-    }
    });
  </script>
-    
