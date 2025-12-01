@@ -1,0 +1,213 @@
+---
+// Trust anchor component - compact version with extended hero background
+import { Image } from 'astro:assets';
+---
+
+<section class="trust-logos-bg pt-6 pb-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Very compact heading -->
+    <div class="text-center mb-4">
+      <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Trusted by teams at
+      </p>
+    </div>
+    
+    <!-- Single row, centered logos with minimal spacing -->
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 max-w-4xl mx-auto">
+      
+      <!-- Logo 1 -->
+      <div class="trust-logo-wrapper">
+        <Image 
+          src="/logos/company1.png" 
+          alt="Company 1"
+          width={120}
+          height={45}
+          class="trust-logo-img"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      
+      <!-- Logo 2 -->
+      <div class="trust-logo-wrapper">
+        <Image 
+          src="/logos/company2.png" 
+          alt="Company 2"
+          width={120}
+          height={45}
+          class="trust-logo-img"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      
+      <!-- Logo 3 -->
+      <div class="trust-logo-wrapper">
+        <Image 
+          src="/logos/company3.png" 
+          alt="Company 3"
+          width={120}
+          height={45}
+          class="trust-logo-img"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      
+      <!-- Logo 4 -->
+      <div class="trust-logo-wrapper">
+        <Image 
+          src="/logos/company4.png" 
+          alt="Company 4"
+          width={120}
+          height={45}
+          class="trust-logo-img"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      
+      <!-- Logo 5 -->
+      <div class="trust-logo-wrapper">
+        <Image 
+          src="/logos/company5.png" 
+          alt="Company 5"
+          width={120}
+          height={45}
+          class="trust-logo-img"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Extended hero background */
+  .trust-logos-bg {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      #F8FAFC 0%,
+      #FFFFFF 50%, 
+      #F8FAFC 100%
+    );
+  }
+  
+  /* Animated background layer 1 */
+  .trust-logos-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      rgba(5, 150, 105, 0.08) 0%,
+      rgba(234, 88, 12, 0.06) 25%,
+      rgba(124, 58, 237, 0.05) 50%,
+      rgba(5, 150, 105, 0.08) 75%,
+      rgba(234, 88, 12, 0.06) 100%
+    );
+    background-size: 400% 400%;
+    animation: brandColorCycle 12s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  /* Animated background layer 2 */
+  .trust-logos-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(5, 150, 105, 0.04) 20%,
+      rgba(234, 88, 12, 0.03) 40%,
+      rgba(5, 150, 105, 0.04) 60%,
+      rgba(124, 58, 237, 0.02) 80%,
+      transparent 100%
+    );
+    animation: waveMove 8s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  /* Ensure content is above animated background */
+  .trust-logos-bg > div {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Logo container - very compact */
+  .trust-logo-wrapper {
+    width: 110px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Logo styling with greyscale */
+  .trust-logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .trust-logo-img:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.05);
+  }
+  
+  /* Animations matching hero */
+  @keyframes brandColorCycle {
+    0% { background-position: 0% 50%; }
+    33% { background-position: 100% 25%; }
+    66% { background-position: 0% 75%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes waveMove {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    50% { transform: translateX(30px) rotate(0.5deg); }
+  }
+  
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .trust-logos-bg::before,
+    .trust-logos-bg::after {
+      animation: none;
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .trust-logo-wrapper {
+      width: 90px;
+      height: 36px;
+    }
+  }
+</style>
