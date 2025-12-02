@@ -63,9 +63,16 @@
   --color-primary-900: #064e3b;
   
   /* Secondary Color (if needed) */
-  --color-secondary-500: #F57634;
+  --color-secondary-50: #fff7ed;
+  --color-secondary-100: #ffedd5;
+  --color-secondary-200: #fed7aa;
+  --color-secondary-300: #fdba74;
+  --color-secondary-400: #fb923c;
+  --color-secondary-500: #f97316;
   --color-secondary-600: #ea580c;
-  --color-secondary-600: #ea580c;
+  --color-secondary-700: #c2410c;
+  --color-secondary-800: #9a3412;
+  --color-secondary-900: #7c2d12;
   
   /* Override Gray Scale */
   --color-gray-50: #f9fafb;
