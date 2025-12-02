@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Testimonials from '../components/Testimonials.astro';
 ---
 
 <Layout 
@@ -160,11 +161,10 @@ import Footer from '../components/Footer.astro';
       <!-- Hero Section -->
       <div class="text-center mb-16">
         <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-          Ready to scale your demand gen?
+          Stop Guessing. Start Growing.
         </h1>
         <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-          Let's figure out what's holding you back and build a plan that scales with your business. 
-          Quick 30-minute diagnostic call to get started (no MBA required).
+          Skip the sales team. Book a 30-minute diagnostic call directly with a senior strategist to identify your growth blockers.
         </p>
        <!--  <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
           <a href="#contact-form" class="bg-primary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-primary-700 transition-colors">
@@ -245,7 +245,7 @@ import Footer from '../components/Footer.astro';
             <input type="hidden" name="lead_source" value="Website Contact Form">
 
             <button type="submit" class="form-submit bg-secondary-600" id="submit-btn">
-                Get Started - Free Consultation
+                Book My Diagnostic Call
             </button>
 
             <p class="privacy-note">
@@ -264,24 +264,24 @@ import Footer from '../components/Footer.astro';
               <div class="flex items-start">
                 <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">1</div>
                 <div>
-                  <h4 class="font-medium text-gray-900">Quick Response</h4>
-                  <p class="text-sm text-gray-600">We'll get back to you within 24 hours (usually much faster)</p>
+                  <h4 class="font-medium text-gray-900">The Intro</h4>
+                  <p class="text-sm text-gray-600">You get a reply within 24 hours (usually much faster)</p>
                 </div>
               </div>
               
               <div class="flex items-start">
                 <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">2</div>
                 <div>
-                  <h4 class="font-medium text-gray-900">Discovery Call</h4>
-                  <p class="text-sm text-gray-600">30-minute call to understand your challenges and goals</p>
+                  <h4 class="font-medium text-gray-900">The Diagnostic</h4>
+                  <p class="text-sm text-gray-600">A 30-minute call to unpack your "Efficiency Gap" and revenue goals</p>
                 </div>
               </div>
               
               <div class="flex items-start">
                 <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">3</div>
                 <div>
-                  <h4 class="font-medium text-gray-900">Tailored Proposal</h4>
-                  <p class="text-sm text-gray-600">Custom proposal with clear outcomes and transparent pricing</p>
+                  <h4 class="font-medium text-gray-900">The Roadmap</h4>
+                  <p class="text-sm text-gray-600">We determine if you need a quick audit, a strategic sprint, or a full partner. No forced packages.</p>
                 </div>
               </div>
             </div>
@@ -331,6 +331,7 @@ import Footer from '../components/Footer.astro';
       </div>
     </div>
   </main>
+  <Testimonials />
   <Footer />
 </Layout>
 
