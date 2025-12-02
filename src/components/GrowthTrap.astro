@@ -2,104 +2,145 @@
 // GrowthTrap.astro - Problem framework section
 ---
 
-<section class="py-16 lg:py-24 bg-white section-divider">
+<section class="py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white section-divider">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
     <!-- Section Header -->
     <div class="text-center mb-12">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        The "Growth Trap" is killing your momentum
+        The 'Growth Trap' is killing your momentum
       </h2>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        You're caught between two challenging paths - and both make it hard to prove ROI quickly enough.
+        Most B2B teams are stuck between two expensive, time-consuming paths. 
+        There's a better way.
       </p>
     </div>
 
-    <!-- Two Column Problem Framework -->
-    <div class="grid md:grid-cols-2 gap-8 mb-12">
-      <!-- Left Column - Building In-House Team -->
-      <div class="bg-gray-50 p-8 rounded-lg border-2 border-gray-200">
-        <h3 class="text-xl font-semibold text-gray-900 mb-6">
-          Building an In-House Team
+    <!-- Comparison Grid -->
+    <div class="grid lg:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Agency Route - Problem Card -->
+      <div class="bg-white rounded-lg p-6 shadow-sm border-2 border-gray-200 relative">
+        <div class="absolute -top-3 left-6 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+          The Slow Path
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mt-4 mb-4">
+          The Agency Route
         </h3>
-        <ul class="space-y-4">
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <ul class="space-y-3">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">6+ months to hire, onboard, and get productive</span>
+            <span>Junior account managers running your campaigns</span>
           </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">£150k+ in salaries before you see results</span>
+            <span>High fees and lengthy retainer commitments</span>
           </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">Need multiple specialists: paid media, SEO, analytics, CRO</span>
+            <span>Slow execution, endless meetings</span>
           </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">Limited senior strategic oversight whilst you scale</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
-            <span class="text-gray-700">High risk if key people leave</span>
+            <span>Focus on vanity metrics, not revenue</span>
           </li>
         </ul>
       </div>
 
-      <!-- Right Column - Traditional Agency -->
-      <div class="bg-gray-50 p-8 rounded-lg border-2 border-gray-200">
-        <h3 class="text-xl font-semibold text-gray-900 mb-6">
-          Traditional Agency Partnerships
+      <!-- In-House Route - Problem Card -->
+      <div class="bg-white rounded-lg p-6 shadow-sm border-2 border-gray-200 relative">
+        <div class="absolute -top-3 left-6 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+          The Risky Path
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mt-4 mb-4">
+          The In-House Route
         </h3>
-        <ul class="space-y-4">
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <ul class="space-y-3">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">Long contracts and minimum commitments</span>
+            <span>6-month hiring cycle (if you're lucky)</span>
           </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">Multiple stakeholders slow down decision-making</span>
+            <span>£80k+ salary plus benefits and equity</span>
           </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">Your account competes for attention with larger clients</span>
+            <span>Risk of a bad hire costing 6+ months</span>
           </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <li class="flex items-start text-gray-600">
+            <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-gray-700">Built for sustained campaigns, not rapid iteration</span>
-          </li>
-          <li class="flex items-start">
-            <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
-            <span class="text-gray-700">Overhead costs that don't directly drive execution</span>
+            <span>3-6 months training before they're effective</span>
           </li>
         </ul>
       </div>
+
+      <!-- DemandGenix Way - Solution Card -->
+      <div class="bg-gradient-to-br from-primary-50 to-white rounded-lg p-6 shadow-lg border-2 border-primary-600 relative">
+        <div class="absolute -top-3 left-6 bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+          The Smart Path
+        </div>
+        <h3 class="text-xl font-semibold text-primary-600 mt-4 mb-4">
+          The DemandGenix Way
+        </h3>
+        <ul class="space-y-3">
+          <li class="flex items-start text-gray-700">
+            <svg class="w-5 h-5 text-primary-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span><strong>Senior expertise on Day 1:</strong> no ramp-up time</span>
+          </li>
+          <li class="flex items-start text-gray-700">
+            <svg class="w-5 h-5 text-primary-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span><strong>No overhead:</strong> fraction of an in-house hire</span>
+          </li>
+          <li class="flex items-start text-gray-700">
+            <svg class="w-5 h-5 text-primary-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span><strong>Agile execution:</strong> sprint-based delivery</span>
+          </li>
+          <li class="flex items-start text-gray-700">
+            <svg class="w-5 h-5 text-primary-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span><strong>Revenue-focused:</strong> pipeline that converts</span>
+          </li>
+        </ul>
+        
+        <div class="mt-6 pt-6 border-t border-primary-200">
+          <a href="/contact" class="block w-full bg-secondary-600 text-white text-center px-6 py-3 rounded-lg font-medium hover:bg-secondary-500 transition-colors">
+            See How It Works
+          </a>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Bottom Closer -->
-    <div class="bg-primary-50 border-l-4 border-primary-600 p-6 rounded-r-lg">
-      <p class="text-lg text-gray-800">
-        <strong class="text-primary-600">The DemandGenix Way:</strong> Senior expertise on Day 1. No overhead. Agile Execution. Focus on Revenue.
+    <!-- Supporting Text -->
+    <div class="text-center">
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        You don't need to choose between expensive and slow. Get senior demand gen expertise that adapts to your growth stage, without the overhead.
       </p>
     </div>
+
   </div>
 </section>
