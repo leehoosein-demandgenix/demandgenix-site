@@ -279,9 +279,42 @@
     }
   }
 
+  function loadApollo() {
+  if (getCookie(MARKETING_COOKIE) === 'true') {
+    // Load Apollo tracker script
+    const apolloScript = document.createElement('script');
+    const cacheKey = Math.random().toString(36).substring(7);
+    apolloScript.src = `https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=${cacheKey}`;
+    apolloScript.async = true;
+    apolloScript.defer = true;
+    
+    apolloScript.onload = function() {
+      // Initialize Apollo after script loads
+      setTimeout(() => {
+        if (window.trackingFunctions && typeof window.trackingFunctions.onLoad === 'function') {
+          try {
+            window.trackingFunctions.onLoad({
+              appId: "693006d71b69e6001df4977e"
+            });
+          } catch (error) {
+            console.error('Apollo initialization error:', error);
+          }
+        }
+      }, 100);
+    };
+    
+    apolloScript.onerror = function() {
+      console.error('Failed to load Apollo tracking script');
+    };
+    
+    document.head.appendChild(apolloScript);
+  }
+}
+
   function loadAllScripts() {
     loadAnalytics();
     loadHubSpot();
+    loadApollo()
   }
 
   // Event listeners
