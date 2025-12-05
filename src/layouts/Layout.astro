@@ -104,6 +104,9 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
   
   <body class="font-sans">
     <slot />
+    <noscript>
+  <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=8301826&fmt=gif" />
+</noscript>
     <CookieConsent />
   </body>
 </html>
