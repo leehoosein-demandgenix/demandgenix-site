@@ -419,7 +419,14 @@ import Testimonials from '../components/Testimonials.astro';
          console.error('HubSpot submit failed', await hsRes.text());
          throw new Error('HubSpot submit failed');
        }
-
+        // ✅ Track successful form submission in GA4
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'generate_lead', {
+            'event_category': 'Contact Form',
+            'event_label': 'Contact Form Submission',
+            'value': 1
+          });
+        }
        // Track conversion in Zaraz ONLY if analytics consent given
        if (hasAnalyticsConsent() && window.zaraz) {
          window.zaraz.track('form_submit', {
