@@ -3,8 +3,13 @@ import { createClient } from '@sanity/client'
 export const client = createClient({
   projectId: 'fv5q0f3v',
   dataset: 'production',
-  useCdn: false, // Keep false for now to avoid caching issues
+  useCdn: true, 
   apiVersion: '2024-01-01',
+  requestTagPrefix: 'demandgenix',
+  timeout: 5000, // 5 second timeout to prevent hanging
+  retries: {
+    maxRetries: 2,
+    retryDelay: 300
 })
 
 // Helper functions
