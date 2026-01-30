@@ -129,6 +129,7 @@
                 <li>HubSpot (form tracking and CRM)</li>
                 <li>LinkedIn Insights (conversion tracking)</li>
                 <li>Google Ads (campaign measurement)</li>
+                <li>Clay (web intent tracking)</li>
               </ul>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -215,11 +216,17 @@
     return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
   }
 
+  function isPrivacyPolicyPage() {
+    return window.location.pathname.includes('/privacy-policy');
+  }
+
   function showBanner() {
-    overlay.classList.remove('hidden');
+    // On privacy policy page, show banner but don't block page access
+    if (!isPrivacyPolicyPage()) {
+      overlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
     consentBanner.classList.remove('translate-y-full');
-    // Prevent body scroll when banner is showing
-    document.body.style.overflow = 'hidden';
   }
 
   function hideBanner() {
@@ -234,8 +241,10 @@
     // Load current settings
     analyticsCheckbox.checked = getCookie(ANALYTICS_COOKIE) === 'true';
     marketingCheckbox.checked = getCookie(MARKETING_COOKIE) === 'true';
-    // Prevent body scroll
-    document.body.style.overflow = 'hidden';
+    // Prevent body scroll (except on privacy policy page)
+    if (!isPrivacyPolicyPage()) {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   function hideSettingsModal() {
@@ -317,7 +326,7 @@ function loadLinkedIn() {
     window._linkedin_partner_id = "8301826"; // Replace with your actual Partner ID
     window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
     window._linkedin_data_partner_ids.push(window._linkedin_partner_id);
-    
+
     (function(l) {
       if (!l) {
         window.lintrk = function(a, b) {
@@ -335,11 +344,21 @@ function loadLinkedIn() {
   }
 }
 
+function loadClay() {
+  if (getCookie(MARKETING_COOKIE) === 'true') {
+    const script = document.createElement('script');
+    script.src = 'https://static.claydar.com/init.v1.js?id=cgiqWQbLzO';
+    script.async = true;
+    document.head.appendChild(script);
+  }
+}
+
   function loadAllScripts() {
     loadAnalytics();
     loadHubSpot();
     loadApollo();
     loadLinkedIn();
+    loadClay();
   }
 
   // Event listeners
