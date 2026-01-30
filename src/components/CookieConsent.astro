@@ -216,11 +216,17 @@
     return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
   }
 
+  function isPrivacyPolicyPage() {
+    return window.location.pathname.includes('/privacy-policy');
+  }
+
   function showBanner() {
-    overlay.classList.remove('hidden');
+    // On privacy policy page, show banner but don't block page access
+    if (!isPrivacyPolicyPage()) {
+      overlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
     consentBanner.classList.remove('translate-y-full');
-    // Prevent body scroll when banner is showing
-    document.body.style.overflow = 'hidden';
   }
 
   function hideBanner() {
@@ -235,8 +241,10 @@
     // Load current settings
     analyticsCheckbox.checked = getCookie(ANALYTICS_COOKIE) === 'true';
     marketingCheckbox.checked = getCookie(MARKETING_COOKIE) === 'true';
-    // Prevent body scroll
-    document.body.style.overflow = 'hidden';
+    // Prevent body scroll (except on privacy policy page)
+    if (!isPrivacyPolicyPage()) {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   function hideSettingsModal() {
