@@ -1,64 +1,39 @@
 ---
-import { getProgrammes } from '../lib/sanity.js';
+import { getProgrammes, getServicesSection } from '../lib/sanity.js';
 
 let programmes;
+let servicesSection;
+
 try {
   programmes = await getProgrammes();
+  servicesSection = await getServicesSection();
 } catch (error) {
-  console.error('Error fetching programmes:', error);
+  console.error('Error fetching data:', error);
   programmes = [];
+  servicesSection = {
+    heading: 'Which sounds like you?',
+    subheading: 'Select your biggest challenge to see the recommended path.'
+  };
 }
 
-// Default solution data structure based on wireframe
-const solutions = [
-  {
-    id: 'diagnostic',
-    label: 'SOLUTION 01',
-    title: 'Pipeline Diagnostic',
-    problemQuote: "I don't know what's working.",
-    icon: 'search',
-    bullets: [
-      'Full-funnel audit with conversion benchmarks.',
-      'Prioritised 90-day execution roadmap.'
-    ],
-    link: '/programmes#diagnostic',
-    linkText: 'See diagnostic details'
-  },
-  {
-    id: 'turnaround',
-    label: 'SOLUTION 02',
-    title: 'Pipeline Turnaround',
-    problemQuote: "I know what's broken. I need it fixed.",
-    icon: 'chart',
-    sprints: ['Revenue Tracking', 'Paid Media Reset', 'Conversion Sprint', 'ABM Pilot'],
-    bullets: [
-      'Fixed-scope execution (6–12 weeks).',
-      'Specific, measurable pipeline outcomes.'
-    ],
-    link: '/programmes#turnaround',
-    linkText: 'Explore turnaround sprints'
-  },
-  {
-    id: 'leadership',
-    label: 'SOLUTION 03',
-    title: 'Fractional Demand Leadership',
-    problemQuote: "I need senior leadership, but can't justify the hire.",
-    icon: 'users',
-    bullets: [
-      'Embedded senior partner in your team.',
-      'Ownership of the pipeline number.'
-    ],
-    link: '/programmes#leadership',
-    linkText: 'See fractional leadership'
-  }
-];
+// Build solutions and lozenges from programmes data
+const solutions = programmes.map(prog => ({
+  id: prog.problemTag || 'default',
+  label: prog.solutionLabel || '',
+  title: prog.title,
+  problemQuote: prog.problemQuote || prog.problemStatement,
+  icon: prog.lozengeIcon || 'search',
+  sprints: prog.sprints || [],
+  bullets: prog.bulletPoints || [],
+  link: prog.linkUrl || '/programmes',
+  linkText: prog.linkText || 'Learn more'
+}));
 
-// Lozenge button config
-const lozenges = [
-  { id: 'diagnostic', label: "I don't know what's working", icon: 'search' },
-  { id: 'turnaround', label: "I know what's broken, I need it fixed", icon: 'chart' },
-  { id: 'leadership', label: "I need senior leadership now", icon: 'users' }
-];
+const lozenges = programmes.map(prog => ({
+  id: prog.problemTag || 'default',
+  label: prog.lozengeLabel || prog.problemStatement,
+  icon: prog.lozengeIcon || 'search'
+}));
 ---
 
 <section id="services" class="py-16 lg:py-24 bg-white">
@@ -67,10 +42,10 @@ const lozenges = [
     <!-- Header -->
     <div class="text-center mb-12">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Which sounds like you?
+        {servicesSection.heading}
       </h2>
       <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
-        Select your biggest challenge to see the recommended path.
+        {servicesSection.subheading}
       </p>
 
       <!-- Lozenge Buttons -->
@@ -110,18 +85,22 @@ const lozenges = [
           class="solution-card bg-white border-2 border-gray-200 rounded-xl p-6 transition-all duration-300 hover:shadow-lg"
         >
           {/* Label */}
-          <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            {solution.label}
-          </div>
+          {solution.label && (
+            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              {solution.label}
+            </div>
+          )}
 
           {/* Title */}
           <h3 class="text-xl font-bold text-gray-900 mb-3">{solution.title}</h3>
 
           {/* Problem Quote */}
-          <p class="text-sm text-gray-600 italic mb-4">"{solution.problemQuote}"</p>
+          {solution.problemQuote && (
+            <p class="text-sm text-gray-600 italic mb-4">"{solution.problemQuote}"</p>
+          )}
 
           {/* Sprints (for Turnaround only) */}
-          {solution.sprints && (
+          {solution.sprints && solution.sprints.length > 0 && (
             <div class="mb-4">
               <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
                 Available Sprints:
@@ -137,16 +116,18 @@ const lozenges = [
           )}
 
           {/* Bullet Points */}
-          <ul class="space-y-2 mb-6">
-            {solution.bullets.map((bullet) => (
-              <li class="flex items-start text-sm text-gray-700">
-                <svg class="w-5 h-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
+          {solution.bullets && solution.bullets.length > 0 && (
+            <ul class="space-y-2 mb-6">
+              {solution.bullets.map((bullet) => (
+                <li class="flex items-start text-sm text-gray-700">
+                  <svg class="w-5 h-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          )}
 
           {/* Link */}
           <a
@@ -161,8 +142,6 @@ const lozenges = [
         </div>
       ))}
     </div>
-
-    {/* Main CTA removed per wireframe */}
   </div>
 </section>
 

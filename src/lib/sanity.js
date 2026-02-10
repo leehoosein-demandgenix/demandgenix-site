@@ -73,6 +73,17 @@ export async function getServices() {
   )
 }
 
+export async function getServicesSection() {
+  return await fetchWithFallback(
+    `*[_type == "servicesSection"][0]`,
+    {},
+    {
+      heading: 'Which sounds like you?',
+      subheading: 'Select your biggest challenge to see the recommended path.'
+    }
+  )
+}
+
 export async function getProgrammes() {
   return await fetchWithFallback(
     `
@@ -81,6 +92,14 @@ export async function getProgrammes() {
       title,
       problemStatement,
       problemTag,
+      solutionLabel,
+      problemQuote,
+      lozengeLabel,
+      lozengeIcon,
+      bulletPoints,
+      sprints,
+      linkText,
+      linkUrl,
       isEntryHero,
       targetAudience,
       duration,
@@ -109,6 +128,16 @@ export async function getProgrammes() {
         title: 'Pipeline Diagnostic',
         problemStatement: "I don't know what's working",
         problemTag: 'diagnostic',
+        solutionLabel: 'SOLUTION 01',
+        problemQuote: "I don't know what's working.",
+        lozengeLabel: "I don't know what's working",
+        lozengeIcon: 'search',
+        bulletPoints: [
+          'Full-funnel audit with conversion benchmarks.',
+          'Prioritised 90-day execution roadmap.'
+        ],
+        linkText: 'See diagnostic details',
+        linkUrl: '/programmes#diagnostic',
         isEntryHero: true,
         duration: '3–4 weeks',
         investment: '£3,500-£5,000',
@@ -126,6 +155,17 @@ export async function getProgrammes() {
         title: 'Pipeline Turnaround',
         problemStatement: "I know what's broken—fix it",
         problemTag: 'turnaround',
+        solutionLabel: 'SOLUTION 02',
+        problemQuote: "I know what's broken. I need it fixed.",
+        lozengeLabel: "I know what's broken, I need it fixed",
+        lozengeIcon: 'chart',
+        sprints: ['Revenue Tracking', 'Paid Media Reset', 'Conversion Sprint', 'ABM Pilot'],
+        bulletPoints: [
+          'Fixed-scope execution (6–12 weeks).',
+          'Specific, measurable pipeline outcomes.'
+        ],
+        linkText: 'Explore turnaround sprints',
+        linkUrl: '/programmes#turnaround',
         isEntryHero: false,
         duration: '3-4 weeks each',
         ctaText: 'Book a 30-Minute Pipeline Diagnostic',
@@ -162,6 +202,16 @@ export async function getProgrammes() {
         title: 'Fractional Demand Leadership',
         problemStatement: 'I need ongoing leadership',
         problemTag: 'leadership',
+        solutionLabel: 'SOLUTION 03',
+        problemQuote: "I need senior leadership, but can't justify the hire.",
+        lozengeLabel: "I need senior leadership now",
+        lozengeIcon: 'users',
+        bulletPoints: [
+          'Embedded senior partner in your team.',
+          'Ownership of the pipeline number.'
+        ],
+        linkText: 'See fractional leadership',
+        linkUrl: '/programmes#leadership',
         isEntryHero: false,
         duration: 'Ongoing (rolling 90 days)',
         durationSubtext: '(1-2 days/week)',

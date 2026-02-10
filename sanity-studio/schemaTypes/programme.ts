@@ -33,6 +33,63 @@ export default {
       validation: (Rule: any) => Rule.required(),
     },
     {
+      name: 'solutionLabel',
+      title: 'Solution Label',
+      type: 'string',
+      description: 'e.g., "SOLUTION 01", "SOLUTION 02"',
+    },
+    {
+      name: 'problemQuote',
+      title: 'Problem Quote',
+      type: 'text',
+      description: 'Italic quote shown on the solution card, e.g., "I don\'t know what\'s working."',
+    },
+    {
+      name: 'lozengeLabel',
+      title: 'Lozenge Button Label',
+      type: 'string',
+      description: 'Text for the lozenge button, e.g., "I don\'t know what\'s working"',
+    },
+    {
+      name: 'lozengeIcon',
+      title: 'Lozenge Button Icon',
+      type: 'string',
+      description: 'Icon for the lozenge button',
+      options: {
+        list: [
+          { title: 'Search', value: 'search' },
+          { title: 'Chart', value: 'chart' },
+          { title: 'Users', value: 'users' }
+        ]
+      },
+    },
+    {
+      name: 'bulletPoints',
+      title: 'Bullet Points',
+      type: 'array',
+      description: 'Key points shown on the solution card',
+      of: [{type: 'string'}],
+    },
+    {
+      name: 'sprints',
+      title: 'Available Sprints',
+      type: 'array',
+      description: 'Sprint options (for Pipeline Turnaround)',
+      of: [{type: 'string'}],
+    },
+    {
+      name: 'linkText',
+      title: 'Link Text',
+      type: 'string',
+      description: 'Text for the card link, e.g., "See diagnostic details"',
+    },
+    {
+      name: 'linkUrl',
+      title: 'Link URL',
+      type: 'string',
+      description: 'URL or anchor for the card link, e.g., "/programmes#diagnostic"',
+    },
+    {
       name: 'isEntryHero',
       title: 'Entry Hero Layout',
       type: 'boolean',

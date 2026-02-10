@@ -2,6 +2,7 @@
 import hero from './hero'
 import service from './service'
 import programme from './programme'
+import servicesSection from './servicesSection'
 import about from './about'
 import contact from './contact'
 import siteSettings from './siteSettings'
@@ -11,4 +12,4 @@ import threeColumnBlock from './threeColumnBlock'
 import socialProof from './socialProof'
 
 
-export const schemaTypes = [hero, service, programme, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, socialProof]
+export const schemaTypes = [hero, service, programme, servicesSection, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, socialProof]
