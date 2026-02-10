@@ -73,6 +73,90 @@ export async function getServices() {
   )
 }
 
+export async function getProgrammes() {
+  return await fetchWithFallback(
+    `
+    *[_type == "programme"] | order(order asc) {
+      _id,
+      title,
+      problemStatement,
+      targetAudience,
+      duration,
+      investment,
+      order,
+      "services": services[]-> {
+        _id,
+        name,
+        price,
+        duration,
+        description,
+        features,
+        order
+      }
+    }
+    `,
+    {},
+    [
+      {
+        title: 'Pipeline Diagnostic',
+        problemStatement: "I don't know what's working",
+        targetAudience: 'For companies that need visibility into their pipeline',
+        duration: '2 weeks',
+        investment: '£2,500',
+        order: 1,
+        services: []
+      },
+      {
+        title: 'Pipeline Turnaround',
+        problemStatement: 'I know what\'s broken, but not how to fix it',
+        targetAudience: 'For companies that need specific fixes',
+        duration: '4-12 weeks',
+        investment: '£5,000-£15,000',
+        order: 2,
+        services: [
+          {
+            name: 'Revenue Source of Truth',
+            duration: '3-4 weeks',
+            description: 'Fix tracking and attribution',
+            features: ['CRM audit', 'Attribution setup', 'Dashboard creation'],
+            order: 1
+          },
+          {
+            name: 'Paid Media Reset',
+            duration: '4-6 weeks',
+            description: 'Optimize paid campaigns',
+            features: ['Channel audit', 'Campaign restructure', 'Performance tracking'],
+            order: 2
+          },
+          {
+            name: 'Conversion Sprint',
+            duration: '3-4 weeks',
+            description: 'Improve conversion rates',
+            features: ['Landing page audit', 'A/B testing setup', 'Conversion tracking'],
+            order: 3
+          },
+          {
+            name: 'ABM Playbook',
+            duration: '4-6 weeks',
+            description: 'Launch account-based marketing',
+            features: ['Account selection', 'Playbook creation', 'Campaign launch'],
+            order: 4
+          }
+        ]
+      },
+      {
+        title: 'Fractional Demand Leadership',
+        problemStatement: 'I need ongoing strategic direction',
+        targetAudience: 'For companies that need part-time leadership',
+        duration: 'Ongoing',
+        investment: 'Custom pricing',
+        order: 3,
+        services: []
+      }
+    ]
+  )
+}
+
 export async function getAbout() {
   return await fetchWithFallback(
     `*[_type == "about"][0]`,

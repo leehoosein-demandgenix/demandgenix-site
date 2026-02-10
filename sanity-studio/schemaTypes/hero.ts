@@ -32,5 +32,11 @@ export default {
       title: 'CTA Button Link',
       type: 'string',
     },
+    {
+      name: 'ctaDescriptor',
+      title: 'CTA Descriptor Text',
+      type: 'text',
+      description: 'Explanatory text that appears beneath the CTA button',
+    },
   ],
 }

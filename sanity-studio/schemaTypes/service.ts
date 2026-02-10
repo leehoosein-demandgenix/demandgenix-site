@@ -33,6 +33,13 @@ export default {
       of: [{type: 'string'}],
     },
     {
+      name: 'programme',
+      title: 'Parent Programme',
+      type: 'reference',
+      to: [{type: 'programme'}],
+      description: 'Optional: Link this service to a parent programme',
+    },
+    {
       name: 'order',
       title: 'Display Order',
       type: 'number',
