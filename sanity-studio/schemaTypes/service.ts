@@ -27,6 +27,12 @@ export default {
       type: 'text',
     },
     {
+      name: 'icon',
+      title: 'Icon Name',
+      type: 'string',
+      description: 'Icon identifier for sprint cards (e.g., "chart", "megaphone", "funnel", "target")',
+    },
+    {
       name: 'features',
       title: 'Features',
       type: 'array',

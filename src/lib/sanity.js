@@ -80,9 +80,16 @@ export async function getProgrammes() {
       _id,
       title,
       problemStatement,
+      problemTag,
+      isEntryHero,
       targetAudience,
       duration,
+      durationSubtext,
       investment,
+      deliverables,
+      ctaText,
+      ctaDescriptor,
+      comparisonTable,
       order,
       "services": services[]-> {
         _id,
@@ -90,6 +97,7 @@ export async function getProgrammes() {
         price,
         duration,
         description,
+        icon,
         features,
         order
       }
@@ -100,56 +108,73 @@ export async function getProgrammes() {
       {
         title: 'Pipeline Diagnostic',
         problemStatement: "I don't know what's working",
-        targetAudience: 'For companies that need visibility into their pipeline',
-        duration: '2 weeks',
-        investment: '£2,500',
+        problemTag: 'diagnostic',
+        isEntryHero: true,
+        duration: '3–4 weeks',
+        investment: '£3,500-£5,000',
+        deliverables: [
+          'Full-funnel analysis',
+          'Actionable roadmap',
+          'Actionable roadmap'
+        ],
+        ctaText: 'Book a 30-Minute Diagnostic',
+        ctaDescriptor: "We'll map your biggest leak and recommend a next step",
         order: 1,
         services: []
       },
       {
         title: 'Pipeline Turnaround',
-        problemStatement: 'I know what\'s broken, but not how to fix it',
-        targetAudience: 'For companies that need specific fixes',
-        duration: '4-12 weeks',
-        investment: '£5,000-£15,000',
+        problemStatement: "I know what's broken—fix it",
+        problemTag: 'turnaround',
+        isEntryHero: false,
+        duration: '3-4 weeks each',
+        ctaText: 'Book a 30-Minute Pipeline Diagnostic',
+        ctaDescriptor: 'Results in weeks, not quarters',
         order: 2,
         services: [
           {
             name: 'Revenue Source of Truth',
             duration: '3-4 weeks',
-            description: 'Fix tracking and attribution',
-            features: ['CRM audit', 'Attribution setup', 'Dashboard creation'],
+            icon: 'chart',
             order: 1
           },
           {
             name: 'Paid Media Reset',
             duration: '4-6 weeks',
-            description: 'Optimize paid campaigns',
-            features: ['Channel audit', 'Campaign restructure', 'Performance tracking'],
+            icon: 'megaphone',
             order: 2
           },
           {
             name: 'Conversion Sprint',
             duration: '3-4 weeks',
-            description: 'Improve conversion rates',
-            features: ['Landing page audit', 'A/B testing setup', 'Conversion tracking'],
+            icon: 'funnel',
             order: 3
           },
           {
             name: 'ABM Playbook',
-            duration: '4-6 weeks',
-            description: 'Launch account-based marketing',
-            features: ['Account selection', 'Playbook creation', 'Campaign launch'],
+            duration: '3-4 weeks each',
+            icon: 'target',
             order: 4
           }
         ]
       },
       {
         title: 'Fractional Demand Leadership',
-        problemStatement: 'I need ongoing strategic direction',
-        targetAudience: 'For companies that need part-time leadership',
-        duration: 'Ongoing',
-        investment: 'Custom pricing',
+        problemStatement: 'I need ongoing leadership',
+        problemTag: 'leadership',
+        isEntryHero: false,
+        duration: 'Ongoing (rolling 90 days)',
+        durationSubtext: '(1-2 days/week)',
+        ctaText: 'Book a 60-Minute Diagnostic',
+        ctaDescriptor: 'Results in weeks, not quarters',
+        comparisonTable: {
+          rows: [
+            { agency: 'Hands-off', fractional: 'Embedded' },
+            { agency: 'Fixed scope', fractional: 'Flexible' },
+            { agency: 'Junior team', fractional: 'Strategic/Exec' },
+            { agency: 'Invoice', fractional: 'Salary/Retainer' }
+          ]
+        },
         order: 3,
         services: []
       }

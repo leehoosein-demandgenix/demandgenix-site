@@ -19,6 +19,27 @@ export default {
       validation: (Rule: any) => Rule.required(),
     },
     {
+      name: 'problemTag',
+      title: 'Problem Tag',
+      type: 'string',
+      description: 'Tag shown in the problem selector',
+      options: {
+        list: [
+          { title: "I don't know what's working", value: "diagnostic" },
+          { title: "I know what's broken—fix it", value: "turnaround" },
+          { title: "I need ongoing leadership", value: "leadership" }
+        ]
+      },
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'isEntryHero',
+      title: 'Entry Hero Layout',
+      type: 'boolean',
+      description: 'Use special hero card layout (for Pipeline Diagnostic)',
+      initialValue: false,
+    },
+    {
       name: 'targetAudience',
       title: 'Target Audience/Context',
       type: 'text',
@@ -28,7 +49,13 @@ export default {
       name: 'duration',
       title: 'Duration',
       type: 'string',
-      description: 'e.g., "2 weeks", "3 months"',
+      description: 'e.g., "3–4 weeks", "Ongoing (rolling 90 days)"',
+    },
+    {
+      name: 'durationSubtext',
+      title: 'Duration Subtext',
+      type: 'string',
+      description: 'Additional duration info, e.g., "(1-2 days/week)"',
     },
     {
       name: 'investment',
@@ -37,10 +64,59 @@ export default {
       description: 'e.g., "£3,500–£5,000"',
     },
     {
+      name: 'deliverables',
+      title: 'Key Deliverables',
+      type: 'array',
+      description: 'List of key deliverables (for Diagnostic)',
+      of: [{type: 'string'}],
+    },
+    {
+      name: 'ctaText',
+      title: 'CTA Button Text',
+      type: 'string',
+      description: 'e.g., "Book a 30-Minute Diagnostic"',
+    },
+    {
+      name: 'ctaDescriptor',
+      title: 'CTA Descriptor',
+      type: 'text',
+      description: 'Text shown below the CTA button',
+    },
+    {
+      name: 'comparisonTable',
+      title: 'Comparison Table',
+      type: 'object',
+      description: 'For Fractional Leadership comparison (Agency vs. Fractional Leader)',
+      fields: [
+        {
+          name: 'rows',
+          title: 'Comparison Rows',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'agency',
+                  title: 'Agency Column',
+                  type: 'string',
+                },
+                {
+                  name: 'fractional',
+                  title: 'Fractional Leader Column',
+                  type: 'string',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: 'services',
       title: 'Linked Services',
       type: 'array',
-      description: 'Services that are part of this programme',
+      description: 'Services that are part of this programme (Sprints)',
       of: [
         {
           type: 'reference',
