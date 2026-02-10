@@ -9,201 +9,219 @@ try {
   programmes = [];
 }
 
-// Icon mapping for sprint cards
-const iconMap = {
-  chart: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>',
-  megaphone: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>',
-  funnel: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>',
-  target: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
-};
+// Default solution data structure based on wireframe
+const solutions = [
+  {
+    id: 'diagnostic',
+    label: 'SOLUTION 01',
+    title: 'Pipeline Diagnostic',
+    problemQuote: "I don't know what's working.",
+    icon: 'search',
+    bullets: [
+      'Full-funnel audit with conversion benchmarks.',
+      'Prioritised 90-day execution roadmap.'
+    ],
+    link: '/programmes#diagnostic',
+    linkText: 'See diagnostic details'
+  },
+  {
+    id: 'turnaround',
+    label: 'SOLUTION 02',
+    title: 'Pipeline Turnaround',
+    problemQuote: "I know what's broken. I need it fixed.",
+    icon: 'chart',
+    sprints: ['Revenue Tracking', 'Paid Media Reset', 'Conversion Sprint', 'ABM Pilot'],
+    bullets: [
+      'Fixed-scope execution (6–12 weeks).',
+      'Specific, measurable pipeline outcomes.'
+    ],
+    link: '/programmes#turnaround',
+    linkText: 'Explore turnaround sprints'
+  },
+  {
+    id: 'leadership',
+    label: 'SOLUTION 03',
+    title: 'Fractional Demand Leadership',
+    problemQuote: "I need senior leadership, but can't justify the hire.",
+    icon: 'users',
+    bullets: [
+      'Embedded senior partner in your team.',
+      'Ownership of the pipeline number.'
+    ],
+    link: '/programmes#leadership',
+    linkText: 'See fractional leadership'
+  }
+];
 
-// Problem tag config
-const problemTags = [
-  { id: 'diagnostic', label: "I don't know what's working", color: 'from-red-500 to-red-600' },
-  { id: 'turnaround', label: "I know what's broken—fix it", color: 'from-secondary-500 to-secondary-600' },
-  { id: 'leadership', label: "I need ongoing leadership", color: 'from-blue-500 to-blue-600' }
+// Lozenge button config
+const lozenges = [
+  { id: 'diagnostic', label: "I don't know what's working", icon: 'search' },
+  { id: 'turnaround', label: "I know what's broken, I need it fixed", icon: 'chart' },
+  { id: 'leadership', label: "I need senior leadership now", icon: 'users' }
 ];
 ---
 
-<section id="services" class="py-16 lg:py-24 bg-gray-50">
+<section id="services" class="py-16 lg:py-24 bg-white">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- Problem Selector Header -->
+    <!-- Header -->
     <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-        What do you need?
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Which sounds like you?
       </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
+        Select your biggest challenge to see the recommended path.
+      </p>
 
-      <!-- Problem Tags -->
+      <!-- Lozenge Buttons -->
       <div class="flex flex-wrap justify-center gap-4 mb-12">
-        {problemTags.map((tag) => (
-          <div class="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-sm border border-gray-200">
-            <div class={`w-8 h-8 rounded-full bg-gradient-to-br ${tag.color} flex items-center justify-center flex-shrink-0`}>
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+        {lozenges.map((lozenge) => (
+          <button
+            type="button"
+            data-solution-id={lozenge.id}
+            class="lozenge-button flex items-center gap-3 bg-gray-50 hover:bg-primary-50 border-2 border-gray-200 hover:border-primary-600 px-6 py-3 rounded-full transition-all duration-200"
+          >
+            {lozenge.icon === 'search' && (
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
-            </div>
-            <span class="text-sm font-medium text-gray-700">{tag.label}</span>
-          </div>
+            )}
+            {lozenge.icon === 'chart' && (
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            )}
+            {lozenge.icon === 'users' && (
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            )}
+            <span class="text-sm font-medium text-gray-700">{lozenge.label}</span>
+          </button>
         ))}
       </div>
     </div>
 
-    <!-- Programme Cards -->
-    <div class="space-y-8">
-      {programmes?.map((programme) => (
-        <div>
-          {programme.isEntryHero ? (
-            <!-- Tier 1: Pipeline Diagnostic - Hero Card -->
-            <div class="relative bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-8 md:p-10 shadow-md border border-orange-200">
-              <!-- START HERE Badge -->
-              <div class="absolute -top-4 -left-4 w-20 h-20 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center text-white font-bold text-xs text-center shadow-lg border-4 border-white">
-                <div class="leading-tight">
-                  START<br/>HERE
-                </div>
+    <!-- Solution Cards -->
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      {solutions.map((solution) => (
+        <div
+          data-solution-card={solution.id}
+          class="solution-card bg-white border-2 border-gray-200 rounded-xl p-6 transition-all duration-300 hover:shadow-lg"
+        >
+          {/* Label */}
+          <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            {solution.label}
+          </div>
+
+          {/* Title */}
+          <h3 class="text-xl font-bold text-gray-900 mb-3">{solution.title}</h3>
+
+          {/* Problem Quote */}
+          <p class="text-sm text-gray-600 italic mb-4">"{solution.problemQuote}"</p>
+
+          {/* Sprints (for Turnaround only) */}
+          {solution.sprints && (
+            <div class="mb-4">
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Available Sprints:
               </div>
-
-              <div class="grid md:grid-cols-2 gap-8 items-center">
-                <!-- Left Column: Content -->
-                <div>
-                  <h3 class="text-3xl font-bold text-gray-900 mb-3">{programme.title}</h3>
-                  <p class="text-lg text-gray-700 mb-4 italic">"{programme.problemStatement}"</p>
-
-                  <div class="flex items-center gap-4 text-sm text-gray-600 mb-6">
-                    {programme.duration && (
-                      <span>{programme.duration}</span>
-                    )}
-                    {programme.investment && (
-                      <span>•</span>
-                      <span>{programme.investment}</span>
-                    )}
-                  </div>
-
-                  <div class="mb-6">
-                    <a href="/contact" class="inline-block bg-secondary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary-500 transition-colors shadow-md">
-                      {programme.ctaText || 'Book a 30-Minute Diagnostic'}
-                    </a>
-                    {programme.ctaDescriptor && (
-                      <p class="text-sm text-gray-600 mt-3 italic">{programme.ctaDescriptor}</p>
-                    )}
-                  </div>
-                </div>
-
-                <!-- Right Column: Map Visual & Deliverables -->
-                <div>
-                  <!-- Map Illustration Placeholder -->
-                  <div class="bg-white rounded-lg p-6 shadow-sm mb-4">
-                    <svg class="w-full h-32 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                      <circle cx="7" cy="10" r="2" fill="currentColor"/>
-                      <circle cx="12" cy="8" r="2" fill="currentColor"/>
-                      <circle cx="17" cy="12" r="2" fill="currentColor"/>
-                    </svg>
-                  </div>
-
-                  {programme.deliverables && programme.deliverables.length > 0 && (
-                    <div class="bg-white rounded-lg p-5 shadow-sm">
-                      <h4 class="font-semibold text-gray-900 mb-3 text-sm">Sprints</h4>
-                      <ul class="space-y-2">
-                        {programme.deliverables.map((item) => (
-                          <li class="text-sm text-gray-700 flex items-start">
-                            <span class="text-secondary-600 mr-2">•</span>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : programme.title === 'Fractional Demand Leadership' ? (
-            <!-- Tier 3: Fractional Leadership - Dark Card with Comparison -->
-            <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 md:p-10 shadow-xl text-white">
-              <div class="grid md:grid-cols-2 gap-8">
-                <!-- Left Column: Content -->
-                <div>
-                  <h3 class="text-3xl font-bold mb-3">{programme.title}</h3>
-                  <p class="text-lg text-gray-300 mb-4 italic">"{programme.problemStatement}"</p>
-
-                  <div class="mb-6">
-                    <div class="text-gray-300">
-                      {programme.duration}
-                    </div>
-                    {programme.durationSubtext && (
-                      <div class="text-sm text-gray-400">{programme.durationSubtext}</div>
-                    )}
-                  </div>
-
-                  <div>
-                    <a href="/contact" class="inline-block bg-secondary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary-500 transition-colors shadow-md">
-                      {programme.ctaText || 'Book a 60-Minute Diagnostic'}
-                    </a>
-                    {programme.ctaDescriptor && (
-                      <p class="text-sm text-gray-400 mt-3 italic">{programme.ctaDescriptor}</p>
-                    )}
-                  </div>
-                </div>
-
-                <!-- Right Column: Comparison Table -->
-                {programme.comparisonTable && programme.comparisonTable.rows && (
-                  <div class="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden">
-                    <table class="w-full">
-                      <thead>
-                        <tr class="border-b border-white/20">
-                          <th class="px-4 py-3 text-left text-sm font-semibold">Agency</th>
-                          <th class="px-4 py-3 text-left text-sm font-semibold">Fractional Leader</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {programme.comparisonTable.rows.map((row, idx) => (
-                          <tr class={idx < programme.comparisonTable.rows.length - 1 ? 'border-b border-white/10' : ''}>
-                            <td class="px-4 py-3 text-sm text-gray-300">{row.agency}</td>
-                            <td class="px-4 py-3 text-sm text-gray-200 font-medium">{row.fractional}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <!-- Tier 2: Pipeline Turnaround - Sprint Grid -->
-            <div class="bg-white rounded-2xl p-8 shadow-md border border-gray-200">
-              <h3 class="text-3xl font-bold text-gray-900 mb-3">{programme.title}</h3>
-              <p class="text-lg text-gray-700 mb-8 italic">"{programme.problemStatement}"</p>
-
-              {/* Sprint Cards Grid */}
-              {programme.services && programme.services.length > 0 && (
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  {programme.services.map((service) => (
-                    <div class="bg-gray-50 rounded-lg p-5 text-center hover:shadow-md transition-shadow border border-gray-200">
-                      {/* Icon */}
-                      <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm">
-                        <svg class="w-7 h-7 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" set:html={iconMap[service.icon] || iconMap.chart}></svg>
-                      </div>
-                      <h4 class="font-semibold text-gray-900 text-sm mb-2">{service.name}</h4>
-                      {service.duration && (
-                        <p class="text-xs text-gray-600">{service.duration}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div class="text-center">
-                <a href="/contact" class="inline-block bg-secondary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary-500 transition-colors shadow-md">
-                  {programme.ctaText || 'Book a 30-Minute Pipeline Diagnostic'}
-                </a>
-                {programme.ctaDescriptor && (
-                  <p class="text-sm text-gray-600 mt-3 italic">{programme.ctaDescriptor}</p>
-                )}
+              <div class="flex flex-wrap gap-2">
+                {solution.sprints.map((sprint) => (
+                  <span class="inline-block bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">
+                    {sprint}
+                  </span>
+                ))}
               </div>
             </div>
           )}
+
+          {/* Bullet Points */}
+          <ul class="space-y-2 mb-6">
+            {solution.bullets.map((bullet) => (
+              <li class="flex items-start text-sm text-gray-700">
+                <svg class="w-5 h-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Link */}
+          <a
+            href={solution.link}
+            class="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          >
+            {solution.linkText}
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
         </div>
       ))}
     </div>
+
+    {/* Main CTA removed per wireframe */}
   </div>
 </section>
+
+<script>
+  // Interactive lozenge button functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const lozengeButtons = document.querySelectorAll('.lozenge-button');
+    const solutionCards = document.querySelectorAll('.solution-card');
+
+    lozengeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const solutionId = button.getAttribute('data-solution-id');
+
+        // Remove active state from all buttons and cards
+        lozengeButtons.forEach((btn) => {
+          btn.classList.remove('bg-primary-50', 'border-primary-600');
+          btn.classList.add('bg-gray-50', 'border-gray-200');
+        });
+        solutionCards.forEach((card) => {
+          card.classList.remove('border-primary-600', 'shadow-lg', 'bg-primary-50');
+        });
+
+        // Add active state to clicked button
+        button.classList.remove('bg-gray-50', 'border-gray-200');
+        button.classList.add('bg-primary-50', 'border-primary-600');
+
+        // Highlight corresponding card
+        const targetCard = document.querySelector(`[data-solution-card="${solutionId}"]`);
+        if (targetCard) {
+          targetCard.classList.add('border-primary-600', 'shadow-lg', 'bg-primary-50');
+
+          // Smooth scroll to card on mobile
+          if (window.innerWidth < 768) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .lozenge-button {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .lozenge-button:focus {
+    outline: 2px solid #059669;
+    outline-offset: 2px;
+  }
+
+  .solution-card {
+    position: relative;
+  }
+
+  @media (max-width: 768px) {
+    .solution-card {
+      scroll-margin-top: 2rem;
+    }
+  }
+</style>

@@ -8,6 +8,7 @@ import siteSettings from './siteSettings'
 import testimonial from './testimonial'
 import blogPost from './blogPost'
 import threeColumnBlock from './threeColumnBlock'
+import socialProof from './socialProof'
 
 
-export const schemaTypes = [hero, service, programme, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock]
+export const schemaTypes = [hero, service, programme, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, socialProof]
