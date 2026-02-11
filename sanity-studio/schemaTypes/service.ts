@@ -27,10 +27,23 @@ export default {
       type: 'text',
     },
     {
+      name: 'icon',
+      title: 'Icon Name',
+      type: 'string',
+      description: 'Icon identifier for sprint cards (e.g., "chart", "megaphone", "funnel", "target")',
+    },
+    {
       name: 'features',
       title: 'Features',
       type: 'array',
       of: [{type: 'string'}],
+    },
+    {
+      name: 'programme',
+      title: 'Parent Programme',
+      type: 'reference',
+      to: [{type: 'programme'}],
+      description: 'Optional: Link this service to a parent programme',
     },
     {
       name: 'order',

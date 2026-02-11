@@ -1,0 +1,119 @@
+---
+// PortableText.astro - Simple renderer for Sanity block content
+export interface Props {
+  content: any[];
+  class?: string;
+}
+
+const { content, class: className = '' } = Astro.props;
+
+// Helper function to render a single block
+function renderBlock(block: any): string {
+  if (!block || !block._type) return '';
+
+  if (block._type === 'block') {
+    const children = block.children || [];
+    let text = children.map((child: any) => {
+      let content = child.text || '';
+
+      // Apply marks (bold, italic, etc.)
+      if (child.marks && child.marks.length > 0) {
+        child.marks.forEach((mark: string) => {
+          if (mark === 'strong') {
+            content = `<strong>${content}</strong>`;
+          } else if (mark === 'em') {
+            content = `<em>${content}</em>`;
+          }
+        });
+      }
+
+      return content;
+    }).join('');
+
+    // Handle list items
+    if (block.listItem === 'bullet') {
+      return `<li>${text}</li>`;
+    } else if (block.listItem === 'number') {
+      return `<li>${text}</li>`;
+    }
+
+    // Handle normal paragraphs
+    return `<p>${text}</p>`;
+  }
+
+  return '';
+}
+
+// Group consecutive list items
+function groupBlocks(blocks: any[]): string {
+  let html = '';
+  let currentList: { type: string; items: string[] } | null = null;
+
+  blocks.forEach((block) => {
+    if (block.listItem === 'bullet' || block.listItem === 'number') {
+      const listType = block.listItem === 'bullet' ? 'ul' : 'ol';
+
+      if (!currentList || currentList.type !== listType) {
+        // Close previous list if exists
+        if (currentList) {
+          html += `</${currentList.type}>`;
+        }
+        // Start new list
+        currentList = { type: listType, items: [] };
+        html += `<${listType}>`;
+      }
+
+      html += renderBlock(block);
+    } else {
+      // Close list if we were in one
+      if (currentList) {
+        html += `</${currentList.type}>`;
+        currentList = null;
+      }
+
+      html += renderBlock(block);
+    }
+  });
+
+  // Close any remaining list
+  if (currentList) {
+    html += `</${currentList.type}>`;
+  }
+
+  return html;
+}
+
+const htmlContent = content && Array.isArray(content) ? groupBlocks(content) : '';
+---
+
+<div class={`portable-text ${className}`} set:html={htmlContent} />
+
+<style>
+  .portable-text :global(p) {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .portable-text :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .portable-text :global(ul),
+  .portable-text :global(ol) {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .portable-text :global(li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .portable-text :global(strong) {
+    font-weight: 700;
+  }
+
+  .portable-text :global(em) {
+    font-style: italic;
+  }
+</style>

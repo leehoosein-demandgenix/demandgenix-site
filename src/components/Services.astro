@@ -1,56 +1,226 @@
 ---
-import { getServices } from '../lib/sanity.js';
+import { getProgrammes, getServicesSection } from '../lib/sanity.js';
 
-let services;
+let programmes;
+let servicesSection;
+
 try {
-  services = await getServices();
+  programmes = await getProgrammes();
+  servicesSection = await getServicesSection();
 } catch (error) {
-  console.error('Error fetching services:', error);
-  services = [];
+  console.error('Error fetching data:', error);
+  programmes = [];
+  servicesSection = null;
 }
+
+// Ensure defaults if data is missing
+if (!programmes || !Array.isArray(programmes)) {
+  programmes = [];
+}
+
+if (!servicesSection) {
+  servicesSection = {
+    heading: 'Which sounds like you?',
+    subheading: 'Select your biggest challenge to see the recommended path.'
+  };
+}
+
+// Build solutions and lozenges from programmes data
+const solutions = programmes.map(prog => ({
+  id: prog.problemTag || 'default',
+  label: prog.solutionLabel || '',
+  title: prog.title,
+  problemQuote: prog.problemQuote || prog.problemStatement,
+  bestFor: prog.bestFor || '',
+  icon: prog.lozengeIcon || 'search',
+  sprints: prog.sprints || [],
+  bullets: prog.bulletPoints || [],
+  link: prog.linkUrl || '/programmes',
+  linkText: prog.linkText || 'Learn more'
+}));
+
+const lozenges = programmes.map(prog => ({
+  id: prog.problemTag || 'default',
+  label: prog.lozengeLabel || prog.problemStatement,
+  icon: prog.lozengeIcon || 'search'
+}));
 ---
 
 <section id="services" class="py-16 lg:py-24 bg-white section-divider">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
     <div class="text-center mb-12">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        How we help you grow
+        {servicesSection.heading}
       </h2>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Pick what you need right now. No packages, no commitments, just clear outcomes.
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
+        {servicesSection.subheading}
       </p>
+
+      <!-- Lozenge Buttons -->
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        {lozenges.map((lozenge) => (
+          <button
+            type="button"
+            data-solution-id={lozenge.id}
+            class="lozenge-button flex items-center gap-3 bg-gray-50 hover:bg-primary-50 border-2 border-gray-200 hover:border-primary-600 px-6 py-3 rounded-full transition-all duration-200"
+          >
+            {lozenge.icon === 'search' && (
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            )}
+            {lozenge.icon === 'chart' && (
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            )}
+            {lozenge.icon === 'users' && (
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            )}
+            <span class="text-sm font-medium text-gray-700">{lozenge.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
-    
-    <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {services?.map((service) => (
-        <div class="service-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-          <div class="mb-4">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
-            <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
-              <!-- <span class="font-medium text-primary-600">{service.price}</span>
-              <span>•</span> -->
-              <span>{service.duration}</span>
+
+    <!-- Solution Cards -->
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      {solutions.map((solution) => (
+        <div
+          data-solution-card={solution.id}
+          class="solution-card bg-white border-2 border-gray-200 rounded-xl p-6 transition-all duration-300 hover:shadow-lg flex flex-col"
+        >
+          {/* Label */}
+          {solution.label && (
+            <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              {solution.label}
             </div>
-            <p class="text-gray-600">{service.description}</p>
-          </div>
-          <ul class="space-y-2">
-            {service.features?.map((feature) => (
-              <li class="text-sm text-gray-700 flex items-center">
-                <svg class="w-4 h-4 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                {feature}
-              </li>
-            ))}
-          </ul>
+          )}
+
+          {/* Title */}
+          <h3 class="text-xl font-bold text-gray-900 mb-3">{solution.title}</h3>
+
+          {/* Problem Quote */}
+          {solution.problemQuote && (
+            <p class="text-sm text-gray-600 italic mb-4">"{solution.problemQuote}"</p>
+          )}
+
+          {/* Best For */}
+          {solution.bestFor && (
+            <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                Best for:
+              </div>
+              <p class="text-sm text-gray-700">{solution.bestFor}</p>
+            </div>
+          )}
+
+          {/* Sprints (for Turnaround only) */}
+          {solution.sprints && solution.sprints.length > 0 && (
+            <div class="mb-4">
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Available Sprints:
+              </div>
+              <div class="flex flex-wrap gap-2">
+                {solution.sprints.map((sprint) => (
+                  <span class="inline-block bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">
+                    {sprint}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Bullet Points */}
+          {solution.bullets && solution.bullets.length > 0 && (
+            <ul class="space-y-2 mb-6">
+              {solution.bullets.map((bullet) => (
+                <li class="flex items-start text-sm text-gray-700">
+                  <svg class="w-5 h-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Link */}
+          <a
+            href={solution.link}
+            class="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors mt-auto"
+          >
+            {solution.linkText}
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
         </div>
       ))}
     </div>
-    
-    <div class="text-center mt-12">
-      <a href="#contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
-        Discuss Your Project >
-      </a>
-    </div>
   </div>
 </section>
+
+<script>
+  // Interactive lozenge button functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const lozengeButtons = document.querySelectorAll('.lozenge-button');
+    const solutionCards = document.querySelectorAll('.solution-card');
+
+    lozengeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const solutionId = button.getAttribute('data-solution-id');
+
+        // Remove active state from all buttons and cards
+        lozengeButtons.forEach((btn) => {
+          btn.classList.remove('bg-primary-50', 'border-primary-600');
+          btn.classList.add('bg-gray-50', 'border-gray-200');
+        });
+        solutionCards.forEach((card) => {
+          card.classList.remove('border-primary-600', 'shadow-lg', 'bg-primary-50');
+        });
+
+        // Add active state to clicked button
+        button.classList.remove('bg-gray-50', 'border-gray-200');
+        button.classList.add('bg-primary-50', 'border-primary-600');
+
+        // Highlight corresponding card
+        const targetCard = document.querySelector(`[data-solution-card="${solutionId}"]`);
+        if (targetCard) {
+          targetCard.classList.add('border-primary-600', 'shadow-lg', 'bg-primary-50');
+
+          // Smooth scroll to card on mobile
+          if (window.innerWidth < 768) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .lozenge-button {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .lozenge-button:focus {
+    outline: 2px solid #059669;
+    outline-offset: 2px;
+  }
+
+  .solution-card {
+    position: relative;
+  }
+
+  @media (max-width: 768px) {
+    .solution-card {
+      scroll-margin-top: 2rem;
+    }
+  }
+</style>

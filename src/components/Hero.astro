@@ -8,11 +8,12 @@ try {
 } catch (error) {
   console.error('Error fetching hero:', error);
   hero = {
-    title: 'Stop Guessing. Start Scaling. Senior B2B Demand Gen Leadership, Without the Headcount.',
-    subtitle: 'I help B2B companies fix broken pipelines, lower CAC, and build predictable revenue engines. 20 years experience. Impact in 90 days.',
-    description: 'AI-powered insights, human-led execution, measurement-first methodology.',
-    ctaText: 'Start with a Free Diagnostic',
-    ctaLink: '#contact'
+    title: 'Your pipeline is unpredictable. Let\'s fix that.',
+    subtitle: 'Get clarity on what\'s working, what\'s not, and exactly where to focus next.',
+    description: '20+ years fixing pipelines for B2B companies. Diagnose in days, not months.',
+    ctaText: 'Book a 30-Minute Pipeline Diagnostic',
+    ctaLink: '/contact',
+    ctaDescriptor: 'Free. No pitch. Just a clear view of your biggest opportunity.'
   };
 }
 ---
@@ -30,13 +31,28 @@ try {
           {hero.subtitle}
           <span class="block mt-2">{hero.description}</span>
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 items-center">
-          <a href="/contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
-            {hero.ctaText}
-          </a>
-          <a href="#WhyDemandGenix" class="text-secondary-600 hover:text-primary-700 font-medium flex items-center">
-            How I Work →
-          </a>
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <a href="/contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
+              {hero.ctaText}
+            </a>
+          </div>
+          {hero.ctaDescriptor && (
+            <p class="text-sm text-gray-600 italic max-w-md">
+              {hero.ctaDescriptor}
+            </p>
+          )}
+          {hero.proofLineText && (
+            <p class="text-sm font-medium text-gray-700 max-w-md mt-3">
+              {hero.proofLineLink ? (
+                <a href={hero.proofLineLink} class="text-secondary-600 hover:text-secondary-700 underline decoration-2 underline-offset-2 transition-colors">
+                  {hero.proofLineText}
+                </a>
+              ) : (
+                hero.proofLineText
+              )}
+            </p>
+          )}
         </div>
       </div>
       
