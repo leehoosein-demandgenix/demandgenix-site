@@ -23,6 +23,16 @@ const diagnostic = programmes.find(p => p.problemTag === 'diagnostic') || {};
 const turnaround = programmes.find(p => p.problemTag === 'turnaround') || {};
 const leadership = programmes.find(p => p.problemTag === 'leadership') || {};
 
+// Extract plain text from Sanity Portable Text blocks
+function toPlainText(blocks) {
+  if (!blocks || typeof blocks === 'string') return blocks || '';
+  return blocks
+    .map(block => (block.children || []).map(child => child.text || '').join(''))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // Create lozenges from programmes
 const lozenges = programmes.map(p => ({
   label: p.lozengeLabel || p.title,
@@ -37,6 +47,53 @@ const lozenges = programmes.map(p => ({
   keywords={programmesPage?.metaKeywords}
   ogImage={programmesPage?.ogImage}
 >
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Demand Generation Consulting",
+    "name": "Demand Generation Programmes",
+    "description": "Strategic consulting for B2B companies looking to transition from lead generation to demand generation.",
+    "url": "https://demandgenix.uk/programmes/",
+    "provider": {
+      "@type": "ProfessionalService",
+      "name": "DemandGenix",
+      "url": "https://demandgenix.uk"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "United Kingdom"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Demand Generation Programmes",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": diagnostic.title || "Pipeline Diagnostic",
+            "description": toPlainText(diagnostic.detailedDescription) || "Audit your current pipeline to identify what's working and what's not."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": turnaround.title || "Pipeline Turnaround",
+            "description": toPlainText(turnaround.detailedDescription) || "Fixed-scope sprints to restructure and accelerate your demand pipeline."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": leadership.title || "Fractional Demand Leadership",
+            "description": toPlainText(leadership.detailedDescription) || "Embedded demand generation leadership for companies scaling without a full-time hire."
+          }
+        }
+      ]
+    }
+  })}></script>
   <Header />
 
   <main>

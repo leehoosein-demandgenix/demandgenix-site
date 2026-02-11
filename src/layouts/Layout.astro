@@ -77,17 +77,66 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
     <!-- Android -->
     <link rel="manifest" href="/manifest.json">
     
-   <!-- Structured Data -->
+   <!-- Structured Data: ProfessionalService -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "DemandGenix Limited",
+      "@type": "ProfessionalService",
+      "name": "DemandGenix",
+      "legalName": "DemandGenix Limited",
       "url": SITE_URL,
-      "description": description,
+      "description": "Specialized B2B Demand Generation agency helping UK firms scale pipeline through strategy and ditching outdated MQL models.",
+      "image": `${SITE_URL}/og-image.jpg`,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Manchester",
+        "addressRegion": "Greater Manchester",
+        "addressCountry": "GB"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Kingdom"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/demandgenix/"
+      ],
       "contactPoint": {
         "@type": "ContactPoint",
         "email": "hello@demandgenix.uk",
         "contactType": "customer service"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Demand Generation Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Demand Generation Strategy & Consulting"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pipeline Diagnostic"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pipeline Turnaround"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Fractional Demand Leadership"
+            }
+          }
+        ]
       }
     })} />
   
@@ -100,6 +149,7 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
         document.documentElement.classList.add('fonts-loaded');
       });
     </script>
+    <slot name="head" />
   </head>
   
   <body class="font-sans">
