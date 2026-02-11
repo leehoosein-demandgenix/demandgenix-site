@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
-import SafetyNet from '../components/SafetyNet.astro';
+
 import Footer from '../components/Footer.astro';
 import PortableText from '../components/PortableText.astro';
 import { getProgrammes, getProgrammesPage } from '../lib/sanity.js';
@@ -39,7 +39,7 @@ const lozenges = programmes.map(p => ({
 >
   <Header />
 
-  <main class="bg-gray-50">
+  <main>
     <!-- Hero Section -->
     <section class="hero-bg py-20 lg:py-28">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -50,489 +50,676 @@ const lozenges = programmes.map(p => ({
           {programmesPage?.heroSubheading || 'Every engagement starts with a clear problem and ends with a measurable outcome. Choose the path that fits where you are.'}
         </p>
 
-        {/* Lozenges */}
-        <div class="flex flex-wrap md:flex-nowrap gap-4 justify-center">
-          {lozenges.map((lozenge) => (
-            <a
-              href={lozenge.anchor}
-              class="flex items-center gap-3 bg-gray-50 hover:bg-primary-50 border-2 border-gray-200 hover:border-primary-600 px-6 py-3 rounded-full transition-all duration-200"
-            >
-              {lozenge.icon === 'search' && (
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-              )}
-              {lozenge.icon === 'chart' && (
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                </svg>
-              )}
-              {lozenge.icon === 'users' && (
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-              )}
-              <span class="text-sm font-medium text-gray-700">{lozenge.label}</span>
-            </a>
-          ))}
+        {/* Path Finder Cards */}
+        <div class="pathfinder-stack">
+          <a href="#diagnostic" class="pathfinder-card" data-accent="green">
+            <div class="pathfinder-card__content">
+              <span class="pathfinder-card__title">"I don't know what's working"</span>
+              <span class="pathfinder-card__subtitle">Pipeline Diagnostic</span>
+            </div>
+            <svg class="pathfinder-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 4l6 6-6 6"/>
+            </svg>
+          </a>
+          <a href="#turnaround" class="pathfinder-card" data-accent="orange">
+            <div class="pathfinder-card__content">
+              <span class="pathfinder-card__title">"I know what's broken — fix it"</span>
+              <span class="pathfinder-card__subtitle">Pipeline Turnaround</span>
+            </div>
+            <svg class="pathfinder-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 4l6 6-6 6"/>
+            </svg>
+          </a>
+          <a href="#leadership" class="pathfinder-card" data-accent="blue">
+            <div class="pathfinder-card__content">
+              <span class="pathfinder-card__title">"I need senior leadership now"</span>
+              <span class="pathfinder-card__subtitle">Fractional Demand Leadership</span>
+            </div>
+            <svg class="pathfinder-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 4l6 6-6 6"/>
+            </svg>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- Pipeline Diagnostic Section -->
-    {diagnostic.title && (
-      <section id="diagnostic" class="py-16 lg:py-24 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div class="mb-8">
-            {diagnostic.solutionLabel && (
-              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                {diagnostic.solutionLabel}
-              </div>
-            )}
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {diagnostic.title}
-            </h2>
-            {diagnostic.problemQuote && (
-              <p class="text-xl text-gray-600 italic mb-6">"{diagnostic.problemQuote}"</p>
-            )}
+    <!-- Journey Indicator -->
+    <div class="journey-indicator">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="journey-flow">
+          <div class="journey-node" data-colour="green">
+            <div class="journey-dot journey-dot--green"></div>
+            <span class="journey-label">Diagnose</span>
+            <span class="journey-sublabel">Diagnostic</span>
           </div>
-
-          {/* Description */}
-          {diagnostic.detailedDescription && (
-            <div class="text-lg text-gray-700 leading-relaxed mb-8">
-              <PortableText content={diagnostic.detailedDescription} />
-            </div>
-          )}
-
-          {/* Process Steps Timeline */}
-          {diagnostic.processSteps && diagnostic.processSteps.length > 0 && (
-            <div class="mb-12">
-              <h3 class="text-xl font-bold text-gray-900 mb-6">The Process</h3>
-
-              {/* Mobile: vertical timeline */}
-              <div class="md:hidden relative pl-8">
-                {/* Vertical connector line */}
-                <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-gray-200"></div>
-
-                <div class="space-y-8">
-                  {diagnostic.processSteps.map((step, index) => (
-                    <div class="relative">
-                      {/* Step indicator */}
-                      <div class="absolute -left-8 w-12 h-12 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-lg z-10">
-                        {index + 1}
-                      </div>
-                      {/* Content */}
-                      <div class="pl-8 pt-1">
-                        {step.week && (
-                          <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            {step.week}
-                          </div>
-                        )}
-                        <h4 class="font-bold text-gray-900 mb-1">{step.title}</h4>
-                        {step.description && (
-                          <p class="text-sm text-gray-600">{step.description}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Desktop: horizontal timeline */}
-              <div class="hidden md:block relative">
-                {/* Horizontal progress bar */}
-                <div class="absolute top-6 left-0 w-full h-1 bg-gray-200 rounded"></div>
-
-                <div class="grid grid-cols-3 gap-6">
-                  {diagnostic.processSteps.map((step, index) => (
-                    <div class="relative">
-                      {/* Step indicator */}
-                      <div class="flex items-center mb-3">
-                        <div class="w-12 h-12 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-lg z-10">
-                          {index + 1}
-                        </div>
-                      </div>
-                      {/* Content */}
-                      <div class="pl-0">
-                        {step.week && (
-                          <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            {step.week}
-                          </div>
-                        )}
-                        <h4 class="font-bold text-gray-900 mb-1">{step.title}</h4>
-                        {step.description && (
-                          <p class="text-sm text-gray-600">{step.description}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Duration & Investment */}
-          <div class="grid md:grid-cols-2 gap-6 mb-8 p-6 bg-gray-50 rounded-lg">
-            {diagnostic.duration && (
-              <div>
-                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                  Duration
-                </div>
-                <div class="text-lg font-bold text-gray-900">
-                  {diagnostic.duration}
-                  {diagnostic.durationSubtext && (
-                    <span class="text-sm font-normal text-gray-600 ml-2">
-                      {diagnostic.durationSubtext}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-            {diagnostic.investment && (
-              <div>
-                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                  Investment
-                </div>
-                <div class="text-lg font-bold text-gray-900">{diagnostic.investment}</div>
-              </div>
-            )}
+          <div class="journey-connector"></div>
+          <div class="journey-node" data-colour="orange">
+            <div class="journey-dot journey-dot--orange"></div>
+            <span class="journey-label">Fix</span>
+            <span class="journey-sublabel">Turnaround</span>
           </div>
-
-          {/* Expected Outcome */}
-          {diagnostic.outcome && (
-            <div class="mb-8 p-6 bg-primary-50 border-l-4 border-primary-600 rounded-r-lg">
-              <h3 class="text-lg font-bold text-gray-900 mb-2">Expected Outcome</h3>
-              <div class="text-gray-700">
-                <PortableText content={diagnostic.outcome} />
-              </div>
-            </div>
-          )}
-
-          {/* CTA */}
-          {diagnostic.ctaText && (
-            <div class="text-center">
-              <a
-                href="/contact"
-                class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
-              >
-                {diagnostic.ctaText}
-              </a>
-              {diagnostic.ctaDescriptor && (
-                <p class="text-sm text-gray-600 italic mt-4 max-w-md mx-auto">
-                  {diagnostic.ctaDescriptor}
-                </p>
-              )}
-            </div>
-          )}
+          <div class="journey-connector"></div>
+          <div class="journey-node" data-colour="blue">
+            <div class="journey-dot journey-dot--blue"></div>
+            <span class="journey-label">Scale</span>
+            <span class="journey-sublabel">Fractional Leadership</span>
+          </div>
         </div>
-      </section>
-    )}
+      </div>
+    </div>
 
-    <!-- Pipeline Turnaround Section -->
-    {turnaround.title && (
-      <section id="turnaround" class="py-16 lg:py-24 bg-gray-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <!-- Header -->
-          <div class="mb-12 max-w-4xl">
-            {turnaround.solutionLabel && (
-              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                {turnaround.solutionLabel}
-              </div>
-            )}
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {turnaround.title}
-            </h2>
-            {turnaround.problemQuote && (
-              <p class="text-xl text-gray-600 italic mb-6">"{turnaround.problemQuote}"</p>
-            )}
-            {turnaround.detailedDescription && (
-              <div class="text-lg text-gray-700 leading-relaxed mb-8">
-                <PortableText content={turnaround.detailedDescription} />
-              </div>
-            )}
+    <!-- Programme Sub-Navigation (sticky) -->
+    <nav class="programme-subnav" id="programme-subnav" aria-label="Programme navigation">
+      <a href="#diagnostic" class="programme-subnav__link programme-subnav__link--green" data-section="diagnostic">Pipeline Diagnostic</a>
+      <a href="#turnaround" class="programme-subnav__link programme-subnav__link--orange" data-section="turnaround">Pipeline Turnaround</a>
+      <a href="#leadership" class="programme-subnav__link programme-subnav__link--blue" data-section="leadership">Fractional Leadership</a>
+    </nav>
 
-            {/* Duration & Investment */}
-            <div class="grid md:grid-cols-2 gap-6 p-6 bg-white rounded-lg border border-gray-200">
-              {turnaround.duration && (
-                <div>
-                  <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                    Duration
+    <!-- Dark Programme Content Area -->
+    <div class="programmes-content">
+      <div class="atmosphere-blob atmosphere-blob--orange" aria-hidden="true"></div>
+
+      <!-- Pipeline Diagnostic Section -->
+      {diagnostic.title && (
+        <section id="diagnostic" class="prog-area">
+          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="programme-section" data-accent="green">
+
+              {/* Start Here Badge */}
+              <div class="programme-badge">Most Companies Start Here</div>
+
+              {/* Header */}
+              <div class="mb-8">
+                {diagnostic.solutionLabel && (
+                  <div class="prog-label">
+                    {diagnostic.solutionLabel}
                   </div>
-                  <div class="text-lg font-bold text-gray-900">{turnaround.duration}</div>
+                )}
+                <h2 class="prog-h2">
+                  {diagnostic.title}
+                </h2>
+                {diagnostic.problemQuote && (
+                  <p class="prog-quote">"{diagnostic.problemQuote}"</p>
+                )}
+              </div>
+
+              {/* Description */}
+              {diagnostic.detailedDescription && (
+                <div class="prog-body mb-8">
+                  <PortableText content={diagnostic.detailedDescription} />
                 </div>
               )}
-              {turnaround.investment && (
-                <div>
-                  <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                    Investment per Sprint
-                  </div>
-                  <div class="text-lg font-bold text-gray-900">{turnaround.investment}</div>
-                </div>
-              )}
-            </div>
-          </div>
 
-          {/* Sprint Options */}
-          {turnaround.sprintDetails && turnaround.sprintDetails.length > 0 && (
-            <div>
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">Available Sprints</h3>
+              {/* Process Steps Timeline */}
+              {diagnostic.processSteps && diagnostic.processSteps.length > 0 && (
+                <div class="mb-12">
+                  <h3 class="prog-h3">The Process</h3>
 
-              {/* Sprint tabs/buttons */}
-              <div class="flex flex-wrap gap-3 mb-8">
-                {turnaround.sprintDetails.map((sprint, index) => (
-                  <button
-                    class="sprint-tab px-4 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-medium hover:border-primary-600 hover:text-primary-600 transition-colors"
-                    data-sprint-index={index}
-                  >
-                    {sprint.name}
-                  </button>
-                ))}
-              </div>
-
-              {/* Sprint details cards */}
-              <div class="space-y-6">
-                {turnaround.sprintDetails.map((sprint, index) => (
-                  <div
-                    class="sprint-detail bg-white border-2 border-gray-200 rounded-xl p-6"
-                    data-sprint-card={index}
-                  >
-                    <h4 class="text-2xl font-bold text-gray-900 mb-4">{sprint.name}</h4>
-
-                    {sprint.problem && (
-                      <div class="mb-4">
-                        <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                          Problem
-                        </div>
-                        <p class="text-gray-700">{sprint.problem}</p>
-                      </div>
-                    )}
-
-                    {sprint.deliverables && sprint.deliverables.length > 0 && (
-                      <div class="mb-4">
-                        <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                          Deliverables
-                        </div>
-                        <ul class="space-y-2">
-                          {sprint.deliverables.map((item) => (
-                            <li class="flex items-start">
-                              <svg class="w-5 h-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                              </svg>
-                              <span class="text-gray-700">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {sprint.outcome && (
-                      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                          Outcome
-                        </div>
-                        <p class="text-gray-900 font-medium">{sprint.outcome}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* CTA */}
-          {turnaround.ctaText && (
-            <div class="text-center mt-12">
-              <a
-                href="/contact"
-                class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
-              >
-                {turnaround.ctaText}
-              </a>
-              {turnaround.ctaDescriptor && (
-                <p class="text-sm text-gray-600 italic mt-4 max-w-md mx-auto">
-                  {turnaround.ctaDescriptor}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-    )}
-
-    <!-- Fractional Demand Leadership Section -->
-    {leadership.title && (
-      <section id="leadership" class="py-16 lg:py-24 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <!-- Header -->
-          <div class="mb-12 max-w-4xl">
-            {leadership.solutionLabel && (
-              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                {leadership.solutionLabel}
-              </div>
-            )}
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {leadership.title}
-            </h2>
-            {leadership.problemQuote && (
-              <p class="text-xl text-gray-600 italic mb-6">"{leadership.problemQuote}"</p>
-            )}
-            {leadership.detailedDescription && (
-              <div class="text-lg text-gray-700 leading-relaxed">
-                <PortableText content={leadership.detailedDescription} />
-              </div>
-            )}
-          </div>
-
-          {/* What This Looks Like in Practice */}
-          {leadership.practicePoints && leadership.practicePoints.length > 0 && (
-            <div class="mb-12">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">What This Looks Like in Practice</h3>
-              <div class="grid md:grid-cols-2 gap-4">
-                {leadership.practicePoints.map((point) => (
-                  <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                    <svg class="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <span class="text-gray-700">{point}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Enterprise Service Table */}
-          {leadership.enterpriseTable && leadership.enterpriseTable.tiers && leadership.enterpriseTable.tiers.length > 0 && (
-            <div class="mb-12">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">At a Glance</h3>
-              <div class="overflow-x-auto">
-                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
-                  <thead>
-                    <tr class="bg-gray-100">
-                      <th class="text-left p-4 font-semibold text-gray-700">Service Tier</th>
-                      {leadership.enterpriseTable.tiers.map((tier) => (
-                        <th class="text-left p-4 font-semibold text-gray-900">{tier.name}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-t border-gray-200">
-                      <td class="p-4 font-medium text-gray-700">Commitment</td>
-                      {leadership.enterpriseTable.tiers.map((tier) => (
-                        <td class="p-4 text-gray-900">{tier.commitment}</td>
-                      ))}
-                    </tr>
-                    <tr class="border-t border-gray-200 bg-gray-50">
-                      <td class="p-4 font-medium text-gray-700">Investment</td>
-                      {leadership.enterpriseTable.tiers.map((tier) => (
-                        <td class="p-4 text-gray-900 font-bold">{tier.investment}</td>
-                      ))}
-                    </tr>
-                    {leadership.enterpriseTable.features && leadership.enterpriseTable.features.map((feature) => (
-                      <tr class="border-t border-gray-200">
-                        <td class="p-4 text-gray-700">{feature.name}</td>
-                        {feature.availability && feature.availability.map((available) => (
-                          <td class="p-4 text-center">
-                            {available ? (
-                              <svg class="w-6 h-6 text-primary-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                              </svg>
-                            ) : (
-                              <span class="text-gray-300">—</span>
+                  {/* Mobile: vertical timeline */}
+                  <div class="md:hidden relative pl-8">
+                    <div class="absolute left-6 top-6 bottom-6 w-0.5" style="background: rgba(255,255,255,0.1);"></div>
+                    <div class="space-y-8">
+                      {diagnostic.processSteps.map((step, index) => (
+                        <div class="relative">
+                          <div class="absolute -left-8 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg z-10" style="background: #4A9B7F; color: white;">
+                            {index + 1}
+                          </div>
+                          <div class="pl-8 pt-1">
+                            {step.week && (
+                              <div class="prog-label mb-1">{step.week}</div>
                             )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+                            <h4 class="font-bold text-white mb-1">{step.title}</h4>
+                            {step.description && (
+                              <p class="text-sm" style="color: rgba(255,255,255,0.6);">{step.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* Comparison Table */}
-          {leadership.comparisonTable && leadership.comparisonTable.rows && leadership.comparisonTable.rows.length > 0 && (
-            <div class="mb-12">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">Why Fractional vs. Agency?</h3>
-              <div class="overflow-x-auto">
-                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
-                  <thead>
-                    <tr class="bg-gray-100">
-                      <th class="text-left p-4 font-semibold text-gray-700 w-1/2"></th>
-                      <th class="text-center p-4 font-semibold text-gray-900">Agency</th>
-                      <th class="text-center p-4 font-semibold text-gray-900">Fractional Leader</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leadership.comparisonTable.rows.map((row, index) => (
-                      <tr class={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        <td class="p-4 text-gray-900 font-medium">{row.feature}</td>
-                        <td class="p-4 text-gray-600 text-center">{row.agency}</td>
-                        <td class="p-4 text-primary-600 font-medium text-center">{row.fractional}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Duration & Investment */}
-          <div class="grid md:grid-cols-2 gap-6 mb-8 p-6 bg-gray-50 rounded-lg">
-            {leadership.duration && (
-              <div>
-                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                  Duration
+                  {/* Desktop: horizontal timeline */}
+                  <div class="hidden md:block relative">
+                    <div class="absolute top-6 left-0 w-full h-1 rounded" style="background: rgba(255,255,255,0.08);"></div>
+                    <div class="grid grid-cols-3 gap-6">
+                      {diagnostic.processSteps.map((step, index) => (
+                        <div class="relative">
+                          <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg z-10" style="background: #4A9B7F; color: white;">
+                              {index + 1}
+                            </div>
+                          </div>
+                          <div>
+                            {step.week && (
+                              <div class="prog-label mb-1">{step.week}</div>
+                            )}
+                            <h4 class="font-bold text-white mb-1">{step.title}</h4>
+                            {step.description && (
+                              <p class="text-sm" style="color: rgba(255,255,255,0.6);">{step.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div class="text-lg font-bold text-gray-900">
-                  {leadership.duration}
-                  {leadership.durationSubtext && (
-                    <span class="text-sm font-normal text-gray-600 ml-2">
-                      {leadership.durationSubtext}
+              )}
+
+              {/* Duration & Investment Badges */}
+              <div class="programme-meta">
+                {diagnostic.duration && (
+                  <div class="programme-meta__item">
+                    <span class="programme-meta__label">Duration</span>
+                    <span class="programme-meta__value">
+                      {diagnostic.duration}
+                      {diagnostic.durationSubtext && (
+                        <span class="prog-label ml-2" style="font-size: 0.8rem;">{diagnostic.durationSubtext}</span>
+                      )}
                     </span>
+                  </div>
+                )}
+                {diagnostic.investment && (
+                  <div class="programme-meta__item">
+                    <span class="programme-meta__label">Investment</span>
+                    <span class="programme-meta__value">{diagnostic.investment}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Deliverables Grid */}
+              {diagnostic.deliverables && diagnostic.deliverables.length > 0 && (
+                <div class="mb-10">
+                  <h3 class="prog-h3">What You'll Receive</h3>
+                  <div class="deliverables-grid">
+                    {diagnostic.deliverables.map((item) => (
+                      <div class="deliverables-grid__item">
+                        <svg class="w-5 h-5 flex-shrink-0" style="color: var(--prog-green);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Expected Outcome */}
+              {diagnostic.outcome && (
+                <div class="prog-outcome prog-outcome--green">
+                  <h3 class="text-lg font-bold text-white mb-2">Expected Outcome</h3>
+                  <div class="prog-body">
+                    <PortableText content={diagnostic.outcome} />
+                  </div>
+                </div>
+              )}
+
+              {/* CTA */}
+              <div class="text-center">
+                <a
+                  href="/contact"
+                  class="prog-cta-btn"
+                >
+                  Book Your Diagnostic — £3,500
+                </a>
+                <p class="prog-cta-subtext">
+                  {diagnostic.ctaDescriptor || "We'll map your biggest leak and recommend a next step."}
+                </p>
+                <a href="/contact" class="cta-secondary">Have questions? Let's talk</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Pipeline Turnaround Section -->
+      {turnaround.title && (
+        <section id="turnaround" class="prog-area prog-area--alt">
+          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="programme-section programme-section--alt" data-accent="orange">
+
+              {/* Header */}
+              <div class="mb-10">
+                {turnaround.solutionLabel && (
+                  <div class="prog-label">
+                    {turnaround.solutionLabel}
+                  </div>
+                )}
+                <h2 class="prog-h2">
+                  {turnaround.title}
+                </h2>
+                {turnaround.problemQuote && (
+                  <p class="prog-quote">"{turnaround.problemQuote}"</p>
+                )}
+                {turnaround.detailedDescription && (
+                  <div class="prog-body mb-8">
+                    <PortableText content={turnaround.detailedDescription} />
+                  </div>
+                )}
+
+                {/* Duration & Investment Badges */}
+                <div class="programme-meta">
+                  {turnaround.duration && (
+                    <div class="programme-meta__item">
+                      <span class="programme-meta__label">Duration</span>
+                      <span class="programme-meta__value">{turnaround.duration}</span>
+                    </div>
+                  )}
+                  {turnaround.investment && (
+                    <div class="programme-meta__item">
+                      <span class="programme-meta__label">Investment per Sprint</span>
+                      <span class="programme-meta__value">{turnaround.investment}</span>
+                    </div>
                   )}
                 </div>
               </div>
-            )}
-            {leadership.investment && (
-              <div>
-                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                  Starting Investment
+
+              {/* Sprint Card Grid (Phase 2) */}
+              {turnaround.sprintDetails && turnaround.sprintDetails.length > 0 && (
+                <div>
+                  <h3 class="prog-h3">Available Sprints</h3>
+
+                  <div class="sprint-grid">
+                    {turnaround.sprintDetails.map((sprint, index) => (
+                      <div class="sprint-card" data-sprint-index={index}>
+                        <h4 class="sprint-card__title">{sprint.name}</h4>
+                        {sprint.problem && (
+                          <p class="sprint-card__summary">{sprint.problem.split('.')[0]}?</p>
+                        )}
+                        <button
+                          class="sprint-card__toggle"
+                          data-sprint-toggle={index}
+                          aria-expanded="false"
+                          aria-controls={`sprint-detail-${index}`}
+                        >
+                          View Details
+                          <svg class="sprint-card__arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 4l4 4 4-4"/>
+                          </svg>
+                        </button>
+
+                        <div class="sprint-detail-panel" id={`sprint-detail-${index}`} data-sprint-detail={index}>
+                          <div class="sprint-detail-panel__inner">
+                            {sprint.problem && (
+                              <div class="mb-4">
+                                <div class="sprint-detail__label">Problem</div>
+                                <p class="prog-body">{sprint.problem}</p>
+                              </div>
+                            )}
+
+                            {sprint.deliverables && sprint.deliverables.length > 0 && (
+                              <div class="mb-4">
+                                <div class="sprint-detail__label">Deliverables</div>
+                                <ul class="sprint-detail__list">
+                                  {sprint.deliverables.map((item) => (
+                                    <li>
+                                      <svg class="w-4 h-4 flex-shrink-0 mt-0.5" style="color: #E8845C;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                      </svg>
+                                      <span>{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {sprint.outcome && (
+                              <div class="sprint-detail__outcome">
+                                <div class="sprint-detail__label">Outcome</div>
+                                <p class="text-white font-medium">{sprint.outcome}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div class="text-lg font-bold text-gray-900">{leadership.investment}</div>
+              )}
+
+              {/* CTA */}
+              <div class="text-center mt-12">
+                <a
+                  href="/contact"
+                  class="prog-cta-btn"
+                >
+                  Discuss Your Turnaround Sprint
+                </a>
+                <p class="prog-cta-subtext">
+                  Tell us which pipeline problem to fix. We'll scope a sprint.
+                </p>
+                <a href="/contact" class="cta-secondary">Not sure which sprint? Start with a Diagnostic</a>
               </div>
-            )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Case Study Spotlight -->
+      <section class="cs-spotlight" id="case-study-spotlight">
+        <div class="cs-spotlight__border cs-spotlight__border--top" aria-hidden="true"></div>
+        <div class="cs-spotlight__noise" aria-hidden="true"></div>
+
+        <div class="cs-spotlight__grid">
+          {/* Left Column: Copy */}
+          <div class="cs-spotlight__copy">
+            <div class="cs-eyebrow">
+              <span class="cs-eyebrow__dot" aria-hidden="true"></span>
+              Case Study
+            </div>
+
+            <h2 class="cs-headline">
+              From 'Spray and Pray' to <span class="cs-headline__accent">111% Pipeline Growth</span>
+            </h2>
+
+            <p class="cs-subtext">
+              How we stopped guessing and used intent data to target just 140 accounts — doubling pipeline value in a single quarter.
+            </p>
+
+            <div class="cs-stats">
+              <div class="cs-stat">
+                <span class="cs-stat__value">111%</span>
+                <span class="cs-stat__label">Pipeline increase</span>
+              </div>
+              <div class="cs-stat">
+                <span class="cs-stat__value">140</span>
+                <span class="cs-stat__label">Accounts targeted</span>
+              </div>
+              <div class="cs-stat">
+                <span class="cs-stat__value">1 Qtr</span>
+                <span class="cs-stat__label">Turnaround time</span>
+              </div>
+            </div>
+
+            <a href="https://demandgenix.uk/blog/case-study-how-we-doubled-pipeline-by-leveraging-intent-data/" class="cs-cta" target="_blank" rel="noopener noreferrer">
+              Read the Full Case Study
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="cs-cta__arrow">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </a>
           </div>
 
-          {/* CTA */}
-          {leadership.ctaText && (
-            <div class="text-center">
-              <a
-                href="/contact"
-                class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
-              >
-                {leadership.ctaText}
-              </a>
-              {leadership.ctaDescriptor && (
-                <p class="text-sm text-gray-600 italic mt-4 max-w-md mx-auto">
-                  {leadership.ctaDescriptor}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-    )}
+          {/* Right Column: Data Visualisation */}
+          <div class="cs-chart-wrapper">
+            <svg class="cs-chart" viewBox="0 0 500 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Stylised growth chart showing 111% pipeline increase">
+              {/* Grid lines */}
+              <line x1="50" y1="40" x2="470" y2="40" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="50" y1="100" x2="470" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="50" y1="160" x2="470" y2="160" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="50" y1="220" x2="470" y2="220" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="50" y1="280" x2="470" y2="280" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
 
-    <!-- Safety Net Section -->
-    <SafetyNet />
+              {/* Vertical intent signal lines */}
+              <line x1="190" y1="30" x2="190" y2="290" stroke="rgba(74,155,127,0.12)" stroke-width="1" stroke-dasharray="3 6"/>
+              <line x1="330" y1="30" x2="330" y2="290" stroke="rgba(74,155,127,0.08)" stroke-width="1" stroke-dasharray="3 6"/>
+
+              {/* Area fill gradient */}
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4A9B7F" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="#4A9B7F" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="glowFilter">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Area fill */}
+              <path class="cs-chart__area" d="M70,250 C110,248 150,245 190,230 C230,200 280,130 330,90 C370,65 420,52 450,48 L450,280 L70,280 Z" fill="url(#areaGrad)"/>
+
+              {/* Glow line */}
+              <path class="cs-chart__glow" d="M70,250 C110,248 150,245 190,230 C230,200 280,130 330,90 C370,65 420,52 450,48" stroke="#4A9B7F" stroke-width="5" stroke-opacity="0.3" stroke-linecap="round" filter="url(#glowFilter)"/>
+
+              {/* Main growth line */}
+              <path class="cs-chart__line" d="M70,250 C110,248 150,245 190,230 C230,200 280,130 330,90 C370,65 420,52 450,48" stroke="#4A9B7F" stroke-width="2.5" stroke-linecap="round" style="filter: drop-shadow(0 0 6px rgba(74, 155, 127, 0.4));"/>
+
+              {/* Data point dots */}
+              <circle class="cs-chart__dot cs-chart__dot--1" cx="70" cy="250" r="4" fill="#4A9B7F"/>
+              <circle class="cs-chart__dot cs-chart__dot--1" cx="70" cy="250" r="7" fill="none" stroke="#4A9B7F" stroke-width="1" stroke-opacity="0.3"/>
+              <circle class="cs-chart__dot cs-chart__dot--2" cx="190" cy="230" r="4" fill="#4A9B7F"/>
+              <circle class="cs-chart__dot cs-chart__dot--2" cx="190" cy="230" r="7" fill="none" stroke="#4A9B7F" stroke-width="1" stroke-opacity="0.3"/>
+              <circle class="cs-chart__dot cs-chart__dot--3" cx="330" cy="90" r="4" fill="#4A9B7F"/>
+              <circle class="cs-chart__dot cs-chart__dot--3" cx="330" cy="90" r="7" fill="none" stroke="#4A9B7F" stroke-width="1" stroke-opacity="0.3"/>
+              <circle class="cs-chart__dot cs-chart__dot--4" cx="450" cy="48" r="4" fill="#4A9B7F"/>
+              <circle class="cs-chart__dot cs-chart__dot--4" cx="450" cy="48" r="7" fill="none" stroke="#4A9B7F" stroke-width="1" stroke-opacity="0.3"/>
+
+              {/* X-axis labels */}
+              <text x="70" y="305" fill="rgba(255,255,255,0.3)" font-size="10" text-anchor="middle">Q-1</text>
+              <text x="190" y="305" fill="rgba(255,255,255,0.3)" font-size="10" text-anchor="middle">Intent activated</text>
+              <text x="330" y="305" fill="rgba(255,255,255,0.3)" font-size="10" text-anchor="middle">Mid-quarter</text>
+              <text x="450" y="305" fill="rgba(255,255,255,0.3)" font-size="10" text-anchor="middle">Q End</text>
+            </svg>
+
+            {/* Floating Annotations */}
+            <div class="cs-annotation cs-annotation--baseline">
+              <span class="cs-annotation__value">Baseline</span>
+              <span class="cs-annotation__label">Spray & pray</span>
+            </div>
+            <div class="cs-annotation cs-annotation--mid">
+              <span class="cs-annotation__value">140</span>
+              <span class="cs-annotation__label">Accounts activated</span>
+            </div>
+            <div class="cs-annotation cs-annotation--peak">
+              <span class="cs-annotation__value">+111%</span>
+              <span class="cs-annotation__label">Pipeline value</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-spotlight__border cs-spotlight__border--bottom" aria-hidden="true"></div>
+      </section>
+
+      <!-- Fractional Demand Leadership Section -->
+      {leadership.title && (
+        <section id="leadership" class="prog-area">
+          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="programme-section" data-accent="blue">
+
+              {/* Header */}
+              <div class="mb-10">
+                {leadership.solutionLabel && (
+                  <div class="prog-label">
+                    {leadership.solutionLabel}
+                  </div>
+                )}
+                <h2 class="prog-h2">
+                  {leadership.title}
+                </h2>
+                {leadership.problemQuote && (
+                  <p class="prog-quote">"{leadership.problemQuote}"</p>
+                )}
+                {leadership.detailedDescription && (
+                  <div class="prog-body">
+                    <PortableText content={leadership.detailedDescription} />
+                  </div>
+                )}
+              </div>
+
+              {/* What This Looks Like in Practice */}
+              {leadership.practicePoints && leadership.practicePoints.length > 0 && (
+                <div class="mb-12">
+                  <h3 class="prog-h3">What This Looks Like in Practice</h3>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    {leadership.practicePoints.map((point) => (
+                      <div class="prog-practice-item">
+                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #5B8DEF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Enterprise Service Table */}
+              {leadership.enterpriseTable && leadership.enterpriseTable.tiers && leadership.enterpriseTable.tiers.length > 0 && (
+                <div class="mb-12">
+                  <h3 class="prog-h3">At a Glance</h3>
+                  <div class="overflow-x-auto">
+                    <table class="prog-table">
+                      <thead>
+                        <tr>
+                          <th>Service Tier</th>
+                          {leadership.enterpriseTable.tiers.map((tier) => (
+                            <th>{tier.name}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-medium">Commitment</td>
+                          {leadership.enterpriseTable.tiers.map((tier) => (
+                            <td>{tier.commitment}</td>
+                          ))}
+                        </tr>
+                        <tr>
+                          <td class="font-medium">Investment</td>
+                          {leadership.enterpriseTable.tiers.map((tier) => (
+                            <td class="font-bold">{tier.investment}</td>
+                          ))}
+                        </tr>
+                        {leadership.enterpriseTable.features && leadership.enterpriseTable.features.map((feature) => (
+                          <tr>
+                            <td>{feature.name}</td>
+                            {feature.availability && feature.availability.map((available) => (
+                              <td class="text-center">
+                                {available ? (
+                                  <svg class="w-5 h-5 mx-auto" style="color: #5B8DEF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                  </svg>
+                                ) : (
+                                  <span style="color: rgba(255,255,255,0.2);">—</span>
+                                )}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Comparison Table */}
+              {leadership.comparisonTable && leadership.comparisonTable.rows && leadership.comparisonTable.rows.length > 0 && (
+                <div class="mb-12">
+                  <h3 class="prog-h3">Why Fractional vs. Agency?</h3>
+                  <div class="overflow-x-auto">
+                    <table class="prog-table">
+                      <thead>
+                        <tr>
+                          <th class="w-1/2"></th>
+                          <th class="text-center">Agency</th>
+                          <th class="text-center">Fractional Leader</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {leadership.comparisonTable.rows.map((row, index) => (
+                          <tr>
+                            <td class="font-medium">{row.feature}</td>
+                            <td class="text-center" style="color: rgba(255,255,255,0.5);">{row.agency}</td>
+                            <td class="text-center font-medium" style="color: #5B8DEF;">{row.fractional}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Duration & Investment Badges */}
+              <div class="programme-meta">
+                {leadership.duration && (
+                  <div class="programme-meta__item">
+                    <span class="programme-meta__label">Duration</span>
+                    <span class="programme-meta__value">
+                      {leadership.duration}
+                      {leadership.durationSubtext && (
+                        <span class="prog-label ml-2" style="font-size: 0.8rem;">{leadership.durationSubtext}</span>
+                      )}
+                    </span>
+                  </div>
+                )}
+                {leadership.investment && (
+                  <div class="programme-meta__item">
+                    <span class="programme-meta__label">Starting Investment</span>
+                    <span class="programme-meta__value">{leadership.investment}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* CTA */}
+              <div class="text-center">
+                <a
+                  href="/contact"
+                  class="prog-cta-btn"
+                >
+                  {leadership.ctaText || 'Discuss Fractional Leadership'}
+                </a>
+                {leadership.ctaDescriptor && (
+                  <p class="prog-cta-subtext">
+                    {leadership.ctaDescriptor}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+    </div>
+
+    <!-- Bottom Catch-All CTA -->
+    <section class="safety-net-bg py-16 section-divider">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          Not sure which path fits?
+        </h2>
+        <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          Most of our engagements start with a
+          <strong class="text-gray-900">30-minute pipeline diagnostic call.</strong>
+          We'll review where you are, identify the biggest constraint, and recommend the right next step—whether that's working with us or not.
+        </p>
+        <a
+          href="/contact"
+          class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
+        >
+          Not Sure? Book a 30-Minute Call
+        </a>
+        <p class="text-sm text-gray-500 mt-4 italic">
+          No pitch deck. No pressure. Just a clear next step.
+        </p>
+      </div>
+    </section>
   </main>
 
   <Footer />
 </Layout>
 
 <style>
-  /* Hero background - same as main site hero */
+  /* ============================================
+     PROGRAMMES PAGE - SCOPED STYLES
+     ============================================ */
+
+  /* --- CSS Custom Properties (Programmes) --- */
+  :root {
+    --prog-green: #4A9B7F;
+    --prog-orange: #E8845C;
+    --prog-blue: #5B8DEF;
+    /* 3-tier depth system */
+    --prog-dark-bg: #111827;       /* Tier 1: Page background */
+    --prog-card-bg: #1A222F;       /* Tier 2: Programme section cards */
+    --prog-inner-bg: #222B3A;      /* Tier 3: Inner elements */
+    --prog-card-border: rgba(255, 255, 255, 0.08);
+    --prog-text: rgba(255, 255, 255, 0.85);
+    --prog-text-muted: rgba(255, 255, 255, 0.6);
+    --prog-text-faint: rgba(255, 255, 255, 0.4);
+  }
+
+  /* --- Hero (unchanged, light) --- */
   .hero-bg {
     position: relative;
     overflow: hidden;
@@ -571,61 +758,1336 @@ const lozenges = programmes.map(p => ({
   }
 
   @keyframes brandColorCycle {
-    0% {
-      background-position: 0% 50%;
+    0% { background-position: 0% 50%; }
+    33% { background-position: 100% 25%; }
+    66% { background-position: 0% 75%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* --- Path Finder Cards (7.5) --- */
+  .pathfinder-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .pathfinder-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .pathfinder-card[data-accent="green"] { border-left-color: var(--prog-green); }
+  .pathfinder-card[data-accent="orange"] { border-left-color: var(--prog-orange); }
+  .pathfinder-card[data-accent="blue"] { border-left-color: var(--prog-blue); }
+
+  .pathfinder-card:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transform: translateX(4px);
+  }
+
+  .pathfinder-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    text-align: left;
+  }
+
+  .pathfinder-card__title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #111827;
+  }
+
+  .pathfinder-card__subtitle {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .pathfinder-card__arrow {
+    color: #9ca3af;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .pathfinder-card:hover .pathfinder-card__arrow {
+    transform: translateX(3px);
+    color: #4b5563;
+  }
+
+  /* --- Journey Indicator --- */
+  .journey-indicator {
+    background: var(--prog-dark-bg);
+    padding: 2rem 0 0;
+  }
+
+  .journey-flow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .journey-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .journey-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+
+  .journey-dot--green { background: var(--prog-green); }
+  .journey-dot--orange { background: var(--prog-orange); }
+  .journey-dot--blue { background: var(--prog-blue); }
+
+  .journey-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .journey-sublabel {
+    font-size: 0.65rem;
+    color: var(--prog-text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .journey-connector {
+    width: 60px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 1rem;
+    margin-top: 6px; /* align with center of 14px dot */
+    position: relative;
+  }
+
+  .journey-connector::after {
+    content: '→';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.75rem;
+  }
+
+  /* Mobile journey: vertical */
+  @media (max-width: 639px) {
+    .journey-flow {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-left: 1.5rem;
+      max-height: none;
     }
-    33% {
-      background-position: 100% 25%;
+
+    .journey-node {
+      flex-direction: row;
+      gap: 0.75rem;
     }
-    66% {
-      background-position: 0% 75%;
+
+    .journey-connector {
+      width: 2px;
+      height: 24px;
+      margin: 0.25rem 0 0.25rem 6px;
     }
-    100% {
-      background-position: 0% 50%;
+
+    .journey-connector::after {
+      content: '↓';
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: -8px;
+      transform: translateX(-50%);
     }
   }
 
-  /* Sprint tab interactions */
-  .sprint-tab.active {
-    border-color: var(--color-primary-600);
-    color: var(--color-primary-600);
-    background-color: var(--color-primary-50);
+  /* --- Sticky Sub-Navigation --- */
+  .programme-subnav {
+    position: sticky;
+    top: 64px; /* height of main nav */
+    z-index: 40;
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: none;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
   }
 
-  .sprint-detail {
-    display: none;
+  .programme-subnav--visible {
+    max-height: 60px;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  .sprint-detail.active {
+  .programme-subnav__link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+  }
+
+  .programme-subnav__link:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .programme-subnav__link.active.programme-subnav__link--green {
+    color: var(--prog-green);
+    border-bottom-color: var(--prog-green);
+  }
+
+  .programme-subnav__link.active.programme-subnav__link--orange {
+    color: var(--prog-orange);
+    border-bottom-color: var(--prog-orange);
+  }
+
+  .programme-subnav__link.active.programme-subnav__link--blue {
+    color: var(--prog-blue);
+    border-bottom-color: var(--prog-blue);
+  }
+
+  /* Mobile sub-nav */
+  @media (max-width: 767px) {
+    .programme-subnav {
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .programme-subnav__link {
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+  }
+
+  /* --- Dark Programme Content Area --- */
+  .programmes-content {
+    background: var(--prog-dark-bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Page atmosphere blobs (7.8) */
+  .programmes-content::before,
+  .programmes-content::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .programmes-content::before {
+    width: 800px;
+    height: 800px;
+    top: -200px;
+    right: -300px;
+    background: radial-gradient(circle, rgba(74, 155, 127, 0.04) 0%, transparent 70%);
+  }
+
+  .programmes-content::after {
+    width: 600px;
+    height: 600px;
+    bottom: 10%;
+    left: -200px;
+    background: radial-gradient(circle, rgba(91, 141, 239, 0.03) 0%, transparent 70%);
+  }
+
+  .atmosphere-blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .atmosphere-blob--orange {
+    width: 700px;
+    height: 700px;
+    top: 40%;
+    right: -250px;
+    background: radial-gradient(circle, rgba(232, 132, 92, 0.035) 0%, transparent 70%);
+  }
+
+  /* --- Programme Area Sections --- */
+  .prog-area {
+    padding: 4rem 0;
+    scroll-margin-top: 130px; /* header + subnav */
+    position: relative;
+    z-index: 1;
+  }
+
+  .prog-area--alt {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  @media (min-width: 1024px) {
+    .prog-area {
+      padding: 5rem 0;
+    }
+  }
+
+  /* --- Programme Section Container (Card) --- */
+  .programme-section {
+    background: var(--prog-card-bg);
+    border: 1px solid var(--prog-card-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    position: relative;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Accent glow gradient (7.2) */
+  .programme-section[data-accent="green"] {
+    background:
+      radial-gradient(ellipse at top center, rgba(74, 155, 127, 0.07) 0%, transparent 60%),
+      var(--prog-card-bg);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 0 80px rgba(74, 155, 127, 0.04);
+  }
+
+  .programme-section[data-accent="orange"] {
+    background:
+      radial-gradient(ellipse at top center, rgba(232, 132, 92, 0.07) 0%, transparent 60%),
+      var(--prog-card-bg);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 0 80px rgba(232, 132, 92, 0.04);
+  }
+
+  .programme-section[data-accent="blue"] {
+    background:
+      radial-gradient(ellipse at top center, rgba(91, 141, 239, 0.07) 0%, transparent 60%),
+      var(--prog-card-bg);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 0 80px rgba(91, 141, 239, 0.04);
+  }
+
+  @media (max-width: 767px) {
+    .programme-section {
+      padding: 1.5rem;
+    }
+  }
+
+  .programme-section--alt {
+    background: var(--prog-card-bg);
+  }
+
+  /* Colour-coded accent bar */
+  .programme-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    right: 2rem;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+  }
+
+  .programme-section[data-accent="green"]::before {
+    background: var(--prog-green);
+  }
+
+  .programme-section[data-accent="orange"]::before {
+    background: var(--prog-orange);
+  }
+
+  .programme-section[data-accent="blue"]::before {
+    background: var(--prog-blue);
+  }
+
+  /* --- "Start Here" Badge --- */
+  .programme-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: rgba(74, 155, 127, 0.15);
+    color: var(--prog-green);
+    border: 1px solid rgba(74, 155, 127, 0.3);
+    border-radius: 100px;
+    padding: 0.3rem 0.8rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* --- Typography --- */
+  .prog-h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .prog-h2 {
+      font-size: 3rem;
+    }
+  }
+
+  .prog-h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+
+  .prog-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--prog-text-faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .prog-quote {
+    font-size: 1.2rem;
+    color: var(--prog-text-muted);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .prog-body {
+    font-size: 1.05rem;
+    color: var(--prog-text);
+    line-height: 1.7;
+    max-width: 42rem;
+  }
+
+  /* --- Duration & Investment Badges --- */
+  .programme-meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .programme-meta__item {
+    background: var(--prog-inner-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .programme-meta__label {
     display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--prog-text-faint);
+    margin-bottom: 0.25rem;
+  }
+
+  .programme-meta__value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: white;
+  }
+
+  /* --- Outcome Block --- */
+  .prog-outcome {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+  }
+
+  .prog-outcome--green {
+    background: var(--prog-inner-bg);
+    border-left-color: var(--prog-green);
+  }
+
+  /* Styled bullet points inside outcome/programme sections */
+  .prog-outcome :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+  }
+
+  .prog-outcome :global(li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: var(--prog-text);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .prog-outcome :global(li:last-child) {
+    border-bottom: none;
+  }
+
+  .prog-outcome :global(li::before) {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    min-width: 6px;
+    border-radius: 50%;
+    background: var(--prog-green);
+    margin-top: 0.55rem;
+  }
+
+  .prog-outcome :global(p) {
+    color: var(--prog-text);
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .prog-outcome :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* --- Deliverables Grid (7.6) --- */
+  .deliverables-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 639px) {
+    .deliverables-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .deliverables-grid__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--prog-inner-bg);
+    border-radius: 8px;
+    color: var(--prog-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* --- Practice Points --- */
+  .prog-practice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--prog-inner-bg);
+    border-radius: 8px;
+    color: var(--prog-text);
+    font-size: 0.95rem;
+  }
+
+  /* --- Tables (dark theme) --- */
+  .prog-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .prog-table thead tr {
+    background: var(--prog-inner-bg);
+  }
+
+  .prog-table th {
+    text-align: left;
+    padding: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+  }
+
+  .prog-table tbody tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .prog-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .prog-table td {
+    padding: 1rem;
+    color: var(--prog-text);
+    font-size: 0.9rem;
+  }
+
+  /* --- CTA Buttons --- */
+  .prog-cta-btn {
+    display: inline-block;
+    background: var(--color-secondary-600);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
+    text-decoration: none;
+  }
+
+  .prog-cta-btn:hover {
+    background: var(--color-secondary-500);
+  }
+
+  .prog-cta-subtext {
+    font-size: 0.875rem;
+    color: var(--prog-text-muted);
+    font-style: italic;
+    margin-top: 1rem;
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-secondary {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--prog-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  .cta-secondary:hover {
+    color: white;
+  }
+
+  /* --- Sprint Card Grid (Phase 2) --- */
+  .sprint-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .sprint-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .sprint-card {
+    background: var(--prog-inner-bg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 2px solid rgba(232, 132, 92, 0.4);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.25s ease;
+  }
+
+  .sprint-card:hover {
+    background: #283342;
+    border-left-color: rgba(232, 132, 92, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .sprint-card:has(.sprint-card__toggle[aria-expanded="true"]) {
+    border-left-color: var(--prog-orange);
+    box-shadow: 0 4px 20px rgba(232, 132, 92, 0.08);
+  }
+
+  .sprint-card__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .sprint-card__summary {
+    font-size: 0.9rem;
+    color: var(--prog-text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .sprint-card__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--prog-orange);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+  }
+
+  .sprint-card__toggle:hover {
+    color: white;
+  }
+
+  .sprint-card__arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .sprint-card__toggle[aria-expanded="true"] .sprint-card__arrow {
+    transform: rotate(180deg);
+  }
+
+  /* Sprint detail panel - hidden by default */
+  .sprint-detail-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+    margin-top: 0;
+  }
+
+  .sprint-detail-panel__inner {
+    overflow: hidden;
+  }
+
+  .sprint-detail-panel.open {
+    grid-template-rows: 1fr;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .sprint-detail__label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--prog-text-faint);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .sprint-detail__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sprint-detail__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: var(--prog-text);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+
+  .sprint-detail__outcome {
+    padding: 1rem;
+    background: rgba(232, 132, 92, 0.06);
+    border-radius: 8px;
+    border: 1px solid rgba(232, 132, 92, 0.12);
+  }
+
+  /* ============================================
+     CASE STUDY SPOTLIGHT
+     ============================================ */
+
+  .cs-spotlight {
+    position: relative;
+    padding: 5rem 2rem;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 60% at 15% 50%, rgba(74, 155, 127, 0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 70% at 85% 30%, rgba(74, 155, 127, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(17, 24, 39, 0.9) 0%, transparent 50%),
+      linear-gradient(170deg, #0D1B17 0%, #111827 40%, #0F1923 100%);
+  }
+
+  /* Noise texture overlay */
+  .cs-spotlight__noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC43IiBudW1PY3RhdmVzPSI0IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9IjAuMDI1Ii8+PC9zdmc+");
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Top/bottom gradient border lines */
+  .cs-spotlight__border {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    z-index: 1;
+  }
+
+  .cs-spotlight__border--top {
+    top: 0;
+    background: linear-gradient(90deg, transparent, rgba(74, 155, 127, 0.3), rgba(74, 155, 127, 0.15), transparent);
+  }
+
+  .cs-spotlight__border--bottom {
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(74, 155, 127, 0.15), rgba(74, 155, 127, 0.3), transparent);
+  }
+
+  /* Grid layout */
+  .cs-spotlight__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1120px;
+    margin: 0 auto;
+    align-items: center;
+  }
+
+  /* --- Eyebrow --- */
+  .cs-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--prog-green);
+    margin-bottom: 1rem;
+  }
+
+  .cs-eyebrow__dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--prog-green);
+    animation: csDotPulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes csDotPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(74, 155, 127, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(74, 155, 127, 0); }
+  }
+
+  /* --- Headline --- */
+  .cs-headline {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 800;
+    color: white;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+
+  .cs-headline__accent {
+    color: var(--prog-green);
+  }
+
+  /* --- Subtext --- */
+  .cs-subtext {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: rgba(249, 250, 251, 0.65);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 32rem;
+  }
+
+  /* --- Stats --- */
+  .cs-stats {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .cs-stat {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(74, 155, 127, 0.15);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    flex: 1;
+    transition: all 0.2s ease;
+  }
+
+  .cs-stat:hover {
+    border-color: rgba(74, 155, 127, 0.35);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .cs-stat__value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--prog-green);
+    line-height: 1.2;
+  }
+
+  .cs-stat__label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(249, 250, 251, 0.45);
+    font-weight: 500;
+    margin-top: 0.25rem;
+  }
+
+  /* --- CTA --- */
+  .cs-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: transparent;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .cs-cta:hover {
+    border-color: rgba(74, 155, 127, 0.5);
+    background: rgba(74, 155, 127, 0.08);
+    color: var(--prog-green);
+  }
+
+  .cs-cta__arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .cs-cta:hover .cs-cta__arrow {
+    transform: translateX(3px);
+  }
+
+  /* --- Chart wrapper --- */
+  .cs-chart-wrapper {
+    position: relative;
+  }
+
+  .cs-chart {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Chart line draw animation */
+  .cs-chart__line,
+  .cs-chart__glow {
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+  }
+
+  .cs-spotlight.cs-animated .cs-chart__line,
+  .cs-spotlight.cs-animated .cs-chart__glow {
+    animation: csLineDraw 2s ease-out forwards;
+  }
+
+  @keyframes csLineDraw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Area fade */
+  .cs-chart__area {
+    opacity: 0;
+  }
+
+  .cs-spotlight.cs-animated .cs-chart__area {
+    animation: csFadeIn 0.8s ease forwards 1.5s;
+  }
+
+  /* Dot pop animations */
+  .cs-chart__dot--1,
+  .cs-chart__dot--2,
+  .cs-chart__dot--3,
+  .cs-chart__dot--4 {
+    opacity: 0;
+  }
+
+  .cs-spotlight.cs-animated .cs-chart__dot--1 {
+    animation: csFadeIn 0.4s ease forwards 0.8s;
+  }
+
+  .cs-spotlight.cs-animated .cs-chart__dot--2 {
+    animation: csFadeIn 0.4s ease forwards 1.2s;
+  }
+
+  .cs-spotlight.cs-animated .cs-chart__dot--3 {
+    animation: csFadeIn 0.4s ease forwards 1.6s;
+  }
+
+  .cs-spotlight.cs-animated .cs-chart__dot--4 {
+    animation: csFadeIn 0.4s ease forwards 2s;
+  }
+
+  @keyframes csFadeIn {
+    to { opacity: 1; }
+  }
+
+  /* --- Floating annotations --- */
+  .cs-annotation {
+    position: absolute;
+    padding: 0.4rem 0.65rem;
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(74, 155, 127, 0.2);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(74, 155, 127, 0.08);
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  .cs-spotlight.cs-animated .cs-annotation--baseline {
+    animation: csAnnotationIn 0.5s ease forwards 1s;
+  }
+
+  .cs-spotlight.cs-animated .cs-annotation--mid {
+    animation: csAnnotationIn 0.5s ease forwards 1.6s;
+  }
+
+  .cs-spotlight.cs-animated .cs-annotation--peak {
+    animation: csAnnotationIn 0.5s ease forwards 2.2s;
+  }
+
+  @keyframes csAnnotationIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .cs-annotation--baseline {
+    bottom: 18%;
+    left: 4%;
+  }
+
+  .cs-annotation--mid {
+    top: 38%;
+    left: 32%;
+  }
+
+  .cs-annotation--peak {
+    top: 5%;
+    right: 5%;
+  }
+
+  .cs-annotation__value {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--prog-green);
+    line-height: 1.2;
+  }
+
+  .cs-annotation__label {
+    display: block;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+  }
+
+  /* --- Case Study Responsive --- */
+
+  /* Tablet / small desktop */
+  @media (max-width: 900px) {
+    .cs-spotlight__grid {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .cs-spotlight__copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cs-subtext {
+      max-width: 100%;
+    }
+
+    .cs-chart-wrapper {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 540px) {
+    .cs-spotlight {
+      padding: 3rem 1.25rem;
+    }
+
+    .cs-stats {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .cs-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+    }
+
+    .cs-stat__value {
+      font-size: 1.3rem;
+    }
+
+    .cs-stat__label {
+      margin-top: 0;
+    }
+
+    /* Hide middle annotation on mobile */
+    .cs-annotation--mid {
+      display: none;
+    }
+  }
+
+  /* --- Bottom CTA Section (Safety Net replacement) --- */
+  .safety-net-bg {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 50%, #F8FAFC 100%);
+  }
+
+  .safety-net-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      rgba(5, 150, 105, 0.08) 0%,
+      rgba(234, 88, 12, 0.06) 25%,
+      rgba(124, 58, 237, 0.05) 50%,
+      rgba(5, 150, 105, 0.08) 75%,
+      rgba(234, 88, 12, 0.06) 100%
+    );
+    background-size: 400% 400%;
+    animation: brandColorCycle 12s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .safety-net-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================
+     MOBILE RESPONSIVENESS (Phase 6)
+     ============================================ */
+
+  /* Small phones (375px) */
+  @media (max-width: 479px) {
+    .prog-area {
+      padding: 2.5rem 0;
+    }
+
+    .prog-h2 {
+      font-size: 1.75rem;
+    }
+
+    .prog-h3 {
+      font-size: 1.15rem;
+    }
+
+    .programme-meta__value {
+      font-size: 0.95rem;
+    }
+
+    .prog-cta-btn {
+      font-size: 1rem;
+      padding: 0.875rem 1.5rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .prog-table th,
+    .prog-table td {
+      padding: 0.625rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Mobile general (up to 767px) */
+  @media (max-width: 767px) {
+    .prog-area {
+      padding: 3rem 0;
+    }
+
+    /* CTA buttons: min 48px tap target */
+    .prog-cta-btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Sprint card toggle: 48px tap target */
+    .sprint-card__toggle {
+      min-height: 44px;
+      padding: 0.5rem 0;
+    }
+
+    /* Body text max-width safe on mobile */
+    .prog-body {
+      max-width: 100%;
+    }
+
+    /* Sprint detail list: increased line-height on mobile */
+    .sprint-detail__list li {
+      line-height: 1.8;
+      margin-bottom: 0.625rem;
+    }
+
+    /* Programme meta badges wrap */
+    .programme-meta {
+      display: flex;
+      width: 100%;
+    }
+
+    .programme-meta__item {
+      flex: 1;
+      min-width: 0;
+    }
   }
 </style>
 
 <script>
-  // Sprint tab functionality
   document.addEventListener('DOMContentLoaded', () => {
-    const tabs = document.querySelectorAll('.sprint-tab');
-    const cards = document.querySelectorAll('.sprint-detail');
+    // ===== Sprint Card Expand/Collapse =====
+    const toggleButtons = document.querySelectorAll('[data-sprint-toggle]');
 
-    if (tabs.length > 0 && cards.length > 0) {
-      // Show first sprint by default
-      tabs[0]?.classList.add('active');
-      cards[0]?.classList.add('active');
+    toggleButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const index = btn.getAttribute('data-sprint-toggle');
+        const panel = document.getElementById(`sprint-detail-${index}`);
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
 
-      tabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
-          const index = tab.getAttribute('data-sprint-index');
-
-          // Remove active class from all tabs and cards
-          tabs.forEach(t => t.classList.remove('active'));
-          cards.forEach(c => c.classList.remove('active'));
-
-          // Add active class to clicked tab and corresponding card
-          tab.classList.add('active');
-          const targetCard = document.querySelector(`[data-sprint-card="${index}"]`);
-          targetCard?.classList.add('active');
+        // Close all other panels first
+        toggleButtons.forEach((otherBtn) => {
+          const otherIndex = otherBtn.getAttribute('data-sprint-toggle');
+          const otherPanel = document.getElementById(`sprint-detail-${otherIndex}`);
+          otherBtn.setAttribute('aria-expanded', 'false');
+          otherPanel?.classList.remove('open');
         });
+
+        // Toggle current panel
+        if (!isOpen) {
+          btn.setAttribute('aria-expanded', 'true');
+          panel?.classList.add('open');
+        }
       });
+    });
+
+    // ===== Sub-Nav Visibility: show after journey indicator scrolls out =====
+    const subnav = document.getElementById('programme-subnav');
+    const journeyIndicator = document.querySelector('.journey-indicator');
+
+    if (subnav && journeyIndicator) {
+      const visibilityObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // Show subnav when journey indicator is NOT visible
+            subnav.classList.toggle('programme-subnav--visible', !entry.isIntersecting);
+          });
+        },
+        {
+          rootMargin: '-64px 0px 0px 0px', /* account for sticky header height */
+          threshold: 0
+        }
+      );
+
+      visibilityObserver.observe(journeyIndicator);
     }
+
+    // ===== Sticky Sub-Nav: Active State Tracking =====
+    const sections = document.querySelectorAll('.prog-area');
+    const navLinks = document.querySelectorAll('.programme-subnav__link');
+
+    if (sections.length > 0 && navLinks.length > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const sectionId = entry.target.id;
+              navLinks.forEach((link) => {
+                link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+              });
+            }
+          });
+        },
+        {
+          rootMargin: '-140px 0px -60% 0px',
+          threshold: 0
+        }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }
+
+    // ===== Case Study Spotlight: scroll-triggered animations =====
+    const csSpotlight = document.getElementById('case-study-spotlight');
+    if (csSpotlight) {
+      const csObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              csSpotlight.classList.add('cs-animated');
+              csObserver.unobserve(csSpotlight);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      csObserver.observe(csSpotlight);
+    }
+
+    // ===== Smooth Scroll for Sub-Nav =====
+    navLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href')?.substring(1);
+        const target = document.getElementById(targetId || '');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
   });
 </script>
