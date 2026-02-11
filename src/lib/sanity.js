@@ -17,6 +17,10 @@ export const client = createClient({
 async function fetchWithFallback(query, params = {}, fallback = null) {
   try {
     const result = await client.fetch(query, params)
+    // If query succeeds but returns null/undefined, use fallback
+    if (result === null || result === undefined) {
+      return fallback
+    }
     return result
   } catch (error) {
     console.error(`Sanity fetch error for query: ${query.substring(0, 50)}...`, error.message)
@@ -28,14 +32,26 @@ async function fetchWithFallback(query, params = {}, fallback = null) {
 // Helper functions - now with current live site fallbacks
 export async function getHero() {
   return await fetchWithFallback(
-    `*[_type == "hero"][0]`,
+    `*[_type == "hero"][0]{
+      title,
+      subtitle,
+      description,
+      ctaText,
+      ctaLink,
+      ctaDescriptor,
+      proofLineText,
+      proofLineLink
+    }`,
     {},
     {
       title: 'Stop Guessing. Start Scaling. Senior B2B Demand Gen Leadership, Without the Headcount.',
       subtitle: 'I help B2B companies fix broken pipelines, lower CAC, and build predictable revenue engines. 20 years experience. Impact in 90 days.',
       description: '',
       ctaText: 'Get a free strategy review',
-      ctaLink: '/contact'
+      ctaLink: '/contact',
+      ctaDescriptor: 'Free. No pitch. Just a clear view of your biggest opportunity.',
+      proofLineText: 'Case Study: 111% pipeline value increase in 90 days via intent-led demand gen.',
+      proofLineLink: '/blog/case-study-how-we-doubled-pipeline-by-leveraging-intent-data/'
     }
   )
 }
@@ -84,6 +100,42 @@ export async function getServicesSection() {
   )
 }
 
+export async function getSafetyNet() {
+  return await fetchWithFallback(
+    `*[_type == "safetyNet"][0]`,
+    {},
+    {
+      heading: 'Not sure which path fits?',
+      description: 'Most of our engagements start with a 30-minute pipeline diagnostic call. We\'ll review where you are, identify the biggest constraint, and recommend the right next step—whether that\'s working with us or not. No pitch deck. No pressure.',
+      ctaText: 'Book a 30-Minute Pipeline Diagnostic',
+      ctaLink: '/contact',
+      subtext: 'No pitch deck. No pressure. Just a clear next step.'
+    }
+  )
+}
+
+export async function getProgrammesPage() {
+  return await fetchWithFallback(
+    `*[_type == "programmesPage"][0]{
+      heroHeading,
+      heroSubheading,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      "ogImage": ogImage.asset->url
+    }`,
+    {},
+    {
+      heroHeading: 'Programmes designed around your pipeline problems',
+      heroSubheading: 'Every engagement starts with a clear problem and ends with a measurable outcome. Choose the path that fits where you are.',
+      metaTitle: 'Programmes | DemandGenix - Pipeline Solutions for B2B Growth',
+      metaDescription: 'Fix your pipeline with our proven programmes: Pipeline Diagnostic, Pipeline Turnaround sprints, or Fractional Demand Leadership. Choose the right path for your growth stage.',
+      metaKeywords: 'demand gen programmes, pipeline diagnostic, demand gen turnaround, fractional CMO, B2B marketing leadership',
+      ogImage: null
+    }
+  )
+}
+
 export async function getProgrammes() {
   return await fetchWithFallback(
     `
@@ -94,6 +146,7 @@ export async function getProgrammes() {
       problemTag,
       solutionLabel,
       problemQuote,
+      bestFor,
       lozengeLabel,
       lozengeIcon,
       bulletPoints,
@@ -108,6 +161,12 @@ export async function getProgrammes() {
       deliverables,
       ctaText,
       ctaDescriptor,
+      detailedDescription,
+      processSteps,
+      sprintDetails,
+      practicePoints,
+      enterpriseTable,
+      outcome,
       comparisonTable,
       order,
       "services": services[]-> {
@@ -130,6 +189,7 @@ export async function getProgrammes() {
         problemTag: 'diagnostic',
         solutionLabel: 'SOLUTION 01',
         problemQuote: "I don't know what's working.",
+        bestFor: 'Seed to Series B companies with £30k–£200k marketing budget who need clarity before committing to execution.',
         lozengeLabel: "I don't know what's working",
         lozengeIcon: 'search',
         bulletPoints: [
@@ -142,9 +202,48 @@ export async function getProgrammes() {
         duration: '3–4 weeks',
         investment: '£3,500-£5,000',
         deliverables: [
-          'Full-funnel analysis',
-          'Actionable roadmap',
-          'Actionable roadmap'
+          'Full-funnel analysis with conversion benchmarks',
+          'Prioritised 90-day execution roadmap',
+          'Channel-specific recommendations',
+          'Quick-win opportunities identified'
+        ],
+        detailedDescription: [
+          {
+            _type: 'block',
+            children: [
+              { _type: 'span', text: 'Most B2B companies are investing in demand gen without knowing what\'s actually working. This diagnostic gives you a clear view of your pipeline health, identifies the biggest leaks, and provides a prioritised roadmap for the next 90 days.' }
+            ]
+          }
+        ],
+        outcome: [
+          {
+            _type: 'block',
+            children: [
+              { _type: 'span', text: 'A clear, data-backed view of what\'s working (and what\'s not) across your entire demand gen funnel, plus a prioritised 90-day roadmap to fix the biggest leaks and drive measurable pipeline growth.' }
+            ]
+          }
+        ],
+        processSteps: [
+          {
+            week: 'Week 1',
+            title: 'Kick-off',
+            description: 'Initial discovery and data access setup'
+          },
+          {
+            week: 'Week 2',
+            title: 'Stakeholder Interviews',
+            description: 'Deep-dive sessions with your team'
+          },
+          {
+            week: 'Week 3-4',
+            title: 'Analysis & Synthesis',
+            description: 'Full-funnel audit and roadmap creation'
+          },
+          {
+            week: 'Week 4',
+            title: 'Insights & Recommendations',
+            description: 'Presentation of findings and next steps'
+          }
         ],
         ctaText: 'Book a 30-Minute Diagnostic',
         ctaDescriptor: "We'll map your biggest leak and recommend a next step",
@@ -157,6 +256,7 @@ export async function getProgrammes() {
         problemTag: 'turnaround',
         solutionLabel: 'SOLUTION 02',
         problemQuote: "I know what's broken. I need it fixed.",
+        bestFor: 'Companies with identified pipeline issues who need targeted fixes delivered in 6-12 weeks.',
         lozengeLabel: "I know what's broken, I need it fixed",
         lozengeIcon: 'chart',
         sprints: ['Revenue Tracking', 'Paid Media Reset', 'Conversion Sprint', 'ABM Pilot'],
@@ -167,7 +267,62 @@ export async function getProgrammes() {
         linkText: 'Explore turnaround sprints',
         linkUrl: '/programmes#turnaround',
         isEntryHero: false,
-        duration: '3-4 weeks each',
+        duration: '6-12 weeks',
+        investment: '£4,500-£12,000 per sprint',
+        detailedDescription: [
+          {
+            _type: 'block',
+            children: [
+              { _type: 'span', text: 'You know what\'s broken in your pipeline—now it\'s time to fix it. Choose from our targeted sprints, each designed to solve a specific problem in 6-12 weeks with measurable outcomes.' }
+            ]
+          }
+        ],
+        sprintDetails: [
+          {
+            name: 'Revenue Source of Truth',
+            problem: 'You can\'t trust your pipeline data. Marketing and Sales don\'t agree on what\'s working.',
+            deliverables: [
+              'Clean revenue attribution model',
+              'Unified dashboard for Marketing and Sales',
+              'Clear definitions of MQL, SQL, and closed-won',
+              'Automated reporting setup'
+            ],
+            outcome: 'One source of truth that both teams trust, enabling better decisions and faster optimisation.'
+          },
+          {
+            name: 'Paid Media Reset',
+            problem: 'Your paid channels are burning budget without clear ROI. CAC is too high and quality is inconsistent.',
+            deliverables: [
+              'Full audit of current campaigns',
+              'Audience and messaging restructure',
+              'Landing page optimisation',
+              'Budget reallocation plan'
+            ],
+            outcome: 'Lower CAC, higher quality leads, and clear attribution from ads to pipeline.'
+          },
+          {
+            name: 'Conversion Sprint',
+            problem: 'Traffic is there but conversions are weak. Your funnel is leaking at critical points.',
+            deliverables: [
+              'Conversion funnel analysis',
+              'High-impact page optimisation',
+              'A/B testing framework',
+              'Lead nurture sequence setup'
+            ],
+            outcome: 'Improved conversion rates at key funnel stages, turning more visitors into qualified pipeline.'
+          },
+          {
+            name: 'ABM Playbook & Pilot',
+            problem: 'You need to land enterprise accounts but your approach is too generic.',
+            deliverables: [
+              'Target account selection and research',
+              'Personalised campaign playbook',
+              'Multi-channel outreach sequence',
+              'Pilot execution with 10-20 accounts'
+            ],
+            outcome: 'A repeatable ABM playbook with validated tactics and early pipeline from target accounts.'
+          }
+        ],
         ctaText: 'Book a 30-Minute Pipeline Diagnostic',
         ctaDescriptor: 'Results in weeks, not quarters',
         order: 2,
@@ -204,6 +359,7 @@ export async function getProgrammes() {
         problemTag: 'leadership',
         solutionLabel: 'SOLUTION 03',
         problemQuote: "I need senior leadership, but can't justify the hire.",
+        bestFor: 'Growing companies who need senior demand gen leadership 1-2 days/week without full-time commitment.',
         lozengeLabel: "I need senior leadership now",
         lozengeIcon: 'users',
         bulletPoints: [
@@ -215,14 +371,48 @@ export async function getProgrammes() {
         isEntryHero: false,
         duration: 'Ongoing (rolling 90 days)',
         durationSubtext: '(1-2 days/week)',
+        investment: 'From £2,500/month',
+        detailedDescription: [
+          {
+            _type: 'block',
+            children: [
+              { _type: 'span', text: 'You need senior demand gen leadership but can\'t justify a full-time hire. Get an embedded fractional leader who owns your pipeline number and works alongside your team 1-2 days per week.' }
+            ]
+          }
+        ],
+        practicePoints: [
+          'Weekly strategic planning and priority setting',
+          'Hands-on execution on high-impact initiatives',
+          'Team coaching and capability building',
+          'Direct collaboration with Sales leadership',
+          'Monthly board-ready reporting',
+          'Vendor management and agency oversight'
+        ],
+        enterpriseTable: {
+          tiers: [
+            { name: 'Core', commitment: '1 day/week', investment: '£2,500/month' },
+            { name: 'Plus', commitment: '2 days/week', investment: '£4,500/month' },
+            { name: 'Enterprise', commitment: 'Custom', investment: 'Custom' }
+          ],
+          features: [
+            { name: 'Strategy & Planning', availability: [true, true, true] },
+            { name: 'Hands-on Execution', availability: [true, true, true] },
+            { name: 'Team Coaching', availability: [false, true, true] },
+            { name: 'Agency/Vendor Oversight', availability: [false, true, true] },
+            { name: 'Board Reporting', availability: [false, false, true] },
+            { name: 'Custom Integrations', availability: [false, false, true] }
+          ]
+        },
         ctaText: 'Book a 60-Minute Diagnostic',
-        ctaDescriptor: 'Results in weeks, not quarters',
+        ctaDescriptor: 'Let\'s discuss what fractional leadership could look like for your business',
         comparisonTable: {
           rows: [
-            { agency: 'Hands-off', fractional: 'Embedded' },
-            { agency: 'Fixed scope', fractional: 'Flexible' },
-            { agency: 'Junior team', fractional: 'Strategic/Exec' },
-            { agency: 'Invoice', fractional: 'Salary/Retainer' }
+            { feature: 'Owns the pipeline number', agency: '✗', fractional: '✓' },
+            { feature: 'Joins your standups', agency: 'Rarely', fractional: 'Weekly' },
+            { feature: 'Reports to your board', agency: 'No', fractional: 'Yes (if needed)' },
+            { feature: 'Builds your team\'s skills', agency: 'No', fractional: 'Yes' },
+            { feature: 'Adapts strategy quarterly', agency: 'New SOW required', fractional: 'Built-in flexibility' },
+            { feature: 'Commitment', agency: 'Project-based', fractional: 'Rolling 90 days' }
           ]
         },
         order: 3,

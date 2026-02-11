@@ -45,6 +45,12 @@ export default {
       description: 'Italic quote shown on the solution card, e.g., "I don\'t know what\'s working."',
     },
     {
+      name: 'bestFor',
+      title: 'Best For',
+      type: 'text',
+      description: 'Description of ideal customer and use case, e.g., "Seed to Series B companies with £30k–£200k marketing budget who need clarity before committing to execution."',
+    },
+    {
       name: 'lozengeLabel',
       title: 'Lozenge Button Label',
       type: 'string',
@@ -154,20 +160,217 @@ export default {
               type: 'object',
               fields: [
                 {
+                  name: 'feature',
+                  title: 'Feature/Attribute',
+                  type: 'string',
+                  description: 'e.g., "Owns the pipeline number", "Joins your standups"',
+                },
+                {
                   name: 'agency',
                   title: 'Agency Column',
                   type: 'string',
+                  description: 'Value for agency column (e.g., "✗", "Rarely", "No")',
                 },
                 {
                   name: 'fractional',
                   title: 'Fractional Leader Column',
                   type: 'string',
+                  description: 'Value for fractional leader column (e.g., "✓", "Yes", "Daily")',
                 },
               ],
             },
           ],
         },
       ],
+    },
+    {
+      name: 'detailedDescription',
+      title: 'Detailed Description',
+      type: 'array',
+      description: 'Longer description for the programmes detail page (supports rich text)',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+          ],
+          lists: [
+            {title: 'Bullet', value: 'bullet'},
+            {title: 'Numbered', value: 'number'}
+          ],
+          marks: {
+            decorators: [
+              {title: 'Strong', value: 'strong'},
+              {title: 'Emphasis', value: 'em'}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      name: 'processSteps',
+      title: 'Process Steps',
+      type: 'array',
+      description: 'Timeline/process steps (for Pipeline Diagnostic)',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'week',
+              title: 'Week/Phase',
+              type: 'string',
+              description: 'e.g., "Week 1", "Week 2-3"',
+            },
+            {
+              name: 'title',
+              title: 'Step Title',
+              type: 'string',
+              description: 'e.g., "Kick-off", "Stakeholder interviews"',
+            },
+            {
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+              description: 'Brief description of this step',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'sprintDetails',
+      title: 'Sprint Details',
+      type: 'array',
+      description: 'Detailed sprint information (for Pipeline Turnaround)',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'name',
+              title: 'Sprint Name',
+              type: 'string',
+              description: 'e.g., "Revenue Source of Truth", "Paid Media Reset"',
+            },
+            {
+              name: 'problem',
+              title: 'Problem',
+              type: 'text',
+              description: 'The problem this sprint solves',
+            },
+            {
+              name: 'deliverables',
+              title: 'Deliverables',
+              type: 'array',
+              of: [{type: 'string'}],
+              description: 'What will be delivered',
+            },
+            {
+              name: 'outcome',
+              title: 'Outcome',
+              type: 'text',
+              description: 'Expected outcome from this sprint',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'practicePoints',
+      title: 'What This Looks Like in Practice',
+      type: 'array',
+      description: 'Practical implementation points (for Fractional Leadership)',
+      of: [{type: 'string'}],
+    },
+    {
+      name: 'enterpriseTable',
+      title: 'Enterprise Service Table',
+      type: 'object',
+      description: 'Service tier comparison table (for Fractional Leadership)',
+      fields: [
+        {
+          name: 'tiers',
+          title: 'Service Tiers',
+          type: 'array',
+          description: 'Different service tiers (columns)',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'name',
+                  title: 'Tier Name',
+                  type: 'string',
+                  description: 'e.g., "Core", "Plus", "Enterprise"',
+                },
+                {
+                  name: 'commitment',
+                  title: 'Commitment',
+                  type: 'string',
+                  description: 'e.g., "1 day/week"',
+                },
+                {
+                  name: 'investment',
+                  title: 'Investment',
+                  type: 'string',
+                  description: 'e.g., "£2,500/month"',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'features',
+          title: 'Features',
+          type: 'array',
+          description: 'Features/services rows',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'name',
+                  title: 'Feature Name',
+                  type: 'string',
+                  description: 'e.g., "Strategy & Planning"',
+                },
+                {
+                  name: 'availability',
+                  title: 'Availability',
+                  type: 'array',
+                  description: 'Which tiers include this (true/false for each tier)',
+                  of: [{type: 'boolean'}],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'outcome',
+      title: 'Expected Outcome',
+      type: 'array',
+      description: 'What outcome/result to expect from this programme (supports rich text)',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+          ],
+          lists: [
+            {title: 'Bullet', value: 'bullet'},
+            {title: 'Numbered', value: 'number'}
+          ],
+          marks: {
+            decorators: [
+              {title: 'Strong', value: 'strong'},
+              {title: 'Emphasis', value: 'em'}
+            ]
+          }
+        }
+      ]
     },
     {
       name: 'services',

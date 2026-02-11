@@ -1,23 +1,150 @@
 ---
 // SafetyNet.astro - A reassurance section for uncertain visitors
+import { getSafetyNet } from '../lib/sanity.js';
+
+let safetyNet;
+try {
+  safetyNet = await getSafetyNet();
+} catch (error) {
+  console.error('Error fetching safety net:', error);
+  safetyNet = {
+    heading: 'Not sure which path fits?',
+    description: 'Most of our engagements start with a 30-minute pipeline diagnostic call. We\'ll review where you are, identify the biggest constraint, and recommend the right next step—whether that\'s working with us or not. No pitch deck. No pressure.',
+    ctaText: 'Book a 30-Minute Pipeline Diagnostic',
+    ctaLink: '/contact',
+    subtext: 'No pitch deck. No pressure. Just a clear next step.'
+  };
+}
 ---
 
-<section class="py-16 bg-gradient-to-br from-gray-900 to-gray-800">
+<section class="safety-net-bg py-16 section-divider">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h2 class="text-3xl font-bold text-white mb-4">
-      Not sure which path fits?
+    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+      {safetyNet.heading}
     </h2>
-    <p class="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-      Most of our engagements start with a <strong class="text-white">30-minute pipeline diagnostic call.</strong> We'll review where you are, identify the biggest constraint, and recommend the right next step—whether that's working with us or not. No pitch deck. No pressure.
+    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+      {safetyNet.description.split('30-minute pipeline diagnostic call')[0]}
+      <strong class="text-gray-900">30-minute pipeline diagnostic call.</strong>
+      {safetyNet.description.split('30-minute pipeline diagnostic call')[1]}
     </p>
     <a
-      href="/contact"
-      class="inline-block bg-primary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-primary-700 transition-colors shadow-lg"
+      href={safetyNet.ctaLink}
+      class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
     >
-      Book a 30-Minute Pipeline Diagnostic
+      {safetyNet.ctaText}
     </a>
-    <p class="text-sm text-gray-400 mt-4 italic">
-      No pitch deck. No pressure. Just a clear next step.
-    </p>
+    {safetyNet.subtext && (
+      <p class="text-sm text-gray-500 mt-4 italic">
+        {safetyNet.subtext}
+      </p>
+    )}
   </div>
 </section>
+
+<style>
+/* Same animated background as hero */
+.safety-net-bg {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #F8FAFC 0%,
+    #FFFFFF 50%,
+    #F8FAFC 100%
+  );
+}
+
+.safety-net-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(5, 150, 105, 0.08) 0%,
+    rgba(234, 88, 12, 0.06) 25%,
+    rgba(124, 58, 237, 0.05) 50%,
+    rgba(5, 150, 105, 0.08) 75%,
+    rgba(234, 88, 12, 0.06) 100%
+  );
+  background-size: 400% 400%;
+  animation: brandColorCycle 12s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.safety-net-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(5, 150, 105, 0.04) 20%,
+    rgba(234, 88, 12, 0.03) 40%,
+    rgba(5, 150, 105, 0.04) 60%,
+    rgba(124, 58, 237, 0.02) 80%,
+    transparent 100%
+  );
+  animation: waveMove 8s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.safety-net-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes brandColorCycle {
+  0% {
+    background-position: 0% 50%;
+  }
+  33% {
+    background-position: 100% 25%;
+  }
+  66% {
+    background-position: 0% 75%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveMove {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(30px) rotate(0.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .safety-net-bg::before {
+    animation: brandColorCycle 12s ease-in-out infinite, subtlePulse 6s ease-in-out infinite;
+  }
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .safety-net-bg::before,
+  .safety-net-bg::after {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+</style>

@@ -38,5 +38,17 @@ export default {
       type: 'text',
       description: 'Explanatory text that appears beneath the CTA button',
     },
+    {
+      name: 'proofLineText',
+      title: 'Proof Line Text',
+      type: 'string',
+      description: 'Optional proof statement (e.g., "Case Study: 111% pipeline value increase in 90 days via intent-led demand gen.")',
+    },
+    {
+      name: 'proofLineLink',
+      title: 'Proof Line Link',
+      type: 'string',
+      description: 'Optional URL for the proof line (e.g., "/blog/case-study-...")',
+    },
   ],
 }

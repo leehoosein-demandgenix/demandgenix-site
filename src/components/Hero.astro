@@ -36,13 +36,21 @@ try {
             <a href="/contact" class="bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-secondary-500 transition-colors">
               {hero.ctaText}
             </a>
-            <a href="#WhyDemandGenix" class="text-secondary-600 hover:text-primary-700 font-medium flex items-center">
-              How I Work →
-            </a>
           </div>
           {hero.ctaDescriptor && (
             <p class="text-sm text-gray-600 italic max-w-md">
               {hero.ctaDescriptor}
+            </p>
+          )}
+          {hero.proofLineText && (
+            <p class="text-sm font-medium text-gray-700 max-w-md mt-3">
+              {hero.proofLineLink ? (
+                <a href={hero.proofLineLink} class="text-secondary-600 hover:text-secondary-700 underline decoration-2 underline-offset-2 transition-colors">
+                  {hero.proofLineText}
+                </a>
+              ) : (
+                hero.proofLineText
+              )}
             </p>
           )}
         </div>

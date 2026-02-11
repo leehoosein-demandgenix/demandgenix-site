@@ -10,6 +10,15 @@ try {
 } catch (error) {
   console.error('Error fetching data:', error);
   programmes = [];
+  servicesSection = null;
+}
+
+// Ensure defaults if data is missing
+if (!programmes || !Array.isArray(programmes)) {
+  programmes = [];
+}
+
+if (!servicesSection) {
   servicesSection = {
     heading: 'Which sounds like you?',
     subheading: 'Select your biggest challenge to see the recommended path.'
@@ -22,6 +31,7 @@ const solutions = programmes.map(prog => ({
   label: prog.solutionLabel || '',
   title: prog.title,
   problemQuote: prog.problemQuote || prog.problemStatement,
+  bestFor: prog.bestFor || '',
   icon: prog.lozengeIcon || 'search',
   sprints: prog.sprints || [],
   bullets: prog.bulletPoints || [],
@@ -36,7 +46,7 @@ const lozenges = programmes.map(prog => ({
 }));
 ---
 
-<section id="services" class="py-16 lg:py-24 bg-white">
+<section id="services" class="py-16 lg:py-24 bg-white section-divider">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <!-- Header -->
@@ -82,7 +92,7 @@ const lozenges = programmes.map(prog => ({
       {solutions.map((solution) => (
         <div
           data-solution-card={solution.id}
-          class="solution-card bg-white border-2 border-gray-200 rounded-xl p-6 transition-all duration-300 hover:shadow-lg"
+          class="solution-card bg-white border-2 border-gray-200 rounded-xl p-6 transition-all duration-300 hover:shadow-lg flex flex-col"
         >
           {/* Label */}
           {solution.label && (
@@ -97,6 +107,16 @@ const lozenges = programmes.map(prog => ({
           {/* Problem Quote */}
           {solution.problemQuote && (
             <p class="text-sm text-gray-600 italic mb-4">"{solution.problemQuote}"</p>
+          )}
+
+          {/* Best For */}
+          {solution.bestFor && (
+            <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                Best for:
+              </div>
+              <p class="text-sm text-gray-700">{solution.bestFor}</p>
+            </div>
           )}
 
           {/* Sprints (for Turnaround only) */}
@@ -132,7 +152,7 @@ const lozenges = programmes.map(prog => ({
           {/* Link */}
           <a
             href={solution.link}
-            class="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+            class="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors mt-auto"
           >
             {solution.linkText}
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

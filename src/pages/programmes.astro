@@ -1,0 +1,600 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import SafetyNet from '../components/SafetyNet.astro';
+import Footer from '../components/Footer.astro';
+import PortableText from '../components/PortableText.astro';
+import { getProgrammes, getProgrammesPage } from '../lib/sanity.js';
+
+let programmes;
+let programmesPage;
+
+try {
+  programmes = await getProgrammes();
+  programmesPage = await getProgrammesPage();
+} catch (error) {
+  console.error('Error fetching data:', error);
+  programmes = [];
+  programmesPage = null;
+}
+
+// Separate programmes by type
+const diagnostic = programmes.find(p => p.problemTag === 'diagnostic') || {};
+const turnaround = programmes.find(p => p.problemTag === 'turnaround') || {};
+const leadership = programmes.find(p => p.problemTag === 'leadership') || {};
+
+// Create lozenges from programmes
+const lozenges = programmes.map(p => ({
+  label: p.lozengeLabel || p.title,
+  anchor: `#${p.problemTag}`,
+  icon: p.lozengeIcon
+}));
+---
+
+<Layout
+  title={programmesPage?.metaTitle || "Programmes | DemandGenix - Pipeline Solutions for B2B Growth"}
+  description={programmesPage?.metaDescription || "Fix your pipeline with our proven programmes: Pipeline Diagnostic, Pipeline Turnaround sprints, or Fractional Demand Leadership. Choose the right path for your growth stage."}
+  keywords={programmesPage?.metaKeywords}
+  ogImage={programmesPage?.ogImage}
+>
+  <Header />
+
+  <main class="bg-gray-50">
+    <!-- Hero Section -->
+    <section class="hero-bg py-20 lg:py-28">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          {programmesPage?.heroHeading || 'Programmes designed around your pipeline problems'}
+        </h1>
+        <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
+          {programmesPage?.heroSubheading || 'Every engagement starts with a clear problem and ends with a measurable outcome. Choose the path that fits where you are.'}
+        </p>
+
+        {/* Lozenges */}
+        <div class="flex flex-wrap md:flex-nowrap gap-4 justify-center">
+          {lozenges.map((lozenge) => (
+            <a
+              href={lozenge.anchor}
+              class="flex items-center gap-3 bg-gray-50 hover:bg-primary-50 border-2 border-gray-200 hover:border-primary-600 px-6 py-3 rounded-full transition-all duration-200"
+            >
+              {lozenge.icon === 'search' && (
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              )}
+              {lozenge.icon === 'chart' && (
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+              )}
+              {lozenge.icon === 'users' && (
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+              )}
+              <span class="text-sm font-medium text-gray-700">{lozenge.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline Diagnostic Section -->
+    {diagnostic.title && (
+      <section id="diagnostic" class="py-16 lg:py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div class="mb-8">
+            {diagnostic.solutionLabel && (
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                {diagnostic.solutionLabel}
+              </div>
+            )}
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              {diagnostic.title}
+            </h2>
+            {diagnostic.problemQuote && (
+              <p class="text-xl text-gray-600 italic mb-6">"{diagnostic.problemQuote}"</p>
+            )}
+          </div>
+
+          {/* Description */}
+          {diagnostic.detailedDescription && (
+            <div class="text-lg text-gray-700 leading-relaxed mb-8">
+              <PortableText content={diagnostic.detailedDescription} />
+            </div>
+          )}
+
+          {/* Process Steps Timeline */}
+          {diagnostic.processSteps && diagnostic.processSteps.length > 0 && (
+            <div class="mb-12">
+              <h3 class="text-xl font-bold text-gray-900 mb-6">The Process</h3>
+              <div class="relative">
+                {/* Progress bar background */}
+                <div class="absolute top-6 left-0 w-full h-1 bg-gray-200 rounded"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {diagnostic.processSteps.map((step, index) => (
+                    <div class="relative">
+                      {/* Step indicator */}
+                      <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 rounded-full bg-primary-600 text-white flex items-center justify-center font-bold text-lg z-10">
+                          {index + 1}
+                        </div>
+                      </div>
+                      {/* Content */}
+                      <div class="pl-0">
+                        {step.week && (
+                          <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                            {step.week}
+                          </div>
+                        )}
+                        <h4 class="font-bold text-gray-900 mb-1">{step.title}</h4>
+                        {step.description && (
+                          <p class="text-sm text-gray-600">{step.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Duration & Investment */}
+          <div class="grid md:grid-cols-2 gap-6 mb-8 p-6 bg-gray-50 rounded-lg">
+            {diagnostic.duration && (
+              <div>
+                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                  Duration
+                </div>
+                <div class="text-lg font-bold text-gray-900">
+                  {diagnostic.duration}
+                  {diagnostic.durationSubtext && (
+                    <span class="text-sm font-normal text-gray-600 ml-2">
+                      {diagnostic.durationSubtext}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+            {diagnostic.investment && (
+              <div>
+                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                  Investment
+                </div>
+                <div class="text-lg font-bold text-gray-900">{diagnostic.investment}</div>
+              </div>
+            )}
+          </div>
+
+          {/* Expected Outcome */}
+          {diagnostic.outcome && (
+            <div class="mb-8 p-6 bg-primary-50 border-l-4 border-primary-600 rounded-r-lg">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Expected Outcome</h3>
+              <div class="text-gray-700">
+                <PortableText content={diagnostic.outcome} />
+              </div>
+            </div>
+          )}
+
+          {/* CTA */}
+          {diagnostic.ctaText && (
+            <div class="text-center">
+              <a
+                href="/contact"
+                class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
+              >
+                {diagnostic.ctaText}
+              </a>
+              {diagnostic.ctaDescriptor && (
+                <p class="text-sm text-gray-600 italic mt-4 max-w-md mx-auto">
+                  {diagnostic.ctaDescriptor}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- Pipeline Turnaround Section -->
+    {turnaround.title && (
+      <section id="turnaround" class="py-16 lg:py-24 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Header -->
+          <div class="mb-12 max-w-4xl">
+            {turnaround.solutionLabel && (
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                {turnaround.solutionLabel}
+              </div>
+            )}
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              {turnaround.title}
+            </h2>
+            {turnaround.problemQuote && (
+              <p class="text-xl text-gray-600 italic mb-6">"{turnaround.problemQuote}"</p>
+            )}
+            {turnaround.detailedDescription && (
+              <div class="text-lg text-gray-700 leading-relaxed mb-8">
+                <PortableText content={turnaround.detailedDescription} />
+              </div>
+            )}
+
+            {/* Duration & Investment */}
+            <div class="grid md:grid-cols-2 gap-6 p-6 bg-white rounded-lg border border-gray-200">
+              {turnaround.duration && (
+                <div>
+                  <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                    Duration
+                  </div>
+                  <div class="text-lg font-bold text-gray-900">{turnaround.duration}</div>
+                </div>
+              )}
+              {turnaround.investment && (
+                <div>
+                  <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                    Investment per Sprint
+                  </div>
+                  <div class="text-lg font-bold text-gray-900">{turnaround.investment}</div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sprint Options */}
+          {turnaround.sprintDetails && turnaround.sprintDetails.length > 0 && (
+            <div>
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">Available Sprints</h3>
+
+              {/* Sprint tabs/buttons */}
+              <div class="flex flex-wrap gap-3 mb-8">
+                {turnaround.sprintDetails.map((sprint, index) => (
+                  <button
+                    class="sprint-tab px-4 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-medium hover:border-primary-600 hover:text-primary-600 transition-colors"
+                    data-sprint-index={index}
+                  >
+                    {sprint.name}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sprint details cards */}
+              <div class="space-y-6">
+                {turnaround.sprintDetails.map((sprint, index) => (
+                  <div
+                    class="sprint-detail bg-white border-2 border-gray-200 rounded-xl p-6"
+                    data-sprint-card={index}
+                  >
+                    <h4 class="text-2xl font-bold text-gray-900 mb-4">{sprint.name}</h4>
+
+                    {sprint.problem && (
+                      <div class="mb-4">
+                        <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                          Problem
+                        </div>
+                        <p class="text-gray-700">{sprint.problem}</p>
+                      </div>
+                    )}
+
+                    {sprint.deliverables && sprint.deliverables.length > 0 && (
+                      <div class="mb-4">
+                        <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                          Deliverables
+                        </div>
+                        <ul class="space-y-2">
+                          {sprint.deliverables.map((item) => (
+                            <li class="flex items-start">
+                              <svg class="w-5 h-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                              </svg>
+                              <span class="text-gray-700">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {sprint.outcome && (
+                      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                          Outcome
+                        </div>
+                        <p class="text-gray-900 font-medium">{sprint.outcome}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* CTA */}
+          {turnaround.ctaText && (
+            <div class="text-center mt-12">
+              <a
+                href="/contact"
+                class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
+              >
+                {turnaround.ctaText}
+              </a>
+              {turnaround.ctaDescriptor && (
+                <p class="text-sm text-gray-600 italic mt-4 max-w-md mx-auto">
+                  {turnaround.ctaDescriptor}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- Fractional Demand Leadership Section -->
+    {leadership.title && (
+      <section id="leadership" class="py-16 lg:py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Header -->
+          <div class="mb-12 max-w-4xl">
+            {leadership.solutionLabel && (
+              <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                {leadership.solutionLabel}
+              </div>
+            )}
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              {leadership.title}
+            </h2>
+            {leadership.problemQuote && (
+              <p class="text-xl text-gray-600 italic mb-6">"{leadership.problemQuote}"</p>
+            )}
+            {leadership.detailedDescription && (
+              <div class="text-lg text-gray-700 leading-relaxed">
+                <PortableText content={leadership.detailedDescription} />
+              </div>
+            )}
+          </div>
+
+          {/* What This Looks Like in Practice */}
+          {leadership.practicePoints && leadership.practicePoints.length > 0 && (
+            <div class="mb-12">
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">What This Looks Like in Practice</h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                {leadership.practicePoints.map((point) => (
+                  <div class="flex items-start p-4 bg-gray-50 rounded-lg">
+                    <svg class="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span class="text-gray-700">{point}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Enterprise Service Table */}
+          {leadership.enterpriseTable && leadership.enterpriseTable.tiers && leadership.enterpriseTable.tiers.length > 0 && (
+            <div class="mb-12">
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">At a Glance</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="text-left p-4 font-semibold text-gray-700">Service Tier</th>
+                      {leadership.enterpriseTable.tiers.map((tier) => (
+                        <th class="text-left p-4 font-semibold text-gray-900">{tier.name}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-t border-gray-200">
+                      <td class="p-4 font-medium text-gray-700">Commitment</td>
+                      {leadership.enterpriseTable.tiers.map((tier) => (
+                        <td class="p-4 text-gray-900">{tier.commitment}</td>
+                      ))}
+                    </tr>
+                    <tr class="border-t border-gray-200 bg-gray-50">
+                      <td class="p-4 font-medium text-gray-700">Investment</td>
+                      {leadership.enterpriseTable.tiers.map((tier) => (
+                        <td class="p-4 text-gray-900 font-bold">{tier.investment}</td>
+                      ))}
+                    </tr>
+                    {leadership.enterpriseTable.features && leadership.enterpriseTable.features.map((feature) => (
+                      <tr class="border-t border-gray-200">
+                        <td class="p-4 text-gray-700">{feature.name}</td>
+                        {feature.availability && feature.availability.map((available) => (
+                          <td class="p-4 text-center">
+                            {available ? (
+                              <svg class="w-6 h-6 text-primary-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                              </svg>
+                            ) : (
+                              <span class="text-gray-300">—</span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Comparison Table */}
+          {leadership.comparisonTable && leadership.comparisonTable.rows && leadership.comparisonTable.rows.length > 0 && (
+            <div class="mb-12">
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">Why Fractional vs. Agency?</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="text-left p-4 font-semibold text-gray-700 w-1/2"></th>
+                      <th class="text-center p-4 font-semibold text-gray-900">Agency</th>
+                      <th class="text-center p-4 font-semibold text-gray-900">Fractional Leader</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leadership.comparisonTable.rows.map((row, index) => (
+                      <tr class={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td class="p-4 text-gray-900 font-medium">{row.feature}</td>
+                        <td class="p-4 text-gray-600 text-center">{row.agency}</td>
+                        <td class="p-4 text-primary-600 font-medium text-center">{row.fractional}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Duration & Investment */}
+          <div class="grid md:grid-cols-2 gap-6 mb-8 p-6 bg-gray-50 rounded-lg">
+            {leadership.duration && (
+              <div>
+                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                  Duration
+                </div>
+                <div class="text-lg font-bold text-gray-900">
+                  {leadership.duration}
+                  {leadership.durationSubtext && (
+                    <span class="text-sm font-normal text-gray-600 ml-2">
+                      {leadership.durationSubtext}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+            {leadership.investment && (
+              <div>
+                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                  Starting Investment
+                </div>
+                <div class="text-lg font-bold text-gray-900">{leadership.investment}</div>
+              </div>
+            )}
+          </div>
+
+          {/* CTA */}
+          {leadership.ctaText && (
+            <div class="text-center">
+              <a
+                href="/contact"
+                class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
+              >
+                {leadership.ctaText}
+              </a>
+              {leadership.ctaDescriptor && (
+                <p class="text-sm text-gray-600 italic mt-4 max-w-md mx-auto">
+                  {leadership.ctaDescriptor}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- Safety Net Section -->
+    <SafetyNet />
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* Hero background - same as main site hero */
+  .hero-bg {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      #F8FAFC 0%,
+      #FFFFFF 50%,
+      #F8FAFC 100%
+    );
+  }
+
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      rgba(5, 150, 105, 0.08) 0%,
+      rgba(234, 88, 12, 0.06) 25%,
+      rgba(124, 58, 237, 0.05) 50%,
+      rgba(5, 150, 105, 0.08) 75%,
+      rgba(234, 88, 12, 0.06) 100%
+    );
+    background-size: 400% 400%;
+    animation: brandColorCycle 12s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes brandColorCycle {
+    0% {
+      background-position: 0% 50%;
+    }
+    33% {
+      background-position: 100% 25%;
+    }
+    66% {
+      background-position: 0% 75%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Sprint tab interactions */
+  .sprint-tab.active {
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-600);
+    background-color: var(--color-primary-50);
+  }
+
+  .sprint-detail {
+    display: none;
+  }
+
+  .sprint-detail.active {
+    display: block;
+  }
+</style>
+
+<script>
+  // Sprint tab functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.sprint-tab');
+    const cards = document.querySelectorAll('.sprint-detail');
+
+    if (tabs.length > 0 && cards.length > 0) {
+      // Show first sprint by default
+      tabs[0]?.classList.add('active');
+      cards[0]?.classList.add('active');
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const index = tab.getAttribute('data-sprint-index');
+
+          // Remove active class from all tabs and cards
+          tabs.forEach(t => t.classList.remove('active'));
+          cards.forEach(c => c.classList.remove('active'));
+
+          // Add active class to clicked tab and corresponding card
+          tab.classList.add('active');
+          const targetCard = document.querySelector(`[data-sprint-card="${index}"]`);
+          targetCard?.classList.add('active');
+        });
+      });
+    }
+  });
+</script>
