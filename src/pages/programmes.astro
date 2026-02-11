@@ -100,10 +100,10 @@ const lozenges = programmes.map(p => ({
     <!-- Hero Section -->
     <section class="hero-bg py-20 lg:py-28">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6" style="color: #F8FAFC;">
           {programmesPage?.heroHeading || 'Programmes designed around your pipeline problems'}
         </h1>
-        <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
+        <p class="text-xl mb-10 max-w-3xl mx-auto" style="color: #94A3B8;">
           {programmesPage?.heroSubheading || 'Every engagement starts with a clear problem and ends with a measurable outcome. Choose the path that fits where you are.'}
         </p>
 
@@ -139,6 +139,30 @@ const lozenges = programmes.map(p => ({
         </div>
       </div>
     </section>
+
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="trust-bar__label">Trusted by teams at</p>
+        <div class="trust-bar__logos">
+          <div class="trust-bar__item">
+            <img src="/logos/Allianz.png" alt="Allianz Business Services" width="120" height="45" loading="lazy" decoding="async" class="trust-bar__img" />
+          </div>
+          <div class="trust-bar__item">
+            <img src="/logos/Aldermore.png" alt="Aldermore Bank" width="120" height="45" loading="lazy" decoding="async" class="trust-bar__img" />
+          </div>
+          <div class="trust-bar__item">
+            <img src="/logos/Sorted.png" alt="Sorted" width="120" height="45" loading="lazy" decoding="async" class="trust-bar__img" />
+          </div>
+          <div class="trust-bar__item">
+            <img src="/logos/Diffblue.png" alt="Diffblue" width="120" height="45" loading="lazy" decoding="async" class="trust-bar__img" />
+          </div>
+          <div class="trust-bar__item">
+            <img src="/logos/Synthesized.png" alt="Synthesized" width="120" height="45" loading="lazy" decoding="async" class="trust-bar__img" />
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Journey Indicator -->
     <div class="journey-indicator">
@@ -730,14 +754,14 @@ const lozenges = programmes.map(p => ({
     </div>
 
     <!-- Bottom Catch-All CTA -->
-    <section class="safety-net-bg py-16 section-divider">
+    <section class="safety-net-bg py-16">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl font-bold mb-4" style="color: #F8FAFC;">
           Not sure which path fits?
         </h2>
-        <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p class="text-lg mb-8 max-w-2xl mx-auto" style="color: #94A3B8;">
           Most of our engagements start with a
-          <strong class="text-gray-900">30-minute pipeline diagnostic call.</strong>
+          <strong style="color: #F8FAFC;">30-minute pipeline diagnostic call.</strong>
           We'll review where you are, identify the biggest constraint, and recommend the right next step—whether that's working with us or not.
         </p>
         <a
@@ -746,7 +770,7 @@ const lozenges = programmes.map(p => ({
         >
           Not Sure? Book a 30-Minute Call
         </a>
-        <p class="text-sm text-gray-500 mt-4 italic">
+        <p class="text-sm mt-4 italic" style="color: rgba(255, 255, 255, 0.4);">
           No pitch deck. No pressure. Just a clear next step.
         </p>
       </div>
@@ -766,26 +790,24 @@ const lozenges = programmes.map(p => ({
     --prog-green: #4A9B7F;
     --prog-orange: #E8845C;
     --prog-blue: #5B8DEF;
-    /* 3-tier depth system */
-    --prog-dark-bg: #111827;       /* Tier 1: Page background */
-    --prog-card-bg: #1A222F;       /* Tier 2: Programme section cards */
+    /* Unified dark theme palette */
+    --prog-global-bg: #0B1120;     /* Global background (Deep Slate/Navy) */
+    --prog-dark-bg: #0B1120;       /* Tier 1: Page background */
+    --prog-card-bg: #1E293B;       /* Tier 2: Programme section cards */
     --prog-inner-bg: #222B3A;      /* Tier 3: Inner elements */
     --prog-card-border: rgba(255, 255, 255, 0.08);
+    --prog-heading: #F8FAFC;       /* Off-White for headings */
+    --prog-body-text: #94A3B8;     /* Slate Grey for body text */
     --prog-text: rgba(255, 255, 255, 0.85);
     --prog-text-muted: rgba(255, 255, 255, 0.6);
     --prog-text-faint: rgba(255, 255, 255, 0.4);
   }
 
-  /* --- Hero (unchanged, light) --- */
+  /* --- Hero (dark mode) --- */
   .hero-bg {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      #F8FAFC 0%,
-      #FFFFFF 50%,
-      #F8FAFC 100%
-    );
+    background: var(--prog-global-bg);
   }
 
   .hero-bg::before {
@@ -795,16 +817,9 @@ const lozenges = programmes.map(p => ({
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba(5, 150, 105, 0.08) 0%,
-      rgba(234, 88, 12, 0.06) 25%,
-      rgba(124, 58, 237, 0.05) 50%,
-      rgba(5, 150, 105, 0.08) 75%,
-      rgba(234, 88, 12, 0.06) 100%
-    );
-    background-size: 400% 400%;
-    animation: brandColorCycle 12s ease-in-out infinite;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(74, 155, 127, 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 80% 80%, rgba(232, 132, 92, 0.04) 0%, transparent 60%);
     z-index: 0;
     pointer-events: none;
   }
@@ -814,14 +829,65 @@ const lozenges = programmes.map(p => ({
     z-index: 1;
   }
 
-  @keyframes brandColorCycle {
-    0% { background-position: 0% 50%; }
-    33% { background-position: 100% 25%; }
-    66% { background-position: 0% 75%; }
-    100% { background-position: 0% 50%; }
+  /* --- Trust Bar (dark mode) --- */
+  .trust-bar {
+    background: var(--prog-global-bg);
+    padding: 2rem 0 2.5rem;
+    text-align: center;
   }
 
-  /* --- Path Finder Cards (7.5) --- */
+  .trust-bar__label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--prog-text-faint);
+    margin-bottom: 1.25rem;
+  }
+
+  .trust-bar__logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .trust-bar__item {
+    width: 110px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trust-bar__img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1) opacity(0.5);
+    transition: all 0.3s ease;
+  }
+
+  .trust-bar__img:hover {
+    filter: brightness(0) invert(1) opacity(0.85);
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .trust-bar__item {
+      width: 90px;
+      height: 36px;
+    }
+
+    .trust-bar__logos {
+      gap: 1.5rem;
+    }
+  }
+
+  /* --- Path Finder Cards (dark mode) --- */
   .pathfinder-stack {
     display: flex;
     flex-direction: column;
@@ -835,12 +901,12 @@ const lozenges = programmes.map(p => ({
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.25rem;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--prog-card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 4px solid transparent;
     border-radius: 10px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
   }
 
   .pathfinder-card[data-accent="green"] { border-left-color: var(--prog-green); }
@@ -848,8 +914,8 @@ const lozenges = programmes.map(p => ({
   .pathfinder-card[data-accent="blue"] { border-left-color: var(--prog-blue); }
 
   .pathfinder-card:hover {
-    border-color: #d1d5db;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-color: #10B981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(0, 0, 0, 0.2);
     transform: translateX(4px);
   }
 
@@ -863,25 +929,25 @@ const lozenges = programmes.map(p => ({
   .pathfinder-card__title {
     font-size: 0.95rem;
     font-weight: 500;
-    color: #111827;
+    color: #F8FAFC;
   }
 
   .pathfinder-card__subtitle {
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--prog-text-faint);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
 
   .pathfinder-card__arrow {
-    color: #9ca3af;
+    color: rgba(255, 255, 255, 0.3);
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: all 0.25s ease;
   }
 
   .pathfinder-card:hover .pathfinder-card__arrow {
     transform: translateX(3px);
-    color: #4b5563;
+    color: #10B981;
   }
 
   /* --- Journey Indicator --- */
@@ -1932,32 +1998,12 @@ const lozenges = programmes.map(p => ({
     }
   }
 
-  /* --- Bottom CTA Section (Safety Net replacement) --- */
+  /* --- Bottom CTA Section (dark mode) --- */
   .safety-net-bg {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #F8FAFC 0%, #FFFFFF 50%, #F8FAFC 100%);
-  }
-
-  .safety-net-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba(5, 150, 105, 0.08) 0%,
-      rgba(234, 88, 12, 0.06) 25%,
-      rgba(124, 58, 237, 0.05) 50%,
-      rgba(5, 150, 105, 0.08) 75%,
-      rgba(234, 88, 12, 0.06) 100%
-    );
-    background-size: 400% 400%;
-    animation: brandColorCycle 12s ease-in-out infinite;
-    z-index: 0;
-    pointer-events: none;
+    background: var(--prog-card-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .safety-net-bg > * {
