@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getErrorPage } from '../lib/sanity.js';
+
+let errorPage;
+try {
+  errorPage = await getErrorPage();
+} catch (error) {
+  console.error('Error fetching 404 page content:', error);
+  errorPage = {
+    headline: '404: This link is a vanity metric.',
+    supportingText: "It doesn't exist. Stop chasing broken links and start chasing revenue.",
+    ctaText: 'Fix Your Pipeline',
+    ctaLink: '/contact/',
+    secondaryCtaText: 'Return Home',
+    secondaryCtaLink: '/'
+  };
+}
+---
+
+<Layout title="404 — Page Not Found | DemandGenix" description="This page doesn't exist. Let's get you somewhere useful.">
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+  <Header />
+  <main class="flex items-center justify-center min-h-[calc(100vh-64px-200px)] bg-white px-4 py-20">
+    <div class="text-center max-w-2xl mx-auto">
+      <p class="text-sm font-semibold tracking-widest uppercase text-primary-600 mb-6">Error 404</p>
+      <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">{errorPage.headline}</h1>
+      <p class="text-lg sm:text-xl text-gray-500 mb-12 max-w-lg mx-auto">{errorPage.supportingText}</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href={errorPage.ctaLink}
+          class="inline-block bg-secondary-600 text-white px-8 py-3.5 rounded-lg hover:bg-secondary-500 transition-colors font-semibold text-lg shadow-lg shadow-secondary-600/20"
+        >
+          {errorPage.ctaText}
+        </a>
+        <a
+          href={errorPage.secondaryCtaLink}
+          class="inline-block text-gray-600 hover:text-gray-900 transition-colors font-medium border border-gray-300 px-8 py-3.5 rounded-lg hover:border-gray-400"
+        >
+          {errorPage.secondaryCtaLink && errorPage.secondaryCtaText}
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
