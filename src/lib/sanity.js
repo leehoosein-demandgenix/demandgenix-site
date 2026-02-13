@@ -1,4 +1,5 @@
 import { createClient } from '@sanity/client'
+import { logger } from './logger.js'
 
 export const client = createClient({
   projectId: 'fv5q0f3v',
@@ -15,6 +16,8 @@ export const client = createClient({
 
 // Add error handling wrapper to prevent 5xx errors
 async function fetchWithFallback(query, params = {}, fallback = null) {
+  const typeMatch = query.match(/_type\s*==\s*"([^"]+)"/)
+  const context = typeMatch ? typeMatch[1] : query.substring(0, 50).trim()
   try {
     const result = await client.fetch(query, params)
     // If query succeeds but returns null/undefined, use fallback
@@ -23,7 +26,7 @@ async function fetchWithFallback(query, params = {}, fallback = null) {
     }
     return result
   } catch (error) {
-    console.error(`Sanity fetch error for query: ${query.substring(0, 50)}...`, error.message)
+    logger.error(context, error.message)
     // Return fallback instead of throwing (prevents 5xx errors)
     return fallback
   }
