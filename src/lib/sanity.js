@@ -608,6 +608,29 @@ export async function getFeaturedTestimonials() {
   )
 }
 
+// Error page
+export async function getErrorPage() {
+  return await fetchWithFallback(
+    `*[_type == "errorPage"][0]{
+      headline,
+      supportingText,
+      ctaText,
+      ctaLink,
+      secondaryCtaText,
+      secondaryCtaLink
+    }`,
+    {},
+    {
+      headline: '404: This link is a vanity metric.',
+      supportingText: "It doesn't exist. Stop chasing broken links and start chasing revenue.",
+      ctaText: 'Fix Your Pipeline',
+      ctaLink: '/contact/',
+      secondaryCtaText: 'Return Home',
+      secondaryCtaLink: '/'
+    }
+  )
+}
+
 // Blog functions
 export async function getAllBlogPosts() {
   return await fetchWithFallback(

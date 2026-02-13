@@ -12,6 +12,7 @@ import testimonial from './testimonial'
 import blogPost from './blogPost'
 import threeColumnBlock from './threeColumnBlock'
 import socialProof from './socialProof'
+import errorPage from './errorPage'
 
 
-export const schemaTypes = [hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, socialProof]
+export const schemaTypes = [hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, socialProof, errorPage]
