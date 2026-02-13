@@ -130,6 +130,7 @@
                 <li>LinkedIn Insights (conversion tracking)</li>
                 <li>Google Ads (campaign measurement)</li>
                 <li>Clay (web intent tracking)</li>
+                <li>RB2B (website visitor identification)</li>
               </ul>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
@@ -353,12 +354,24 @@ function loadClay() {
   }
 }
 
+function loadRB2B() {
+  if (getCookie(MARKETING_COOKIE) === 'true') {
+    if (window.reb2b) return;
+    window.reb2b = { loaded: true };
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://ddwl4m2hdecbv.cloudfront.net/b/Z6PVLHQGDP6R/Z6PVLHQGDP6R.js.gz";
+    document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);
+  }
+}
+
   function loadAllScripts() {
     loadAnalytics();
     loadHubSpot();
     loadApollo();
     loadLinkedIn();
     loadClay();
+    loadRB2B();
   }
 
   // Event listeners
