@@ -43,7 +43,9 @@ const blogStructuredData = {
   "image": post.heroImage ? `${post.heroImage.url}` : `${SITE_URL}/og-image.jpg`,
   "author": {
     "@type": "Person",
-    "name": post.author
+    "name": post.author,
+    "url": "https://www.linkedin.com/in/lee-hoosein/",
+    "sameAs": ["https://www.linkedin.com/in/lee-hoosein/"]
   },
   "publisher": {
     "@type": "Organization",
@@ -214,9 +216,9 @@ article :global(ul li) {
                 </span>
               </div>
               <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900">
+                <a href="https://www.linkedin.com/in/lee-hoosein/" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-gray-900 hover:text-primary-600 transition-colors">
                   {post.author}
-                </p>
+                </a>
                 <p class="text-sm text-gray-500">
                   Founder, DemandGenix
                 </p>
