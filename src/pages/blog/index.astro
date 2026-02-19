@@ -80,13 +80,13 @@ const blogSectionStructuredData = {
           <h2 class="text-2xl font-bold text-gray-900 mb-8">Featured Articles</h2>
           <div class="grid md:grid-cols-2 gap-8">
             {featuredPosts.map((post) => (
-              <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+              <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow" data-blog-post>
                 {post.heroImage && (
-                  <img 
-                    src={optimizeSanityImage(post.heroImage.url, { 
-                      width: 800, 
-                      height: 400, 
-                      fit: 'crop' 
+                  <img
+                    src={optimizeSanityImage(post.heroImage.url, {
+                      width: 800,
+                      height: 400,
+                      fit: 'crop'
                     })}
                     alt={post.heroImage.alt}
                     width="800"
@@ -99,12 +99,12 @@ const blogSectionStructuredData = {
                 )}
                 <div class="p-6">
                   <div class="flex items-center gap-4 mb-3">
-                    <span class={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category)}`}>
+                    <span data-category class={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category)}`}>
                       {getCategoryLabel(post.category)}
                     </span>
-                    <span class="text-sm text-gray-500">
+                    <time class="text-sm text-gray-500" datetime={post.publishDate}>
                       {formatDate(post.publishDate)}
-                    </span>
+                    </time>
                     {post.readingTime && (
                       <span class="text-sm text-gray-500">
                         {post.readingTime} min read
@@ -116,7 +116,7 @@ const blogSectionStructuredData = {
                       {post.title}
                     </a>
                   </h3>
-                  <p class="text-gray-600 mb-4">{post.excerpt}</p>
+                  <p class="text-gray-600 mb-4" data-excerpt>{post.excerpt}</p>
                   <a 
                     href={`/blog/${post.slug.current}/`}
                     class="text-primary-600 hover:text-primary-700 font-medium text-sm"
@@ -139,13 +139,13 @@ const blogSectionStructuredData = {
         {allPosts && allPosts.length > 0 ? (
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {allPosts.map((post) => (
-              <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+              <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow" data-blog-post>
                 {post.heroImage && (
-                  <img 
-                    src={optimizeSanityImage(post.heroImage.url, { 
-                      width: 800, 
-                      height: 400, 
-                      fit: 'crop' 
+                  <img
+                    src={optimizeSanityImage(post.heroImage.url, {
+                      width: 800,
+                      height: 400,
+                      fit: 'crop'
                     })}
                     alt={post.heroImage.alt}
                     width="800"
@@ -157,19 +157,19 @@ const blogSectionStructuredData = {
                 )}
                 <div class="p-6">
                   <div class="flex items-center gap-2 mb-3">
-                    <span class={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category)}`}>
+                    <span data-category class={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category)}`}>
                       {getCategoryLabel(post.category)}
                     </span>
-                    <span class="text-sm text-gray-500">
+                    <time class="text-sm text-gray-500" datetime={post.publishDate}>
                       {formatDate(post.publishDate)}
-                    </span>
+                    </time>
                   </div>
                   <h3 class="text-lg font-semibold text-gray-900 mb-2">
                     <a href={`/blog/${post.slug.current}/`} class="hover:text-primary-600 transition-colors">
                       {post.title}
                     </a>
                   </h3>
-                  <p class="text-gray-600 text-sm mb-4">{post.excerpt}</p>
+                  <p class="text-gray-600 text-sm mb-4" data-excerpt>{post.excerpt}</p>
                   <div class="flex items-center justify-between">
                     <a href="https://www.linkedin.com/in/lee-hoosein/" target="_blank" rel="noopener noreferrer" class="text-xs text-gray-500 hover:text-primary-600 transition-colors">
                       By {post.author}

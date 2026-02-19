@@ -189,7 +189,9 @@ import Testimonials from '../components/Testimonials.astro';
   <strong>Privacy Settings Notice</strong><br>
   To respect your cookie preferences, please email us directly at <a href="mailto:hello@demandgenix.uk" class="underline font-medium">hello@demandgenix.uk</a> with your inquiry. We'll respond within 24 hours.
 </div>
-  <form id="contact-form" action="/api/contact" method="POST">
+  <form id="contact-form" action="/api/contact" method="POST"
+        toolname="submitContactForm"
+        tooldescription="Submit a contact inquiry to DemandGenix to book a free 30-minute pipeline diagnostic call">
             <div class="form-group">
                 <label for="firstname" class="form-label">First Name <span class="required">*</span></label>
                 <input 

@@ -173,6 +173,8 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
 </noscript>
     <CookieConsent />
     <script src="https://static.claydar.com/init.v1.js?id=cgiqWQbLzO"></script>
+    <!-- WebMCP: Expose structured tools to AI agents via navigator.modelContext -->
+    <script is:inline src="/webmcp.js" defer></script>
   </body>
 </html>
 

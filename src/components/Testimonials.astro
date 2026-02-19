@@ -26,16 +26,16 @@ try {
       
       <div class="grid md:grid-cols-3 lg:grid-cols-3 gap-8">
         {testimonials.map((testimonial) => (
-          <div class="bg-white p-6 rounded-lg shadow-sm">
+          <div class="bg-white p-6 rounded-lg shadow-sm" data-testimonial>
             <div class="flex items-center mb-4">
               {testimonial.profilePhoto ? (
-                <img 
-                  src={optimizeSanityImage(testimonial.profilePhoto, { 
-                    width: 96, 
-                    height: 96, 
-                    fit: 'crop' 
+                <img
+                  src={optimizeSanityImage(testimonial.profilePhoto, {
+                    width: 96,
+                    height: 96,
+                    fit: 'crop'
                   })}
-                  alt={testimonial.name || 'Recommender'} 
+                  alt={testimonial.name || 'Recommender'}
                   width="96"
                   height="96"
                   loading="lazy"
@@ -50,15 +50,15 @@ try {
                 </div>
               )}
               <div>
-                <h4 class="font-semibold text-gray-900">
+                <h4 class="font-semibold text-gray-900" data-testimonial-name>
                   {testimonial.name || 'Anonymous'}
                 </h4>
-                <p class="text-sm text-gray-600">
+                <p class="text-sm text-gray-600" data-testimonial-title>
                   {testimonial.title ? `${testimonial.title}${testimonial.company ? ` at ${testimonial.company}` : ''}` : 'LinkedIn Connection'}
                 </p>
               </div>
             </div>
-            <p class="text-gray-700 text-sm leading-relaxed mb-4">
+            <p class="text-gray-700 text-sm leading-relaxed mb-4" data-testimonial-text>
               "{testimonial.recommendation}"
             </p>
             <div class="flex items-center justify-between">
