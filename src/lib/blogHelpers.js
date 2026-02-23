@@ -85,11 +85,16 @@ if (block._type === 'code' || block._type === 'codeBlock') {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
       
-      const filenameHtml = filename 
-        ? `<div class="text-xs text-gray-400 bg-gray-800 px-4 py-2 rounded-t-lg font-mono">${filename}</div>` 
+      const filenameHtml = filename
+        ? `<div class="text-xs text-gray-400 bg-gray-800 px-4 py-2 rounded-t-lg font-mono">${filename}</div>`
         : '';
-      
-      return `<div class="code-block-wrapper my-8">${filenameHtml}<pre class="${filename ? '' : 'rounded-t-lg'} rounded-b-lg p-4 bg-gray-900 overflow-x-auto" data-language="${language}"><code class="text-sm text-gray-100 font-mono">${escapedCode}</code></pre></div>`;
+
+      // Plain text: wrap long lines for readability. Code: horizontal scroll to preserve formatting.
+      const isPlainText = language === 'text';
+      const preStyle = isPlainText ? 'white-space: pre-wrap; word-break: break-word;' : '';
+      const preClass = `${filename ? '' : 'rounded-t-lg'} rounded-b-lg p-4 bg-gray-900 ${isPlainText ? '' : 'overflow-x-auto'}`.trim();
+
+      return `<div class="code-block-wrapper my-8">${filenameHtml}<pre class="${preClass}" style="${preStyle}" data-language="${language}"><code class="text-sm text-gray-100 font-mono">${escapedCode}</code></pre></div>`;
     }
     
    // Handle images
@@ -117,6 +122,68 @@ if (block._type === 'image' && block.asset && block.asset.url) {
       return html;
     }
     
+    // Handle comparison tables
+    if (block._type === 'comparisonTable') {
+      const col1Header = block.col1Header || '';
+      const col2Header = block.col2Header || '';
+      const col3Header = block.col3Header || '';
+      const rows = block.rows || [];
+
+      // Brand colours: primary green / secondary orange
+      const headerBg   = '#065f46'; // primary-800
+      const col2Bg     = '#059669'; // primary-600
+      const col3Bg     = '#ea580c'; // secondary-600
+      const rowLabelBg = '#ecfdf5'; // primary-50
+      const rowLabelColor = '#064e3b'; // primary-900
+      const borderLight   = '#a7f3d0'; // primary-200
+      const borderOrange  = '#fed7aa'; // secondary-200
+
+      let html = '<div class="my-10 overflow-x-auto rounded-lg" style="box-shadow: 0 1px 4px rgba(0,0,0,0.08);">';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:0.9rem;">';
+      html += '<thead>';
+      html += '<tr>';
+      html += `<th style="padding:0.75rem 1rem;text-align:left;background:${headerBg};color:#fff;border:1px solid ${headerBg};">${col1Header}</th>`;
+      html += `<th style="padding:0.75rem 1rem;text-align:left;background:${col2Bg};color:#fff;border:1px solid ${col2Bg};">${col2Header}</th>`;
+      html += `<th style="padding:0.75rem 1rem;text-align:left;background:${col3Bg};color:#fff;border:1px solid ${col3Bg};">${col3Header}</th>`;
+      html += '</tr>';
+      html += '</thead>';
+      html += '<tbody>';
+
+      rows.forEach((row, index) => {
+        const rowBg = index % 2 === 0 ? '#ffffff' : '#f9fafb';
+        html += `<tr style="background:${rowBg};">`;
+        html += `<td style="padding:0.75rem 1rem;font-weight:600;background:${rowLabelBg};color:${rowLabelColor};border:1px solid ${borderLight};white-space:nowrap;vertical-align:top;">${row.col1 || ''}</td>`;
+        html += `<td style="padding:0.75rem 1rem;border:1px solid ${borderLight};color:#1f2937;vertical-align:top;line-height:1.6;">${row.col2 || ''}</td>`;
+        html += `<td style="padding:0.75rem 1rem;border:1px solid ${borderOrange};color:#1f2937;vertical-align:top;line-height:1.6;">${row.col3 || ''}</td>`;
+        html += '</tr>';
+      });
+
+      html += '</tbody>';
+      html += '</table>';
+      html += '</div>';
+      return html;
+    }
+
+    // Handle callout boxes
+    if (block._type === 'calloutBox') {
+      const type    = block.type || 'insight';
+      const title   = block.title || '';
+      const content = block.content || '';
+
+      const styles = {
+        insight: { bg: '#ecfdf5', border: '#059669', titleColor: '#064e3b', label: 'Insight' },
+        warning: { bg: '#fff7ed', border: '#ea580c', titleColor: '#7c2d12', label: 'Warning' },
+        tip:     { bg: '#eff6ff', border: '#3b82f6', titleColor: '#1e3a8a', label: 'Tip'     }
+      };
+      const s = styles[type] || styles.insight;
+
+      const titleHtml = title
+        ? `<p style="font-weight:700;margin:0 0 0.4rem 0;color:${s.titleColor};">${title}</p>`
+        : '';
+
+      return `<div class="callout-box" style="margin:2rem 0;padding:1.25rem 1.5rem;border-radius:0.5rem;border-left:4px solid ${s.border};background:${s.bg};">${titleHtml}<p style="margin:0;line-height:1.75;color:#374151;">${content}</p></div>`;
+    }
+
     // Handle list items (bullet or numbered)
     if (block.listItem === 'bullet' || block.listItem === 'number') {
       const markDefs = block.markDefs || [];
