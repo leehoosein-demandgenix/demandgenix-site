@@ -700,6 +700,23 @@ export async function getBlogPostBySlug(slug) {
             content
           }
         },
+        _type == "comparisonTable" => {
+          _type,
+          col1Header,
+          col2Header,
+          col3Header,
+          rows[]{
+            col1,
+            col2,
+            col3
+          }
+        },
+        _type == "calloutBox" => {
+          _type,
+          type,
+          title,
+          content
+        },
         markDefs[]{
           ...,
           _type == "link" => {

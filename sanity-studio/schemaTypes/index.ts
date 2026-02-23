@@ -11,8 +11,10 @@ import siteSettings from './siteSettings'
 import testimonial from './testimonial'
 import blogPost from './blogPost'
 import threeColumnBlock from './threeColumnBlock'
+import comparisonTable from './comparisonTable'
+import calloutBox from './calloutBox'
 import socialProof from './socialProof'
 import errorPage from './errorPage'
 
 
-export const schemaTypes = [hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, socialProof, errorPage]
+export const schemaTypes = [hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, comparisonTable, calloutBox, socialProof, errorPage]

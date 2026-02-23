@@ -106,11 +106,18 @@ export default defineType({
           type: 'threeColumnBlock'
         },
         {
+          type: 'comparisonTable'
+        },
+        {
+          type: 'calloutBox'
+        },
+        {
       type: 'code',
       title: 'Code Block',
       options: {
         language: 'javascript',
         languageAlternatives: [
+          { title: 'Plain Text', value: 'text' },
           { title: 'JavaScript', value: 'javascript' },
           { title: 'TypeScript', value: 'typescript' },
           { title: 'HTML', value: 'html' },

@@ -135,6 +135,20 @@ const blogStructuredData = {
     border: 1px solid #e5e7eb;
   }
 
+  /* Comparison table — ensure responsive scroll on mobile */
+  article :global(.overflow-x-auto) {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  article :global(table) {
+    min-width: 480px;
+  }
+
+  /* Callout box spacing */
+  article :global(.callout-box + .callout-box) {
+    margin-top: 1rem;
+  }
+
   /* Breadcrumb specific styles to prevent list styling */
   nav :global(ol),
   nav :global(ul) {
