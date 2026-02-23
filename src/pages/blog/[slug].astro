@@ -33,6 +33,119 @@ console.log('Before processListItems - contains blog-list-item:', contentHtml.in
 contentHtml = processListItems(contentHtml);
 console.log('After processListItems - contains <ul>:', contentHtml.includes('<ul'));
 
+// AEO schema: scoped to this specific blog post only
+const AEO_SLUG = 'demand-gen-vs-lead-gen-which-should-your-lean-team-prioritise-right-now';
+const isAeoPost = slug === AEO_SLUG;
+
+if (isAeoPost) {
+  // Inject id="faq-section" onto the FAQ heading so the Speakable cssSelector can reference it
+  contentHtml = contentHtml.replace(
+    /(<h2)( [^>]*>|>)([\s\S]*?(?:FAQ|Frequently Asked)[\s\S]*?)(<\/h2>)/i,
+    '$1 id="faq-section"$2$3$4'
+  );
+}
+
+const aeoFaqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can you do demand generation without lead generation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes - some B2B companies, particularly those with product-led or self-serve motions, operate predominantly in demand gen. For most sales-assisted B2B businesses, however, demand gen and lead gen work in sequence."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between demand gen and lead gen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Demand gen is a long-term strategic activity aimed at education and awareness. Lead gen exists to capture contact info for sales follow-up. Demand gen is the strategy; lead gen is a tactic executed within it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is better for a small marketing team: demand gen or lead gen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This depends on your pipeline health right now. If you're missing targets and have limited runway, lead gen will fill the pipeline faster. If lead quality is declining or your sales team is struggling to convert, prioritise demand generation. For growth stage companies the correct answer is to run both — build demand gen foundations while maintaining lead gen activity."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does demand generation take to show results?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This depends on your GTM and sales cycles. If you have a longer sales cycle, your demand generation activity needs to overlap the duration to truly evaluate its impact. Leading indicators such as branded search volume and direct traffic trends will give you early signals while you are in the evaluation stage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What metrics should a lean team track for demand gen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Branded search volume, direct traffic, social engagement metrics, pipeline source mix and self-reported attribution sources are a good starting point. Also look at traffic to key pages, pipeline velocity, lead to MQL and MQL to SQL rates."
+      }
+    }
+  ]
+};
+
+const aeoHowToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to transition from a lead-gen-only model to a demand-gen model on a budget",
+  "description": "A three-phase approach for lean B2B teams to introduce demand generation alongside existing lead gen activity, without pausing current pipeline activity.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Review your existing content",
+      "text": "Identify gated content that proves your value proposition or speaks to your audience's pain points and ungate it. Make it accessible to your ICP, promote it on your website, allow search engines and LLMs to crawl it, and create long-form social posts to distribute it. This should take approximately one week, with early engagement signals visible within the first few weeks."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Create co-partnered content",
+      "text": "Identify a partner whose audience overlaps with your ICP. Find a shared pain point and create a how-to webinar you can both promote. This broadens your engaged audience and deepens the partner relationship. Allow approximately four weeks to plan and host, and ask your partner to lead on infrastructure if they have an established audience."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Take dark social seriously",
+      "text": "Find the Slack groups, closed forums and Reddit communities where your ICP discusses their problems. Engage authentically and add value without being overly promotional. Start with one channel and build consistent engagement over time. Pipeline quality improvements should become visible within the same quarter."
+    }
+  ]
+};
+
+const aeoBlogPostingSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Demand Gen vs. Lead Gen: Which Should Your Lean Team Prioritise Right Now?",
+  "description": "A practical guide for lean B2B marketing teams on the core differences between demand generation and lead generation, which to prioritise at each growth stage, and how to transition from a lead-gen-only model on a budget.",
+  "url": "https://demandgenix.uk/blog/demand-gen-vs-lead-gen-which-should-your-lean-team-prioritise-right-now/",
+  "datePublished": "2026-02-23",
+  "author": {
+    "@type": "Person",
+    "name": "Lee Hoosein",
+    "url": "https://www.linkedin.com/in/lee-hoosein/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DemandGenix",
+    "url": "https://demandgenix.uk",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://demandgenix.uk/favicon.ico"
+    }
+  },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".callout-box", "#faq-section"]
+  }
+};
+
 // Create blog-specific structured data
 const SITE_URL = "https://demandgenix.uk";
 const blogStructuredData = {
@@ -74,6 +187,14 @@ const blogStructuredData = {
 >
   <!-- Add blog-specific structured data -->
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogStructuredData)}></script>
+  <!-- AEO schema blocks: FAQPage, HowTo, BlogPosting+Speakable — this post only -->
+  {isAeoPost && (
+    <Fragment slot="head">
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoFaqSchema)}></script>
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoHowToSchema)}></script>
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoBlogPostingSchema)}></script>
+    </Fragment>
+  )}
 <style>
   /* Enhanced list styling */
   article :global(ul:not(nav ul)) {
