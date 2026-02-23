@@ -125,7 +125,7 @@ const aeoBlogPostingSchema = {
   "headline": "Demand Gen vs. Lead Gen: Which Should Your Lean Team Prioritise Right Now?",
   "description": "A practical guide for lean B2B marketing teams on the core differences between demand generation and lead generation, which to prioritise at each growth stage, and how to transition from a lead-gen-only model on a budget.",
   "url": "https://demandgenix.uk/blog/demand-gen-vs-lead-gen-which-should-your-lean-team-prioritise-right-now/",
-  "datePublished": "2026-02-23",
+  "datePublished": "2026-02-23T00:00:00+00:00",
   "author": {
     "@type": "Person",
     "name": "Lee Hoosein",
@@ -145,6 +145,9 @@ const aeoBlogPostingSchema = {
     "cssSelector": [".callout-box", "#faq-section"]
   }
 };
+
+// Ensure date strings include timezone so schema.org validators accept them
+const toIsoDateTime = (date: string) => date?.includes('T') ? date : `${date}T00:00:00+00:00`;
 
 // Create blog-specific structured data
 const SITE_URL = "https://demandgenix.uk";
@@ -168,8 +171,8 @@ const blogStructuredData = {
       "url": `${SITE_URL}/favicon.svg`
     }
   },
-  "datePublished": post.publishDate,
-  "dateModified": post.publishDate,
+  "datePublished": toIsoDateTime(post.publishDate),
+  "dateModified": toIsoDateTime(post.publishDate),
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": `${SITE_URL}/blog/${post.slug.current}/`
