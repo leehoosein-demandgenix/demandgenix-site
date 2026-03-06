@@ -1,7 +1,7 @@
 # DemandGenix Limited - B2B SaaS Demand Generation Consultancy
 
 ## Company Overview
-DemandGenix Limited is a Manchester-based boutique demand generation consultancy specializing in helping B2B SaaS companies from Seed to Series C scale efficiently. We help lean marketing teams prove ROI and scale demand generation with practical, evidence-led strategies.
+DemandGenix Limited is a Manchester-based boutique demand generation consultancy specialising in helping B2B SaaS companies from Seed to Series C scale efficiently. We help lean marketing teams prove ROI and scale demand generation with practical, evidence-led strategies.
 
 **Mission**: Help lean B2B teams find, prove, and scale demand efficiently.
 **Approach**: Practical over performative. Evidence-led. Clear communication. No-fluff partnerships.
@@ -10,19 +10,19 @@ DemandGenix Limited is a Manchester-based boutique demand generation consultancy
 
 ### Strategic Demand Generation
 - Comprehensive demand generation strategy and execution
-- ICP development and messaging optimization
+- ICP development and messaging optimisation
 - Multi-channel campaign development and management
 - Performance measurement and attribution setup
 
-### Conversion Rate Optimization  
-- Website and landing page optimization
-- A/B testing and experimentation programs
+### Conversion Rate Optimisation
+- Website and landing page optimisation
+- A/B testing and experimentation programmes
 - Funnel analysis and improvement recommendations
-- User experience and conversion flow optimization
+- User experience and conversion flow optimisation
 
 ### Marketing Analytics & Measurement
-- Marketing analytics setup and optimization
-- Attribution modeling and reporting
+- Marketing analytics setup and optimisation
+- Attribution modelling and reporting
 - Dashboard creation and KPI tracking
 - Data governance and measurement frameworks
 
@@ -35,11 +35,11 @@ DemandGenix Limited is a Manchester-based boutique demand generation consultancy
 ### Training & Workshops
 - Team training on demand generation best practices
 - Workshop facilitation on positioning and messaging
-- Marketing skills development programs
+- Marketing skills development programmes
 - Knowledge transfer and capability building
 
 ## Target Market
-We specialize in working with B2B SaaS companies from Seed to Series C stage, particularly those with sales-assisted motions and lean marketing teams. Our clients typically have small, growing marketing teams that need strategic expertise and hands-on execution support.
+We specialise in working with B2B SaaS companies from Seed to Series C stage, particularly those with sales-assisted motions and lean marketing teams. Our clients typically have small, growing marketing teams that need strategic expertise and hands-on execution support.
 
 **Geographic Focus**: UK, EU, and US markets with remote delivery model.
 
@@ -47,9 +47,9 @@ We specialize in working with B2B SaaS companies from Seed to Series C stage, pa
 
 ## Key Differentiators
 - **AI-Enhanced Approach**: Integration of cutting-edge AI tools with human strategic expertise
-- **Measurement-First**: Clean tracking, attribution, and ROI-focused execution  
+- **Measurement-First**: Clean tracking, attribution, and ROI-focused execution
 - **Boutique Agility**: Direct access to senior expertise without agency overhead
-- **Fixed-Scope Delivery**: Transparent, productized engagements with clear outcomes
+- **Fixed-Scope Delivery**: Transparent, productised engagements with clear outcomes
 - **Growth-Stage Expertise**: Strategies appropriate for startup to scale-up challenges
 
 ## Company Details
