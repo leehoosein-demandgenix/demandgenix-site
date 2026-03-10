@@ -109,6 +109,9 @@ export default defineType({
           type: 'comparisonTable'
         },
         {
+          type: 'twoColumnTable'
+        },
+        {
           type: 'calloutBox'
         },
         {
@@ -180,6 +183,36 @@ export default defineType({
       title: 'Meta Description (SEO)',
       type: 'text',
       validation: (Rule) => Rule.max(160).warning('Keep under 160 characters for optimal SEO')
+    }),
+    defineField({
+      name: 'faqs',
+      title: 'FAQs (Structured Data)',
+      type: 'array',
+      description: 'FAQ items injected as FAQPage JSON-LD schema. Improves visibility in AI-driven search (AEO).',
+      of: [
+        {
+          type: 'object',
+          title: 'FAQ Item',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Question',
+              type: 'string',
+              validation: (Rule) => Rule.required()
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Answer',
+              type: 'text',
+              rows: 3,
+              validation: (Rule) => Rule.required()
+            })
+          ],
+          preview: {
+            select: { title: 'question' }
+          }
+        }
+      ]
     }),
     defineField({
       name: 'isPublished',

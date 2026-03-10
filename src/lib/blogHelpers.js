@@ -164,6 +164,43 @@ if (block._type === 'image' && block.asset && block.asset.url) {
       return html;
     }
 
+    // Handle two-column tables
+    if (block._type === 'twoColumnTable') {
+      const col1Header = block.col1Header || '';
+      const col2Header = block.col2Header || '';
+      const rows = block.rows || [];
+
+      // Brand colours — consistent with comparisonTable
+      const headerBg      = '#065f46'; // primary-800
+      const col2Bg        = '#059669'; // primary-600
+      const rowLabelBg    = '#ecfdf5'; // primary-50
+      const rowLabelColor = '#064e3b'; // primary-900
+      const borderColor   = '#a7f3d0'; // primary-200
+
+      let html = '<div class="my-10 overflow-x-auto rounded-lg" style="box-shadow: 0 1px 4px rgba(0,0,0,0.08);">';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:0.9rem;">';
+      html += '<thead>';
+      html += '<tr>';
+      html += `<th style="padding:0.75rem 1rem;text-align:left;background:${headerBg};color:#fff;border:1px solid ${headerBg};">${col1Header}</th>`;
+      html += `<th style="padding:0.75rem 1rem;text-align:left;background:${col2Bg};color:#fff;border:1px solid ${col2Bg};">${col2Header}</th>`;
+      html += '</tr>';
+      html += '</thead>';
+      html += '<tbody>';
+
+      rows.forEach((row, index) => {
+        const rowBg = index % 2 === 0 ? '#ffffff' : '#f9fafb';
+        html += `<tr style="background:${rowBg};">`;
+        html += `<td style="padding:0.75rem 1rem;font-weight:600;background:${rowLabelBg};color:${rowLabelColor};border:1px solid ${borderColor};white-space:nowrap;vertical-align:top;">${row.label || ''}</td>`;
+        html += `<td style="padding:0.75rem 1rem;border:1px solid ${borderColor};color:#1f2937;vertical-align:top;line-height:1.6;">${row.value || ''}</td>`;
+        html += '</tr>';
+      });
+
+      html += '</tbody>';
+      html += '</table>';
+      html += '</div>';
+      return html;
+    }
+
     // Handle callout boxes
     if (block._type === 'calloutBox') {
       const type    = block.type || 'insight';

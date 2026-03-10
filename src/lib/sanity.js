@@ -711,6 +711,15 @@ export async function getBlogPostBySlug(slug) {
             col3
           }
         },
+        _type == "twoColumnTable" => {
+          _type,
+          col1Header,
+          col2Header,
+          rows[]{
+            label,
+            value
+          }
+        },
         _type == "calloutBox" => {
           _type,
           type,
@@ -740,7 +749,8 @@ export async function getBlogPostBySlug(slug) {
       "heroImage": heroImage{
         "url": asset->url,
         "alt": alt
-      }
+      },
+      faqs[]{ question, answer }
     }
     `,
     { slug },
