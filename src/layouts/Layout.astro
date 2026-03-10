@@ -167,6 +167,22 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
       });
     </script>
     <slot name="head" />
+
+    <!-- Dreamdata: consent sentinel prevents auto-init before explicit consent is given.
+         By setting window.google_tag_data with analytics_storage.update: false, Dreamdata
+         enters its dataLayer-intercept mode and waits for a consent signal rather than
+         initialising immediately. -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      if (!window.google_tag_data) {
+        window.google_tag_data = { ics: { entries: { analytics_storage: { update: false } } } };
+      }
+    </script>
+
+    <!-- Dreamdata Analytics (consent-aware init) -->
+    <script id="init-dreamdata" is:inline>
+      !function(){"use strict";var a="dreamdata",t="dreamdata-analytics",e=!1;function i(a){if(function(){try{var a=window&&window.localStorage&&window.localStorage.getItem("DD_DEBUGGER");return"true"===a||"1"===a}catch(a){return!1}}())try{var t=window.console,e=Array.prototype.slice.call(arguments,1),i=t&&t[a]?t[a]:t&&t.log?t.log:null;i&&i.apply(t,e)}catch(a){return}}var dreamdata=window[a]=window[a]||[];if(!dreamdata.initialize)if(dreamdata.invoked)i("warn","Dreamdata snippet included twice.");else{dreamdata.invoked=!0,dreamdata.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"],dreamdata.factory=function(t){return function(){if(window[a].initialized)return window[a][t].apply(window[a],arguments);var e=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(t)>-1){var i=document.querySelector("link[rel='canonical']");e.push({__t:"bpc",c:i&&i.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}return e.unshift(t),dreamdata.push(e),dreamdata}};for(var r=0;r<dreamdata.methods.length;r++){var n=dreamdata.methods[r];dreamdata[n]=dreamdata.factory(n)}dreamdata.load=function(e,i){var r=document.createElement("script");r.id=t,r.type="text/javascript",r.async=!0,r.setAttribute("data-global-dreamdata-analytics-key",a),r.src="https://cdn.dreamdata.cloud/scripts/analytics/next/dreamdata.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(r,n),dreamdata._loadOptions=i},dreamdata._writeKey="9012df46-e34f-460c-b512-e80da56dbfbf",dreamdata.SNIPPET_VERSION="dreamdata-2.2.6",dreamdata.init=function(){try{if(e)return void i("warn","Dreamdata already initialized, skipping duplicate initialization");dreamdata.load("9012df46-e34f-460c-b512-e80da56dbfbf", {"googleEnhancedConversions":true,"formTracking":{"html":true,"hubspot":true},"intentSources":{"autoGroup":true}}),dreamdata.page(),e=!0}catch(a){i("error","Failed to initialize Dreamdata:",a&&a.message)}},function(){try{if(e)return;if(i("log","✅ dataLayer",window.dataLayer),i("log","✅ google_tag_data",window.google_tag_data),!window.dataLayer||!window.google_tag_data)return void dreamdata.init();if(window.google_tag_data&&window.google_tag_data.ics&&window.google_tag_data.ics.entries&&window.google_tag_data.ics.entries.analytics_storage&&!0===window.google_tag_data.ics.entries.analytics_storage.update||function(){try{var a=localStorage.getItem("framerCookiesConsentMode");if(!a)return!1;var t=JSON.parse(a);return!!t&&!0===t.analytics}catch(a){return!1}}())return i("log","✅ Consent with GTM analytics_storage in google_tag_data granted, initializing Dreamdata"),void dreamdata.init();var a=window.dataLayer.push;window.dataLayer.push=function(){var r=Array.prototype.slice.call(arguments);i("log","✅ DataLayer Change Detected:",r[0]);var n=r[0];return n&&3===n.length&&"consent"===n[0]&&n[2]&&n[2].analytics_storage&&("denied"===n[2].analytics_storage&&(i("log","❌ Consent with GTM analytics_storage in dataLayer denied, removing Dreamdata script"),function(){e=!1;var a=document.getElementById(t);a&&a.remove()}()),"granted"===n[2].analytics_storage&&(i("log","✅ Consent with GTM analytics_storage in dataLayer granted, initializing Dreamdata"),dreamdata.init())),a.apply(this,r)}}catch(a){i("error","Error in initialization logic, falling back to basic init:",a&&a.message),dreamdata.init()}}()}}();
+    </script>
   </head>
   
   <body class="font-sans">
