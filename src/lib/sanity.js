@@ -740,7 +740,8 @@ export async function getBlogPostBySlug(slug) {
       "heroImage": heroImage{
         "url": asset->url,
         "alt": alt
-      }
+      },
+      faqs[]{ question, answer }
     }
     `,
     { slug },
