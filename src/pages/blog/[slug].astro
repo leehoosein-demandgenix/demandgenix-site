@@ -45,53 +45,6 @@ if (isAeoPost) {
   );
 }
 
-const aeoFaqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can you do demand generation without lead generation?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes - some B2B companies, particularly those with product-led or self-serve motions, operate predominantly in demand gen. For most sales-assisted B2B businesses, however, demand gen and lead gen work in sequence."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between demand gen and lead gen?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Demand gen is a long-term strategic activity aimed at education and awareness. Lead gen exists to capture contact info for sales follow-up. Demand gen is the strategy; lead gen is a tactic executed within it."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Which is better for a small marketing team: demand gen or lead gen?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "This depends on your pipeline health right now. If you're missing targets and have limited runway, lead gen will fill the pipeline faster. If lead quality is declining or your sales team is struggling to convert, prioritise demand generation. For growth stage companies the correct answer is to run both — build demand gen foundations while maintaining lead gen activity."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long does demand generation take to show results?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "This depends on your GTM and sales cycles. If you have a longer sales cycle, your demand generation activity needs to overlap the duration to truly evaluate its impact. Leading indicators such as branded search volume and direct traffic trends will give you early signals while you are in the evaluation stage."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What metrics should a lean team track for demand gen?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Branded search volume, direct traffic, social engagement metrics, pipeline source mix and self-reported attribution sources are a good starting point. Also look at traffic to key pages, pipeline velocity, lead to MQL and MQL to SQL rates."
-      }
-    }
-  ]
-};
-
 const aeoHowToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
@@ -149,6 +102,22 @@ const aeoBlogPostingSchema = {
 // Ensure date strings include timezone so schema.org validators accept them
 const toIsoDateTime = (date: string) => date?.includes('T') ? date : `${date}T00:00:00+00:00`;
 
+// Dynamic FAQPage schema — driven by post.faqs from Sanity
+const faqSchema = post.faqs?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": post.faqs.map((faq: { question: string; answer: string }) => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    }
+  : null;
+
 // Create blog-specific structured data
 const SITE_URL = "https://demandgenix.uk";
 const blogStructuredData = {
@@ -190,10 +159,12 @@ const blogStructuredData = {
 >
   <!-- Add blog-specific structured data -->
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogStructuredData)}></script>
-  <!-- AEO schema blocks: FAQPage, HowTo, BlogPosting+Speakable — this post only -->
+  {faqSchema && (
+    <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqSchema)}></script>
+  )}
+  <!-- AEO schema blocks: HowTo, BlogPosting+Speakable — this post only -->
   {isAeoPost && (
     <Fragment slot="head">
-      <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoFaqSchema)}></script>
       <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoHowToSchema)}></script>
       <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoBlogPostingSchema)}></script>
     </Fragment>
