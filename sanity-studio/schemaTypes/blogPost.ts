@@ -109,6 +109,9 @@ export default defineType({
           type: 'comparisonTable'
         },
         {
+          type: 'twoColumnTable'
+        },
+        {
           type: 'calloutBox'
         },
         {
@@ -189,6 +192,7 @@ export default defineType({
       of: [
         {
           type: 'object',
+          title: 'FAQ Item',
           fields: [
             defineField({
               name: 'question',
