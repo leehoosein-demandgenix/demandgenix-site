@@ -158,11 +158,11 @@ const blogStructuredData = {
   description={post.metaDescription || post.excerpt}
 >
   <!-- Add blog-specific structured data -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogStructuredData)}></script>
+  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(blogStructuredData)}></script>
   {faqSchema && (
     <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(faqSchema)}></script>
   )}
-  <!-- AEO schema blocks: HowTo, BlogPosting+Speakable — this post only -->
+  <!-- AEO schema blocks: HowTo, BlogPosting+Speakable — this post only. FAQPage is dynamic from post.faqs above. -->
   {isAeoPost && (
     <Fragment slot="head">
       <script type="application/ld+json" is:inline set:html={JSON.stringify(aeoHowToSchema)}></script>
