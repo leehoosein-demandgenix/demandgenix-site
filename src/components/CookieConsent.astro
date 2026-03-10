@@ -107,6 +107,7 @@
               </p>
               <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
                 <li>Google Analytics (anonymous statistics)</li>
+                <li>Dreamdata (marketing attribution and pipeline analytics)</li>
                 <li>Page views and user journeys</li>
               </ul>
             </div>
@@ -366,6 +367,25 @@ function loadRB2B() {
   }
 }
 
+  // Signal Dreamdata (loaded in <head>) to initialise via its dataLayer interceptor.
+  // The sentinel in Layout.astro sets google_tag_data so Dreamdata waits for this signal.
+  function loadDreamdata() {
+    if (getCookie(ANALYTICS_COOKIE) === 'true') {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push(['consent', 'update', { analytics_storage: 'granted' }]);
+    }
+  }
+
+  // Load Dreamdata CL (client-side attribution fallback) only after analytics consent.
+  function loadDreamdataCL() {
+    if (getCookie(ANALYTICS_COOKIE) !== 'true') return;
+    if (document.getElementById('dreamdata-analytics-cl')) return;
+    const s = document.createElement('script');
+    s.id = 'init-dreamdata-cl-consent';
+    s.textContent = `!function(){if(!window.dreamdata||!window.dreamdata.initialized){if(window.dreamdata){var e=document.getElementById("dreamdata-analytics");if(e&&e.type&&"text/javascript"==e.type)return}var a="dreamdata-cl",dreamdata=window[a]=window[a]||[];if(!dreamdata.initialize)if(dreamdata.invoked)window.console&&console.error&&console.error("Dreamdata CL snippet included twice.");else{dreamdata.invoked=!0,dreamdata.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"],dreamdata.factory=function(e){return function(){if(window[a].initialized)return window[a][e].apply(window[a],arguments);var t=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var r=document.querySelector("link[rel='canonical']");t.push({__t:"bpc",c:r&&r.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}return t.unshift(e),dreamdata.push(t),dreamdata}};for(var t=0;t<dreamdata.methods.length;t++){var r=dreamdata.methods[t];dreamdata[r]=dreamdata.factory(r)}dreamdata.load=function(e,t){var r=document.createElement("script");r.id="dreamdata-analytics-cl",r.type="text/javascript",r.async=!0,r.setAttribute("data-global-dreamdata-cl-analytics-key",a),r.src="https://cdn.drda.io/scripts/analytics/next/dreamdata.cl.min.js";var i=document.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i),dreamdata._loadOptions=t},dreamdata._writeKey="9012df46-e34f-460c-b512-e80da56dbfbf",dreamdata.SNIPPET_VERSION="dreamdata-cl-2.0.0",dreamdata.load("9012df46-e34f-460c-b512-e80da56dbfbf"),dreamdata.page()}}}();`;
+    document.head.appendChild(s);
+  }
+
   function loadAllScripts() {
     loadAnalytics();
     loadHubSpot();
@@ -373,6 +393,8 @@ function loadRB2B() {
     loadLinkedIn();
     loadClay();
     loadRB2B();
+    loadDreamdata();
+    loadDreamdataCL();
   }
 
   // Event listeners
@@ -390,6 +412,9 @@ function loadRB2B() {
     setCookie(ANALYTICS_COOKIE, 'false');
     setCookie(MARKETING_COOKIE, 'false');
     hideBanner();
+    // Signal Dreamdata that analytics consent was denied
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push(['consent', 'update', { analytics_storage: 'denied' }]);
     window.dispatchEvent(new CustomEvent('cookie-consent-changed', { detail: { all: false } }));
   });
 
@@ -410,6 +435,11 @@ function loadRB2B() {
     setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
     setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
     hideSettingsModal();
+    // Propagate analytics consent decision to Dreamdata's dataLayer interceptor
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push(['consent', 'update', {
+      analytics_storage: analyticsCheckbox.checked ? 'granted' : 'denied'
+    }]);
     loadAllScripts();
     window.dispatchEvent(new CustomEvent('cookie-consent-changed', { 
       detail: { 
