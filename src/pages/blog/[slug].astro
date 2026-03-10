@@ -360,6 +360,26 @@ article :global(ul li) {
           <div set:html={contentHtml}></div>
         </div>
 
+        <!-- FAQ Section — visually renders post.faqs for Google FAQPage rich results -->
+        {post.faqs && post.faqs.length > 0 && (
+          <section id="faq-section" class="mt-12 pt-8 border-t border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+              {post.faqs.map((faq: { question: string; answer: string }) => (
+                <details class="group border border-gray-200 rounded-lg">
+                  <summary class="flex items-center justify-between w-full px-6 py-4 text-left cursor-pointer list-none font-medium text-gray-900 hover:bg-gray-50 transition-colors">
+                    <span>{faq.question}</span>
+                    <span class="ml-4 text-gray-400 group-open:rotate-180 transition-transform duration-200">▼</span>
+                  </summary>
+                  <div class="px-6 pb-4 pt-2 text-gray-600 leading-relaxed">
+                    {faq.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
         <!-- Post Footer -->
         <footer class="mt-12 pt-8 border-t border-gray-200">
           <div class="flex items-center justify-between">
