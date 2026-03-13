@@ -1,5 +1,6 @@
 ---
 import CookieConsent from '../components/CookieConsent.astro';
+import UTMTracker from '../components/UTMTracker.astro';
 
 export interface Props {
   title: string;
@@ -191,6 +192,7 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
   <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=8301826&fmt=gif" />
 </noscript>
     <CookieConsent />
+    <UTMTracker />
     <script src="https://static.claydar.com/init.v1.js?id=cgiqWQbLzO"></script>
     <!-- WebMCP: Expose structured tools to AI agents via navigator.modelContext -->
     <script is:inline src="/webmcp.js" defer></script>

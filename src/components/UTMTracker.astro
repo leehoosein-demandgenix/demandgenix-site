@@ -1,0 +1,59 @@
+---
+// UTMTracker.astro
+// Captures UTM parameters from landing URLs and persists them in a cookie
+// so attribution data survives multi-page journeys to form submission.
+// Respects marketing cookie consent before writing.
+---
+
+<script>
+  const UTM_COOKIE_NAME = 'utm_data';
+  const UTM_COOKIE_DAYS = 30;
+  const UTM_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id'];
+
+  function getUTMsFromURL(): Record<string, string> | null {
+    const params = new URLSearchParams(window.location.search);
+    const utms: Record<string, string> = {};
+    for (const key of UTM_PARAMS) {
+      const val = params.get(key);
+      if (val) utms[key] = val;
+    }
+    return Object.keys(utms).length > 0 ? utms : null;
+  }
+
+  function hasMarketingConsent(): boolean {
+    return document.cookie.split('; ').find(r => r.startsWith('marketing-consent='))?.split('=')[1] === 'true';
+  }
+
+  function getStoredUTMs(): Record<string, string> | null {
+    const raw = document.cookie.split('; ').find(r => r.startsWith(UTM_COOKIE_NAME + '='))?.split('=').slice(1).join('=');
+    if (!raw) return null;
+    try { return JSON.parse(decodeURIComponent(raw)); } catch { return null; }
+  }
+
+  function persistUTMs(utms: Record<string, string>): void {
+    const expires = new Date(Date.now() + UTM_COOKIE_DAYS * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${UTM_COOKIE_NAME}=${encodeURIComponent(JSON.stringify(utms))}; expires=${expires}; path=/; SameSite=Lax; Secure`;
+  }
+
+  function tryCapture(): void {
+    if (!hasMarketingConsent()) return;
+    // First-touch: don't overwrite an existing UTM cookie
+    if (getStoredUTMs()) return;
+    const utms = getUTMsFromURL();
+    if (utms) persistUTMs(utms);
+  }
+
+  // Expose globally so forms can read UTM data at submission time
+  (window as any).getUTMData = (): Record<string, string> | null => getStoredUTMs();
+
+  // Attempt capture on page load (handles returning visitors who already consented)
+  tryCapture();
+
+  // Also capture when consent is granted for the first time in this session
+  window.addEventListener('cookie-consent-changed', (e: Event) => {
+    const detail = (e as CustomEvent).detail;
+    if (detail?.all || detail?.marketing) {
+      tryCapture();
+    }
+  });
+</script>
