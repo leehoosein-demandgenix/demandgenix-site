@@ -420,15 +420,19 @@ function loadRB2B() {
 
   customizeBtn.addEventListener('click', showSettingsModal);
   
-  cancelCustomizeBtn.addEventListener('click', () => {
+  function dismissAll() {
+    setCookie(COOKIE_NAME, 'essential-only');
+    setCookie(ANALYTICS_COOKIE, 'false');
+    setCookie(MARKETING_COOKIE, 'false');
     hideSettingsModal();
-    showBanner();
-  });
+    hideBanner();
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push(['consent', 'update', { analytics_storage: 'denied' }]);
+    window.dispatchEvent(new CustomEvent('cookie-consent-changed', { detail: { all: false } }));
+  }
 
-  closeSettingsBtn.addEventListener('click', () => {
-    hideSettingsModal();
-    showBanner();
-  });
+  cancelCustomizeBtn.addEventListener('click', dismissAll);
+  closeSettingsBtn.addEventListener('click', dismissAll);
 
   savePreferencesBtn.addEventListener('click', () => {
     setCookie(COOKIE_NAME, 'customized');
