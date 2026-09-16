@@ -22,14 +22,13 @@ try {
     <h2 class="text-3xl font-bold text-gray-900 mb-4">
       {safetyNet.heading}
     </h2>
-    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-      {safetyNet.description.split('30-minute pipeline diagnostic call')[0]}
-      <strong class="text-gray-900">30-minute pipeline diagnostic call.</strong>
-      {safetyNet.description.split('30-minute pipeline diagnostic call')[1]}
-    </p>
+    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto" set:html={safetyNet.description.replace(
+      '30-minute pipeline diagnostic call',
+      '<strong class="text-gray-900">30-minute pipeline diagnostic call</strong>'
+    )} />
     <a
       href={safetyNet.ctaLink}
-      class="inline-block bg-secondary-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
+      class="inline-block bg-secondary-600 text-gray-900 px-8 py-3 rounded-lg text-lg font-medium hover:bg-secondary-500 transition-colors shadow-lg"
     >
       {safetyNet.ctaText}
     </a>

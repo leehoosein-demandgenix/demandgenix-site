@@ -64,6 +64,7 @@ const lozenges = programmes.map(prog => ({
           <button
             type="button"
             data-solution-id={lozenge.id}
+            aria-pressed="false"
             class="lozenge-button flex items-center gap-3 bg-gray-50 hover:bg-primary-50 border-2 border-gray-200 hover:border-primary-600 px-6 py-3 rounded-full transition-all duration-200"
           >
             {lozenge.icon === 'search' && (
@@ -170,33 +171,37 @@ const lozenges = programmes.map(prog => ({
   document.addEventListener('DOMContentLoaded', () => {
     const lozengeButtons = document.querySelectorAll('.lozenge-button');
     const solutionCards = document.querySelectorAll('.solution-card');
+    let activeId = null;
 
     lozengeButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const solutionId = button.getAttribute('data-solution-id');
+        // Clicking the already-active lozenge clears the filter and shows every path again
+        activeId = activeId === solutionId ? null : solutionId;
 
-        // Remove active state from all buttons and cards
         lozengeButtons.forEach((btn) => {
-          btn.classList.remove('bg-primary-50', 'border-primary-600');
-          btn.classList.add('bg-gray-50', 'border-gray-200');
+          const selected = btn.getAttribute('data-solution-id') === activeId;
+          btn.classList.toggle('bg-primary-50', selected);
+          btn.classList.toggle('border-primary-600', selected);
+          btn.classList.toggle('bg-gray-50', !selected);
+          btn.classList.toggle('border-gray-200', !selected);
+          btn.setAttribute('aria-pressed', String(selected));
         });
+
+        let targetCard = null;
         solutionCards.forEach((card) => {
+          const matches = card.getAttribute('data-solution-card') === activeId;
           card.classList.remove('border-primary-600', 'shadow-lg', 'bg-primary-50');
+          card.classList.toggle('hidden', activeId !== null && !matches);
+          if (matches) {
+            card.classList.add('border-primary-600', 'shadow-lg', 'bg-primary-50');
+            targetCard = card;
+          }
         });
 
-        // Add active state to clicked button
-        button.classList.remove('bg-gray-50', 'border-gray-200');
-        button.classList.add('bg-primary-50', 'border-primary-600');
-
-        // Highlight corresponding card
-        const targetCard = document.querySelector(`[data-solution-card="${solutionId}"]`);
-        if (targetCard) {
-          targetCard.classList.add('border-primary-600', 'shadow-lg', 'bg-primary-50');
-
-          // Smooth scroll to card on mobile
-          if (window.innerWidth < 768) {
-            targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
+        // Smooth scroll to the recommended card on mobile
+        if (targetCard && window.innerWidth < 768) {
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       });
     });
