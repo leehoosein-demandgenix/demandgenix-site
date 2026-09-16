@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "plus jakarta sans",
+        "createdAt": "2026-09-16T09:47:27.119Z",
+        "reason": "Established brand typeface: self-hosted @font-face definitions (weights 300-700) in global.css, referenced as the site's sans font in tailwind.config.js, and preloaded in Layout.astro. Deliberate brand choice predating this session, not AI-default drift."
+      }
+    ]
+  }
+}
