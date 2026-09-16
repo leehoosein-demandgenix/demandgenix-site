@@ -20,9 +20,8 @@ try {
 {testimonials && testimonials.length > 0 && (
   <section class="py-16 bg-gray-50 section-divider">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-center mb-4">What colleagues and collaborators say</h2>
-      <p class="text-center text-gray-600 mb-2">LinkedIn recommendations from people I've worked with</p>
-      <p class="text-center text-sm text-gray-500 italic mb-12">Client case studies coming Q2 2026...</p>
+      <h2 class="text-3xl font-bold text-center mb-4">What colleagues say about working with our founder</h2>
+      <p class="text-center text-gray-600 mb-12">Direct, unprompted LinkedIn recommendations for Lee — not client case studies, just honest feedback from people who've been in the room with him</p>
       
       <div class="grid md:grid-cols-3 lg:grid-cols-3 gap-8">
         {testimonials.map((testimonial) => (
@@ -50,9 +49,9 @@ try {
                 </div>
               )}
               <div>
-                <h4 class="font-semibold text-gray-900" data-testimonial-name>
+                <h3 class="font-semibold text-gray-900" data-testimonial-name>
                   {testimonial.name || 'Anonymous'}
-                </h4>
+                </h3>
                 <p class="text-sm text-gray-600" data-testimonial-title>
                   {testimonial.title ? `${testimonial.title}${testimonial.company ? ` at ${testimonial.company}` : ''}` : 'LinkedIn Connection'}
                 </p>
@@ -82,6 +81,7 @@ try {
           </div>
         ))}
       </div>
+      <p class="text-center text-sm text-gray-500 mt-8">Full client case studies launching Q2 2026.</p>
     </div>
   </section>
 )}

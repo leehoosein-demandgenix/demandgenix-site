@@ -16,7 +16,7 @@
         <a href="/contact/" class="text-white hover:text-gray-900 transition-colors">Contact</a>
       </nav>
       <div class="hidden md:block">
-        <a href="/contact/" class="bg-secondary-600 text-white px-4 py-2 rounded-lg hover:bg-secondary-500 transition-colors">
+        <a href="/contact/" class="bg-secondary-600 text-gray-900 px-4 py-2 rounded-lg hover:bg-secondary-500 transition-colors">
           Book a Call
         </a>
       </div>
@@ -36,20 +36,22 @@
       </button>
     </div>
   </div>
-
-  <!-- Mobile menu panel -->
-  <div id="mobile-menu" class="md:hidden hidden bg-green border-t border-white/10">
-    <nav class="flex flex-col px-4 py-4 space-y-3">
-      <a href="/programmes/" class="text-white hover:text-gray-200 transition-colors py-2">Programmes</a>
-      <a href="/#about" class="text-white hover:text-gray-200 transition-colors py-2">About</a>
-      <a href="/blog/" class="text-gray-100 hover:text-white transition-colors py-2">Blog</a>
-      <a href="/contact/" class="text-white hover:text-gray-200 transition-colors py-2">Contact</a>
-      <a href="/contact/" class="bg-secondary-600 text-white px-4 py-2 rounded-lg hover:bg-secondary-500 transition-colors text-center mt-2">
-        Book a Call
-      </a>
-    </nav>
-  </div>
 </header>
+
+<!-- Mobile menu panel: a sibling of <header>, not a descendant, so it can never
+     paint over the header bar (and its close button) regardless of z-index rules
+     for stacking contexts nested inside a positioned ancestor. -->
+<div id="mobile-menu" class="md:hidden hidden fixed inset-x-0 top-16 h-[calc(100vh-4rem)] z-40 overflow-y-auto bg-green border-t border-white/10">
+  <nav class="flex flex-col px-4 py-4 space-y-3">
+    <a href="/programmes/" class="text-white hover:text-gray-200 transition-colors py-2">Programmes</a>
+    <a href="/#about" class="text-white hover:text-gray-200 transition-colors py-2">About</a>
+    <a href="/blog/" class="text-gray-100 hover:text-white transition-colors py-2">Blog</a>
+    <a href="/contact/" class="text-white hover:text-gray-200 transition-colors py-2">Contact</a>
+    <a href="/contact/" class="bg-secondary-600 text-gray-900 px-4 py-2 rounded-lg hover:bg-secondary-500 transition-colors text-center mt-2">
+      Book a Call
+    </a>
+  </nav>
+</div>
 
 <script>
   const menuBtn = document.getElementById('mobile-menu-btn');
@@ -63,5 +65,6 @@
     hamburgerIcon?.classList.toggle('hidden');
     closeIcon?.classList.toggle('hidden');
     menuBtn.setAttribute('aria-expanded', String(!isOpen));
+    document.body.classList.toggle('overflow-hidden', !isOpen);
   });
 </script>
