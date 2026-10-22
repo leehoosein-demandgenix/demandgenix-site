@@ -299,12 +299,6 @@ const lozenges = programmes.map(p => ({
                     </span>
                   </div>
                 )}
-                {diagnostic.investment && (
-                  <div class="programme-meta__item">
-                    <span class="programme-meta__label">Investment</span>
-                    <span class="programme-meta__value">{diagnostic.investment}</span>
-                  </div>
-                )}
               </div>
 
               {/* Deliverables Grid */}
@@ -340,7 +334,7 @@ const lozenges = programmes.map(p => ({
                   href="/contact"
                   class="prog-cta-btn"
                 >
-                  Book Your Diagnostic — £3,500
+                  Book a free intro call
                 </a>
                 <p class="prog-cta-subtext">
                   {diagnostic.ctaDescriptor || "We'll map your biggest leak and recommend a next step."}
@@ -383,12 +377,6 @@ const lozenges = programmes.map(p => ({
                     <div class="programme-meta__item">
                       <span class="programme-meta__label">Duration</span>
                       <span class="programme-meta__value">{turnaround.duration}</span>
-                    </div>
-                  )}
-                  {turnaround.investment && (
-                    <div class="programme-meta__item">
-                      <span class="programme-meta__label">Investment per Sprint</span>
-                      <span class="programme-meta__value">{turnaround.investment}</span>
                     </div>
                   )}
                 </div>
@@ -657,12 +645,6 @@ const lozenges = programmes.map(p => ({
                             <td>{tier.commitment}</td>
                           ))}
                         </tr>
-                        <tr>
-                          <td class="font-medium">Investment</td>
-                          {leadership.enterpriseTable.tiers.map((tier) => (
-                            <td class="font-bold">{tier.investment}</td>
-                          ))}
-                        </tr>
                         {leadership.enterpriseTable.features && leadership.enterpriseTable.features.map((feature) => (
                           <tr>
                             <td>{feature.name}</td>
@@ -723,12 +705,6 @@ const lozenges = programmes.map(p => ({
                         <span class="prog-label ml-2" style="font-size: 0.8rem;">{leadership.durationSubtext}</span>
                       )}
                     </span>
-                  </div>
-                )}
-                {leadership.investment && (
-                  <div class="programme-meta__item">
-                    <span class="programme-meta__label">Starting Investment</span>
-                    <span class="programme-meta__value">{leadership.investment}</span>
                   </div>
                 )}
               </div>

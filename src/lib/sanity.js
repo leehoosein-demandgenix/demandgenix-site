@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client'
 import { logger } from './logger.js'
+import { siteSettingsDefaults, homePageDefaults, servicesPageDefaults } from '../content/defaults.js'
 
 export const client = createClient({
   projectId: 'fv5q0f3v',
@@ -160,7 +161,6 @@ export async function getProgrammes() {
       targetAudience,
       duration,
       durationSubtext,
-      investment,
       deliverables,
       ctaText,
       ctaDescriptor,
@@ -203,7 +203,6 @@ export async function getProgrammes() {
         linkUrl: '/programmes#diagnostic',
         isEntryHero: true,
         duration: '3–4 weeks',
-        investment: '£3,500-£5,000',
         deliverables: [
           'Full-funnel analysis with conversion benchmarks',
           'Prioritised 90-day execution roadmap',
@@ -271,7 +270,6 @@ export async function getProgrammes() {
         linkUrl: '/programmes#turnaround',
         isEntryHero: false,
         duration: '6-12 weeks',
-        investment: '£4,500-£12,000 per sprint',
         detailedDescription: [
           {
             _type: 'block',
@@ -374,7 +372,6 @@ export async function getProgrammes() {
         isEntryHero: false,
         duration: 'Ongoing (rolling 90 days)',
         durationSubtext: '(1-2 days/week)',
-        investment: 'From £2,500/month',
         detailedDescription: [
           {
             _type: 'block',
@@ -393,9 +390,9 @@ export async function getProgrammes() {
         ],
         enterpriseTable: {
           tiers: [
-            { name: 'Core', commitment: '1 day/week', investment: '£2,500/month' },
-            { name: 'Plus', commitment: '2 days/week', investment: '£4,500/month' },
-            { name: 'Enterprise', commitment: 'Custom', investment: 'Custom' }
+            { name: 'Core', commitment: '1 day/week' },
+            { name: 'Plus', commitment: '2 days/week' },
+            { name: 'Enterprise', commitment: 'Custom' }
           ],
           features: [
             { name: 'Strategy & Planning', availability: [true, true, true] },
@@ -494,20 +491,65 @@ export async function getContact() {
   )
 }
 
-export async function getSiteSettings() {
-  return await fetchWithFallback(
-    `*[_type == "siteSettings"][0]`,
-    {},
-    {
-      siteTitle: "Demand Generation and Digital Marketing in Manchester, UK | DemandGenix",
-      siteDescription: "Manchester-based demand gen and digital marketing consultancy helping growing companies scale efficiently. Fixed-scope sprints, fractional leadership, AI utilization.",
-      linkedinUrl: "https://linkedin.com/company/demandgenix",
-      companyName: "DemandGenix Limited",
-      companyNumber: "16660290",
-      vatNumber: "501 3963 18",
-      registeredAddress: "48 Sandy Lane, Prestwich, Manchester, M25 9NB"
-    }
-  )
+// --- Copy that lives in the CMS -------------------------------------------
+// Each document is merged over the draft copy in src/content/defaults.js, field by field,
+// so a page never renders blank if the CMS is empty, unreachable, or missing a field.
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v)
+const isEmpty = (v) => v === undefined || v === null || v === '' || (Array.isArray(v) && v.length === 0)
+
+export function withDefaults(defaults, doc) {
+  if (!doc) return defaults
+  const out = { ...doc }
+  for (const [key, fallback] of Object.entries(defaults)) {
+    const current = doc[key]
+    if (isEmpty(current)) out[key] = fallback
+    else if (isPlainObject(fallback) && isPlainObject(current)) out[key] = withDefaults(fallback, current)
+  }
+  return out
+}
+
+const imageRef = (field) => `${field}{ alt, "url": asset->url }`
+
+// Site settings and the two pages are read many times during a build, so fetch each once.
+// In development they are always re-fetched so edits in Studio show up on refresh.
+const cache = {}
+function once(name, load) {
+  if (import.meta.env?.DEV) return load()
+  if (!cache[name]) cache[name] = load()
+  return cache[name]
+}
+
+export function getSiteSettings() {
+  return once('siteSettings', async () => {
+    const doc = await fetchWithFallback(
+      `*[_type == "siteSettings"][0]{ ..., ${imageRef('defaultOgImage')} }`,
+      {},
+      null
+    )
+    return withDefaults(siteSettingsDefaults, doc)
+  })
+}
+
+export function getHomePage() {
+  return once('homePage', async () => {
+    const doc = await fetchWithFallback(
+      `*[_type == "homePage"][0]{ ..., _updatedAt, ${imageRef('heroPhoto')}, ${imageRef('aboutPhoto')}, seo{ ..., ${imageRef('ogImage')} } }`,
+      {},
+      null
+    )
+    return withDefaults(homePageDefaults, doc)
+  })
+}
+
+export function getServicesPage() {
+  return once('servicesPage', async () => {
+    const doc = await fetchWithFallback(
+      `*[_type == "servicesPage"][0]{ ..., _updatedAt, seo{ ..., ${imageRef('ogImage')} } }`,
+      {},
+      null
+    )
+    return withDefaults(servicesPageDefaults, doc)
+  })
 }
 
 // Testimonials functions
