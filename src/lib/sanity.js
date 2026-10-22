@@ -5,7 +5,7 @@ import { siteSettingsDefaults, homePageDefaults, servicesPageDefaults, contactPa
 export const client = createClient({
   projectId: 'fv5q0f3v',
   dataset: 'production',
-  useCdn: true, 
+  useCdn: false, 
   apiVersion: '2024-01-01',
   requestTagPrefix: 'demandgenix',
   timeout: 5000, // 5 second timeout to prevent hanging
