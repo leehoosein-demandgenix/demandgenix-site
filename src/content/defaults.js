@@ -290,3 +290,71 @@ export const servicesPageDefaults = {
       'People searching for a marketing consultant, a PPC or Google Ads consultant, or asking how to tell whether marketing spend is working. FAQ questions are written the way people ask them so they can be quoted by AI assistants.'
   }
 }
+
+// --- Contact page ----------------------------------------------------------
+export const contactPageDefaults = {
+  heroKicker: 'Contact',
+  heroHeadline: 'Let’s have a straight conversation about where your marketing money goes.',
+  heroSub: 'Book a free 30-minute intro call. You tell me what you’re spending and what you’re seeing, and I tell you honestly whether I can help.',
+
+  formHeading: 'Book your free intro call',
+  formIntro: 'Four details, and I’ll be in touch within 24 hours.',
+  privacyNote: rt('By submitting this form you agree to the [privacy policy](/privacy-policy/). I’ll only use your details to reply to your enquiry and to send relevant updates.'),
+  successMessage: 'Thanks, I’ve got your details and will reply within 24 hours.',
+  errorMessage: 'Sorry, something went wrong sending that. Please email {email} and I’ll pick it up.',
+
+  expectHeading: 'What to expect',
+  expectSteps: [
+    { _key: 'e1', title: 'A reply within 24 hours', body: rt('Usually much faster during UK business hours.') },
+    { _key: 'e2', title: 'The intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing, and I tell you honestly whether I can help.') },
+    { _key: 'e3', title: 'What happens next', body: rt('If it’s a fit, I’ll explain what a first piece of work involves and costs, in writing, before you commit to anything. If it isn’t, I’ll say so.') }
+  ],
+
+  detailsHeading: 'Get in touch',
+  responseTime: 'I reply within 24 hours, usually much faster during UK business hours.',
+  locationNote: 'Based in Manchester. I work remotely with clients across the UK, EU and US.',
+
+  seo: {
+    _type: 'seo',
+    metaTitle: 'Book a Free Intro Call | DemandGenix',
+    metaDescription:
+      'Book a free 30-minute intro call. Tell me what you spend on marketing and what you’re seeing, and I’ll tell you honestly whether I can help.',
+    summary:
+      'This is the contact page for DemandGenix, the Manchester marketing practice run by Lee Hoosein. A short form books a free 30-minute intro call, and Lee replies within 24 hours. The page also gives the email address and location.',
+    searchIntent:
+      'People ready to talk to a marketing consultant in Manchester, or who have been referred and want to book a call. Keep the form short; the page exists to get the call booked.'
+  }
+}
+
+// --- Blog index and post footer --------------------------------------------
+export const blogPageDefaults = {
+  heroKicker: 'Blog',
+  heroHeadline: 'Demand gen insights',
+  heroSub: 'Practical thinking on demand generation, measurement, and getting marketing to bring in new business.',
+  featuredHeading: 'Featured',
+  allHeading: 'All articles',
+  postCtaHeading: 'Want a straight answer on where your marketing money goes?',
+  postCtaNote: 'Thirty minutes, free. If I can’t help, I’ll say so.',
+
+  seo: {
+    _type: 'seo',
+    metaTitle: 'Blog - Demand Gen Insights & B2B Marketing Tips | DemandGenix',
+    metaDescription:
+      'Expert insights on B2B demand generation, conversion optimisation, and marketing growth strategies from DemandGenix.',
+    summary:
+      'The DemandGenix blog collects practical articles by Lee Hoosein on demand generation, measurement and conversion for B2B companies, including a case study from real client work. Articles are written for lean marketing teams and founders.',
+    searchIntent:
+      'People researching demand generation, lead generation, MQLs and B2B measurement. Each post targets one question; the index page should list them clearly and link to every one.'
+  }
+}
+
+// --- 404 -------------------------------------------------------------------
+// Kept in code rather than the CMS: it rarely changes, and a broken CMS must never break the 404 page.
+export const notFoundDefaults = {
+  headline: 'That page doesn’t exist.',
+  text: 'The link may be old or mistyped. These are the places most people are looking for.',
+  primaryLabel: 'Back to the home page',
+  primaryHref: '/',
+  secondaryLabel: 'See what I take on',
+  secondaryHref: '/services/'
+}

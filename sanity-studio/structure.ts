@@ -5,6 +5,8 @@ import type {StructureResolver} from 'sanity/structure'
 export const SINGLETONS = [
   {type: 'homePage', id: 'homePage', title: 'Home page'},
   {type: 'servicesPage', id: 'servicesPage', title: 'Services page'},
+  {type: 'contactPage', id: 'contactPage', title: 'Contact page'},
+  {type: 'blogPage', id: 'blogPage', title: 'Blog page'},
   {type: 'siteSettings', id: 'siteSettings', title: 'Site settings'},
 ]
 

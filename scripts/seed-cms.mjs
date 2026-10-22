@@ -5,11 +5,20 @@
 //   SANITY_WRITE_TOKEN=... node scripts/seed-cms.mjs   write the drafts
 //
 // Create a token at https://www.sanity.io/manage > project fv5q0f3v > API > Tokens (role: Editor).
-// It is safe to re-run: it replaces the drafts, and never touches anything you have already published.
+// It is safe to re-run: a page that already exists in Studio (published or as a draft) is skipped, so your
+// edits are never overwritten. Add --force to replace existing drafts deliberately. Published versions are
+// never touched either way.
 import { createClient } from '@sanity/client'
-import { siteSettingsDefaults, homePageDefaults, servicesPageDefaults } from '../src/content/defaults.js'
+import {
+  siteSettingsDefaults,
+  homePageDefaults,
+  servicesPageDefaults,
+  contactPageDefaults,
+  blogPageDefaults
+} from '../src/content/defaults.js'
 
 const dryRun = process.argv.includes('--dry-run')
+const force = process.argv.includes('--force')
 const token = process.env.SANITY_WRITE_TOKEN
 
 if (!dryRun && !token) {
@@ -20,7 +29,9 @@ if (!dryRun && !token) {
 const docs = [
   { _id: 'drafts.siteSettings', _type: 'siteSettings', ...siteSettingsDefaults },
   { _id: 'drafts.homePage', _type: 'homePage', ...homePageDefaults },
-  { _id: 'drafts.servicesPage', _type: 'servicesPage', ...servicesPageDefaults }
+  { _id: 'drafts.servicesPage', _type: 'servicesPage', ...servicesPageDefaults },
+  { _id: 'drafts.contactPage', _type: 'contactPage', ...contactPageDefaults },
+  { _id: 'drafts.blogPage', _type: 'blogPage', ...blogPageDefaults }
 ]
 
 const client = createClient({
@@ -31,8 +42,19 @@ const client = createClient({
   token
 })
 
+// Find what already exists so nothing is overwritten by accident.
+const existing = new Set()
+if (!dryRun && !force) {
+  const ids = docs.flatMap((d) => [d._id, d._id.replace('drafts.', '')])
+  for (const row of await client.fetch('*[_id in $ids]{_id}', { ids })) existing.add(row._id.replace('drafts.', ''))
+}
+
 for (const doc of docs) {
   const size = JSON.stringify(doc).length
+  if (!dryRun && !force && existing.has(doc._id.replace('drafts.', ''))) {
+    console.log(`skipped ${doc._id} (already exists in Studio; use --force to replace the draft)`)
+    continue
+  }
   if (dryRun) {
     console.log(`[dry run] would write ${doc._id} (${doc._type}, ${size} bytes, ${Object.keys(doc).length - 2} fields)`)
     continue

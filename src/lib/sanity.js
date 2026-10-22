@@ -1,11 +1,11 @@
 import { createClient } from '@sanity/client'
 import { logger } from './logger.js'
-import { siteSettingsDefaults, homePageDefaults, servicesPageDefaults } from '../content/defaults.js'
+import { siteSettingsDefaults, homePageDefaults, servicesPageDefaults, contactPageDefaults, blogPageDefaults } from '../content/defaults.js'
 
 export const client = createClient({
   projectId: 'fv5q0f3v',
   dataset: 'production',
-  useCdn: true, 
+  useCdn: false, 
   apiVersion: '2024-01-01',
   requestTagPrefix: 'demandgenix',
   timeout: 5000, // 5 second timeout to prevent hanging
@@ -543,6 +543,28 @@ export function getHomePage() {
   })
 }
 
+export function getContactPage() {
+  return once('contactPage', async () => {
+    const doc = await fetchWithFallback(
+      `*[_type == "contactPage"][0]{ ..., _updatedAt, seo{ ..., ${imageRef('ogImage')} } }`,
+      {},
+      null
+    )
+    return withDefaults(contactPageDefaults, doc)
+  })
+}
+
+export function getBlogPage() {
+  return once('blogPage', async () => {
+    const doc = await fetchWithFallback(
+      `*[_type == "blogPage"][0]{ ..., _updatedAt, seo{ ..., ${imageRef('ogImage')} } }`,
+      {},
+      null
+    )
+    return withDefaults(blogPageDefaults, doc)
+  })
+}
+
 export function getServicesPage() {
   return once('servicesPage', async () => {
     const doc = await fetchWithFallback(
@@ -732,6 +754,7 @@ export async function getBlogPostBySlug(slug) {
     `
     *[_type == "blogPost" && slug.current == $slug && isPublished == true][0] {
       _id,
+      _updatedAt,
       title,
       slug,
       excerpt,
@@ -762,6 +785,22 @@ export async function getBlogPostBySlug(slug) {
           rows[]{
             label,
             value
+          }
+        },
+        _type == "fiveColumnTable" => {
+          _type,
+          tableTitle,
+          col1Header,
+          col2Header,
+          col3Header,
+          col4Header,
+          col5Header,
+          rows[]{
+            col1,
+            col2,
+            col3,
+            col4,
+            col5
           }
         },
         _type == "calloutBox" => {

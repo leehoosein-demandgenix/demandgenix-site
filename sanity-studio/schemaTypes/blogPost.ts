@@ -112,6 +112,9 @@ export default defineType({
           type: 'twoColumnTable'
         },
         {
+          type: 'fiveColumnTable'
+        },
+        {
           type: 'calloutBox'
         },
         {

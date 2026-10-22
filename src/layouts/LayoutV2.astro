@@ -24,6 +24,8 @@ export interface Props {
     breadcrumbs?: { name: string; url: string }[];
     faqs?: { question: string; answer: any }[];
     services?: { name: string; description?: string }[];
+    extra?: Record<string, any>;
+    extraNodes?: Record<string, any>[];
   };
 }
 
@@ -32,7 +34,7 @@ const settings = await getSiteSettings();
 
 <!DOCTYPE html>
 <html lang="en-GB">
-  <SiteHead {...Astro.props} variant="v2">
+  <SiteHead {...Astro.props}>
     <slot name="head" slot="head" />
   </SiteHead>
   <body class="dgx">

@@ -1,453 +1,228 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import Testimonials from '../components/Testimonials.astro';
+import LayoutV2 from '../layouts/LayoutV2.astro';
+import RichText from '../components/v2/RichText.astro';
+import Feedback from '../components/v2/Feedback.astro';
+import { getContactPage, getSiteSettings, getTestimonials } from '../lib/sanity.js';
+
+const [page, settings, allTestimonials] = await Promise.all([getContactPage(), getSiteSettings(), getTestimonials()]);
+const seo = page.seo;
+const email: string = settings.email || 'hello@demandgenix.uk';
+const testimonials = (allTestimonials || []).filter((t: any) => t.recommendation && t.isPublic !== false).slice(0, 3);
+
+// "{email}" in a CMS message becomes a mailto link.
+const withEmail = (text: string) => String(text || '').split('{email}');
+const failed = withEmail(page.errorMessage);
+
+const schema = {
+  type: 'ContactPage',
+  dateModified: page._updatedAt,
+  abstract: seo.summary,
+  breadcrumbs: [
+    { name: 'Home', url: '/' },
+    { name: 'Contact', url: '/contact/' }
+  ]
+};
 ---
 
-<Layout 
-  title="Contact DemandGenix | Free Demand Gen Consultation"
-  description="Get in touch with DemandGenix for a free 30-minute demand generation consultation. Book a call or send us a message today."
+<LayoutV2
+  title={seo.metaTitle}
+  description={seo.metaDescription}
+  ogImage={seo.ogImage?.url}
+  canonicalUrl={seo.canonicalUrl}
+  noindex={seo.noIndex}
+  schema={schema}
 >
-  <Header />
-   <style>
-        /* DemandGenix Brand Colors */
-        :root {
-            --forest-green: #059669;
-            --forest-green-dark: #047857;
-            --warm-orange: #EA580C;
-            --charcoal-grey: #374151;
-            --warm-grey: #6B7280;
-            --light-grey: #F8FAFC;
-        }
+  <div class="dg-wrap">
+    <header class="dg-hero dg-hero--solo">
+      {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
+      <h1>{page.heroHeadline}</h1>
+      <p class="dg-hero__sub">{page.heroSub}</p>
+    </header>
 
-        .demandgenix-form-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            padding: 32px;
-            border-radius: 8px;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        }
+    <div class="dg-contact">
+      <section class="dg-formcard" aria-labelledby="form-heading">
+        <h2 id="form-heading">{page.formHeading}</h2>
+        {page.formIntro && <p class="dg-formcard__intro">{page.formIntro}</p>}
 
-        .form-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--charcoal-grey);
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .form-subtitle {
-            color: var(--warm-grey);
-            text-align: center;
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 500;
-            color: var(--charcoal-grey);
-            margin-bottom: 6px;
-            font-size: 14px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #E5E7EB;
-            border-radius: 6px;
-            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-            font-size: 16px;
-            color: var(--charcoal-grey);
-            background: white;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            box-sizing: border-box;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--forest-green);
-            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
-        }
-
-        .form-input::placeholder {
-            color: var(--warm-grey);
-        }
-
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .form-submit {
-            width: 100%;
-            background: var(--forest-green);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 14px 24px;
-            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-            font-weight: 500;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            margin-top: 8px;
-        }
-
-        .form-submit:hover {
-            background: var(--forest-green-dark);
-        }
-
-        .form-submit:disabled {
-            background: #9CA3AF;
-            cursor: not-allowed;
-        }
-
-        .required {
-            color: var(--warm-orange);
-        }
-
-        .error-message {
-            color: #DC2626;
-            font-size: 14px;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .success-message {
-            background: #ECFDF5;
-            border: 1px solid #D1FAE5;
-            color: #065F46;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .privacy-note {
-            font-size: 12px;
-            color: var(--warm-grey);
-            text-align: center;
-            margin-top: 16px;
-            line-height: 1.4;
-        }
-
-        .privacy-note a {
-            color: var(--forest-green);
-            text-decoration: none;
-        }
-
-        .privacy-note a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .demandgenix-form-container {
-                margin: 16px;
-                padding: 24px;
-            }
-        }
-    </style>
-  <main class="py-16">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Hero Section -->
-      <div class="text-center mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-          Stop Guessing. Start Growing.
-        </h1>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-          Skip the sales team. Book a 30-minute diagnostic call directly with a senior strategist to identify your growth blockers.
-        </p>
-       <!--  <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <a href="#contact-form" class="bg-primary-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-primary-700 transition-colors">
-            Book Your Free Consultation
-          </a>
-      
-        </div> -->
-      </div>
-
-      <div class="grid lg:grid-cols-2 gap-16 items-start">
-        <div id="contact-form-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-  <h2 class="text-2xl font-bold text-gray-900 mb-2">Get in Touch</h2>
-  <p class="text-gray-600 mb-6">
-    Fill out the form below and we'll get back to you within 24 hours.
-  </p>
-  
-  <!-- Form Container -->
-   <div id="success-message" class="success-message">
-  Thanks — we’ve got your details and will reply within 24 hours.
-</div>
-<div id="no-consent-message" class="success-message" style="background: #FEF3C7; border-color: #FDE68A; color: #92400E; display: none;">
-  <strong>Privacy Settings Notice</strong><br>
-  To respect your cookie preferences, please email us directly at <a href="mailto:hello@demandgenix.uk" class="underline font-medium">hello@demandgenix.uk</a> with your inquiry. We'll respond within 24 hours.
-</div>
-  <form id="contact-form" action="/api/contact" method="POST"
-        toolname="submitContactForm"
-        tooldescription="Submit a contact inquiry to DemandGenix to book a free 30-minute pipeline diagnostic call">
-            <div class="form-group">
-                <label for="firstname" class="form-label">First Name <span class="required">*</span></label>
-                <input 
-                    type="text" 
-                    id="firstname" 
-                    name="firstname" 
-                    class="form-input" 
-                    placeholder="Your first name"
-                    required
-                >
-                <div class="error-message" id="firstname-error">Please enter your first name</div>
-            </div>
-
-            <div class="form-group">
-                <label for="lastname" class="form-label">Last Name <span class="required">*</span></label>
-                <input 
-                    type="text" 
-                    id="lastname" 
-                    name="lastname" 
-                    class="form-input" 
-                    placeholder="Your last name"
-                    required
-                >
-                <div class="error-message" id="lastname-error">Please enter your last name</div>
-            </div>
-
-            <div class="form-group">
-                <label for="email" class="form-label">Email <span class="required">*</span></label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    class="form-input" 
-                    placeholder="your.email@company.com"
-                    required
-                >
-                <div class="error-message" id="email-error">Please enter a valid email address</div>
-            </div>
-
-            <div class="form-group">
-                <label for="company" class="form-label">Company <span class="required">*</span></label>
-                <input 
-                    type="text" 
-                    id="company" 
-                    name="company" 
-                    class="form-input" 
-                    placeholder="Your company name"
-                    required
-                >
-                <div class="error-message" id="company-error">Please enter your company name</div>
-            </div>
-            <!-- Hidden field for lead source -->
-            <input type="hidden" name="lead_source" value="Website Contact Form">
-
-            <button type="submit" class="form-submit bg-secondary-600" id="submit-btn">
-                Book My Diagnostic Call
-            </button>
-
-            <p class="privacy-note">
-                We respect your privacy. By submitting this form, you agree to our 
-                <a href="/privacy-policy/">Privacy Policy</a>. 
-                We'll only use your information to respond to your inquiry and send relevant updates.
-            </p>
-        </form>
-</div>
-        <!-- Contact Information -->
-        <div class="space-y-8">
-          <!-- What to Expect -->
-          <div class="bg-primary-50 rounded-lg p-8">
-            <h3 class="text-xl font-semibold text-gray-900 mb-6">What to Expect</h3>
-            <div class="space-y-4">
-              <div class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">1</div>
-                <div>
-                  <h4 class="font-medium text-gray-900">The Intro</h4>
-                  <p class="text-sm text-gray-600">You get a reply within 24 hours (usually much faster)</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">2</div>
-                <div>
-                  <h4 class="font-medium text-gray-900">The Diagnostic</h4>
-                  <p class="text-sm text-gray-600">A 30-minute call to unpack your "Efficiency Gap" and revenue goals</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3 mt-0.5">3</div>
-                <div>
-                  <h4 class="font-medium text-gray-900">The Roadmap</h4>
-                  <p class="text-sm text-gray-600">We determine if you need a quick audit, a strategic sprint, or a full partner. No forced packages.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Contact Details -->
-          <div class="bg-gray-50 rounded-lg p-8">
-            <h3 class="text-xl font-semibold text-gray-900 mb-6">Get in Touch</h3>
-            <div class="space-y-6">
-              <div class="flex items-start">
-                <svg class="w-6 h-6 text-primary-600 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                <div>
-                  <h4 class="font-medium text-gray-900">Email</h4>
-                  <p class="text-gray-600">hello@demandgenix.uk</p>
-                  <p class="text-sm text-gray-500 mt-1">We typically respond within 2-4 hours</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start">
-                <svg class="w-6 h-6 text-primary-600 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <div>
-                  <h4 class="font-medium text-gray-900">Location</h4>
-                  <p class="text-gray-600">Manchester, UK</p>
-                  <p class="text-sm text-gray-500 mt-1">Serving UK, EU & US remotely</p>
-                </div>
-              </div>
-
-              <div class="flex items-start">
-                <svg class="w-6 h-6 text-primary-600 mr-4 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <div>
-                  <h4 class="font-medium text-gray-900">Response Time</h4>
-                  <p class="text-gray-600">Within 24 hours</p>
-                  <p class="text-sm text-gray-500 mt-1">Usually much faster during UK business hours</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          
+        <div id="contact-success" class="dg-alert dg-alert--ok" role="status" tabindex="-1" hidden>{page.successMessage}</div>
+        <div id="contact-error" class="dg-alert dg-alert--error" role="alert" hidden>
+          {failed[0]}<a href={`mailto:${email}`}>{email}</a>{failed[1]}
         </div>
-      </div>
+
+        <form
+          id="contact-form"
+          action="/api/contact"
+          method="POST"
+          novalidate
+          toolname="submitContactForm"
+          tooldescription="Submit a contact inquiry to DemandGenix to book a free 30-minute intro call"
+        >
+          <div class="dg-fields">
+            <div class="dg-field">
+              <label for="firstname">First name <span aria-hidden="true">*</span></label>
+              <input type="text" id="firstname" name="firstname" autocomplete="given-name" required aria-required="true" aria-describedby="firstname-error" />
+              <p class="dg-field__error" id="firstname-error" hidden>Please enter your first name</p>
+            </div>
+            <div class="dg-field">
+              <label for="lastname">Last name <span aria-hidden="true">*</span></label>
+              <input type="text" id="lastname" name="lastname" autocomplete="family-name" required aria-required="true" aria-describedby="lastname-error" />
+              <p class="dg-field__error" id="lastname-error" hidden>Please enter your last name</p>
+            </div>
+          </div>
+          <div class="dg-field">
+            <label for="email">Email <span aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@company.com" required aria-required="true" aria-describedby="email-error" />
+            <p class="dg-field__error" id="email-error" hidden>Please enter a valid email address</p>
+          </div>
+          <div class="dg-field">
+            <label for="company">Company <span aria-hidden="true">*</span></label>
+            <input type="text" id="company" name="company" autocomplete="organization" required aria-required="true" aria-describedby="company-error" />
+            <p class="dg-field__error" id="company-error" hidden>Please enter your company name</p>
+          </div>
+
+          <input type="hidden" name="lead_source" value="Website Contact Form" />
+
+          <button type="submit" class="dg-btn dg-btn--block" id="submit-btn" data-label={settings.ctaLabel}>{settings.ctaLabel}</button>
+          <RichText class="dg-privacy" blocks={page.privacyNote} />
+        </form>
+      </section>
+
+      <aside class="dg-contact__side">
+        <section class="dg-expect" aria-labelledby="expect-heading">
+          <h2 id="expect-heading">{page.expectHeading}</h2>
+          <ol class="dg-steps dg-steps--compact">
+            {page.expectSteps.map((step: any, i: number) => (
+              <li class="dg-step">
+                <span class="dg-step__n" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <RichText class="dg-step__body" blocks={step.body} />
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section class="dg-details" aria-labelledby="details-heading">
+          <h2 id="details-heading">{page.detailsHeading}</h2>
+          <dl>
+            <div><dt>Email</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>
+            {page.locationNote && <div><dt>Where</dt><dd>{page.locationNote}</dd></div>}
+            {page.responseTime && <div><dt>Reply time</dt><dd>{page.responseTime}</dd></div>}
+          </dl>
+        </section>
+      </aside>
     </div>
-  </main>
-  <Testimonials />
-  <Footer />
-</Layout>
+  </div>
+
+  {testimonials.length > 0 && (
+    <section class="dg-block dg-band dg-contact__proof">
+      <div class="dg-wrap">
+        <Feedback heading="Feedback from people I’ve worked with" items={testimonials} headingLevel="h2" />
+      </div>
+    </section>
+  )}
+</LayoutV2>
 
 <script>
-   // Helper to read cookies safely
-   function getCookie(name) {
-     return document.cookie.split('; ').find(r => r.startsWith(name + '='))?.split('=')[1];
-   }
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const successBox = document.getElementById('contact-success');
+  const errorBox = document.getElementById('contact-error');
 
-   // Check consent status
-   function hasMarketingConsent() {
-     return getCookie('marketing-consent') === 'true';
-   }
+  const getCookie = (name: string) => document.cookie.split('; ').find((r) => r.startsWith(name + '='))?.split('=')[1];
+  const hasMarketingConsent = () => getCookie('marketing-consent') === 'true';
+  const hasAnalyticsConsent = () => getCookie('analytics-consent') === 'true';
 
-   function hasAnalyticsConsent() {
-     return getCookie('analytics-consent') === 'true';
-   }
+  const FIELDS = ['firstname', 'lastname', 'email', 'company'] as const;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-   document.getElementById('contact-form').addEventListener('submit', async function (e) {
-     e.preventDefault();
+  function setInvalid(id: string, invalid: boolean) {
+    const input = document.getElementById(id) as HTMLInputElement | null;
+    const msg = document.getElementById(id + '-error');
+    if (!input || !msg) return;
+    msg.hidden = !invalid;
+    if (invalid) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  }
 
-     const form = /** @type {HTMLFormElement} */(this);
-     const submitBtn = document.getElementById('submit-btn');
-     const successMessage = document.getElementById('success-message');
+  form?.addEventListener('input', (e) => {
+    const id = (e.target as HTMLElement).id;
+    if (FIELDS.includes(id as any)) setInvalid(id, false);
+  });
 
-     // Check if user has given marketing consent
-     if (!hasMarketingConsent()) {
-       // Show message asking them to email instead
-        document.getElementById('no-consent-message').style.display = 'block';
-        document.getElementById('no-consent-message').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-       return;
-     }
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form || !submitBtn) return;
+    if (errorBox) errorBox.hidden = true;
 
-     // Clear previous errors
-     document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    let firstInvalid: HTMLElement | null = null;
+    for (const id of FIELDS) {
+      const input = document.getElementById(id) as HTMLInputElement;
+      const value = input.value.trim();
+      const bad = !value || (id === 'email' && !EMAIL_RE.test(value));
+      setInvalid(id, bad);
+      if (bad && !firstInvalid) firstInvalid = input;
+    }
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return;
+    }
 
-     // Validate
-     let isValid = true;
-     ['firstname','lastname','email','company'].forEach(field => {
-       const input = document.getElementById(field);
-       const error = document.getElementById(field + '-error');
-       if (!input.value.trim()) { error.style.display = 'block'; isValid = false; }
-     });
-     const email = document.getElementById('email');
-     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     if (email.value && !emailRegex.test(email.value)) {
-       const el = document.getElementById('email-error');
-       el.textContent = 'Please enter a valid email address';
-       el.style.display = 'block';
-       isValid = false;
-     }
-     if (!isValid) return;
+    const label = submitBtn.dataset.label || submitBtn.textContent || '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
 
-     submitBtn.disabled = true;
-     submitBtn.textContent = 'Sending...';
+    const fd = new FormData(form);
+    // The HubSpot tracking cookie is only attached when marketing cookies were accepted. The enquiry
+    // itself is sent either way: the visitor chose to write to us, and no cookie is needed for that.
+    const hutk = hasMarketingConsent() ? getCookie('hubspotutk') : undefined;
+    const payload = {
+      fields: [
+        { name: 'firstname', value: fd.get('firstname') || '' },
+        { name: 'lastname', value: fd.get('lastname') || '' },
+        { name: 'email', value: fd.get('email') || '' },
+        { name: 'company', value: fd.get('company') || '' },
+        { name: 'lead_source', value: fd.get('lead_source') || 'Website Contact Form' }
+      ],
+      context: { hutk, pageUri: window.location.href, pageName: document.title }
+    };
 
-     const fd = new FormData(form);
-     const hutk = getCookie('hubspotutk');
+    try {
+      // EU data centre endpoint
+      const res = await fetch('https://api-eu1.hsforms.com/submissions/v3/integration/submit/146805802/2e5d9771-a003-488e-a7d3-87aeb942301c', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        console.error('HubSpot submit failed', await res.text());
+        throw new Error('HubSpot submit failed');
+      }
 
-     // Build HubSpot Forms API payload
-     const payload = {
-       fields: [
-         { name: 'firstname', value: fd.get('firstname') || '' },
-         { name: 'lastname',  value: fd.get('lastname')  || '' },
-         { name: 'email',     value: fd.get('email')     || '' },
-         { name: 'company',   value: fd.get('company')   || '' },
-         { name: 'lead_source', value: fd.get('lead_source') || 'Website Contact Form' }
-       ],
-       context: {
-         hutk,
-         pageUri:  window.location.href,
-         pageName: document.title
-       }
-     };
+      const w = window as any;
+      if (hasAnalyticsConsent() && typeof w.gtag !== 'undefined') {
+        w.gtag('event', 'generate_lead', { event_category: 'Contact Form', event_label: 'Contact Form Submission', value: 1 });
+      }
+      if (hasAnalyticsConsent() && w.zaraz) {
+        w.zaraz.track('form_submit', {
+          form_name: 'contact_form',
+          form_location: 'contact_page',
+          lead_source: fd.get('lead_source') || 'Website Contact Form'
+        });
+      }
 
-     try {
-       // EU data center endpoint
-       const hsRes = await fetch('https://api-eu1.hsforms.com/submissions/v3/integration/submit/146805802/2e5d9771-a003-488e-a7d3-87aeb942301c', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(payload)
-       });
-
-       if (!hsRes.ok) {
-         console.error('HubSpot submit failed', await hsRes.text());
-         throw new Error('HubSpot submit failed');
-       }
-        // ✅ Track successful form submission in GA4
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'generate_lead', {
-            'event_category': 'Contact Form',
-            'event_label': 'Contact Form Submission',
-            'value': 1
-          });
-        }
-       // Track conversion in Zaraz ONLY if analytics consent given
-       if (hasAnalyticsConsent() && window.zaraz) {
-         window.zaraz.track('form_submit', {
-           form_name: 'contact_form',
-           form_location: 'contact_page',
-           lead_source: fd.get('lead_source') || 'Website Contact Form'
-         });
-       }
-
-       // Success UX
-       form.reset();
-       form.style.display = 'none';
-       successMessage.style.display = 'block';
-     } 
-     catch (err) {
-       console.error(err);
-       submitBtn.disabled = false;
-       submitBtn.textContent = 'Get Started - Free Consultation';
-       alert('Sorry—something went wrong submitting the form. Please email hello@demandgenix.uk.');
-     }
-   });
- </script>
+      form.reset();
+      form.hidden = true;
+      if (successBox) {
+        successBox.hidden = false;
+        successBox.focus();
+      }
+    } catch (err) {
+      console.error(err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = label;
+      if (errorBox) errorBox.hidden = false;
+    }
+  });
+</script>
