@@ -105,7 +105,7 @@ export const homePageDefaults = {
   heroSub: 'I run the ads, website and follow-up that bring in new business. First, I work out what’s actually happening.',
 
   offerHeading: 'What I take on',
-  offerLede: 'The marketing that’s meant to bring in new business. I run it, and I make it earn its keep.',
+  offerLede: 'The marketing that’s meant to bring in new business, often called demand generation. I run it, and I make it earn its keep.',
   offerItems: [
     { _key: 'o1', name: 'The ads', description: 'Who they’re aimed at, what they say, and whether they’re paying for themselves.' },
     { _key: 'o2', name: 'The website', description: 'Whether it says what you sell, whether the forms work, and whether a visitor knows what to do next.' },
