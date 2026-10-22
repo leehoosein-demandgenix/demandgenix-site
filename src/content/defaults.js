@@ -37,6 +37,7 @@ export const siteSettingsDefaults = {
     'DemandGenix is a one-person marketing practice in Manchester run by Lee Hoosein. It takes on the ads, website and follow-up that are meant to bring in new business, and says plainly what they return and what can’t be tracked.',
   companyName: 'DemandGenix Limited',
   companyNumber: '16660290',
+  vatNumber: '501 3963 18',
   linkedinUrl: 'https://www.linkedin.com/company/demandgenix/',
 
   ctaLabel: 'Book a free intro call',

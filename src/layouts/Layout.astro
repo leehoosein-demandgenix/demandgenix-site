@@ -1,9 +1,6 @@
 ---
-import CookieConsent from '../components/CookieConsent.astro';
-import UTMTracker from '../components/UTMTracker.astro';
-import { getSiteSettings } from '../lib/sanity.js';
-import { homePageDefaults } from '../content/defaults.js';
-import { SITE_URL, buildSiteNodes, buildPageNodes, toJsonLd } from '../lib/seo.js';
+import SiteHead from '../components/SiteHead.astro';
+import SiteEnd from '../components/SiteEnd.astro';
 
 export interface Props {
   title: string;
@@ -12,146 +9,25 @@ export interface Props {
   ogImage?: string;
   canonicalUrl?: string;
   noindex?: boolean;
-  // Optional, per-page structured data. See buildPageNodes in src/lib/seo.js.
   schema?: {
     type?: string;
     dateModified?: string;
+    abstract?: string;
     breadcrumbs?: { name: string; url: string }[];
     faqs?: { question: string; answer: any }[];
     services?: { name: string; description?: string }[];
   };
 }
-
-const settings = await getSiteSettings();
-
-const {
-  title,
-  description = homePageDefaults.seo.metaDescription,
-  keywords,
-  ogImage,
-  canonicalUrl,
-  noindex = false,
-  schema
-} = Astro.props;
-
-// Canonical URL always uses the production domain
-const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
-
-// Social image: the page's own, else the site default from the CMS. If neither exists, omit the tags
-// rather than point at a file that 404s.
-const rawImage = ogImage || settings.defaultOgImage?.url;
-const socialImage = rawImage ? (rawImage.startsWith('http') ? rawImage : `${SITE_URL}${rawImage}`) : undefined;
-
-const robots = noindex
-  ? 'noindex, nofollow'
-  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
-
-const jsonLd = toJsonLd([
-  ...buildSiteNodes(settings),
-  ...buildPageNodes({ url: finalCanonicalUrl, name: title, description, ...schema })
-]);
 ---
 
 <!DOCTYPE html>
 <html lang="en-GB">
-  <head>
-    <!-- Preconnect to analytics domains -->
-    <link rel="preconnect" href="https://stats.g.doubleclick.net" crossorigin>
-    <link rel="dns-prefetch" href="https://stats.g.doubleclick.net">
-    <meta charset="UTF-8" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    {keywords && <meta name="keywords" content={keywords} />}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="robots" content={robots} />
-    <meta name="author" content="DemandGenix Limited" />
-    
-    <!-- Geographic Meta -->
-    <meta name="geo.region" content="GB-MAN" />
-    <meta name="geo.placename" content="Manchester" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    {socialImage && <meta property="og:image" content={socialImage} />}
-    <meta property="og:url" content={finalCanonicalUrl} />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="en_GB" />
-    <meta property="og:site_name" content="DemandGenix" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    {socialImage && <meta name="twitter:image" content={socialImage} />}
-
-    <!-- Theme color for mobile browsers -->
-    <meta name="theme-color" content="#059669">
-    <meta name="msapplication-TileColor" content="#059669">
-    
-    <!-- iOS specific -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="DemandGenix">
-    
-    <!-- RSS Feed -->
-    <link rel="alternate" type="application/rss+xml" title="DemandGenix Blog" href="/rss.xml" />
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href={finalCanonicalUrl} />
-
-    <!-- Standard favicon -->
-    <link rel="icon" href="/favicon.ico" sizes="32x32">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  
-    <!-- Apple -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  
-    <!-- Android -->
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- Structured data: business, founder, website and this page, built from the CMS (src/lib/seo.js) -->
-    <script type="application/ld+json" set:html={jsonLd} />
-
-    <!-- Preload critical fonts -->
-    <link rel="preload" href="/fonts/plus-jakarta-sans-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/plus-jakarta-sans-v12-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-    <script>
-      // Add class when fonts are loaded
-      document.fonts.ready.then(() => {
-        document.documentElement.classList.add('fonts-loaded');
-      });
-    </script>
-    <slot name="head" />
-
-    <!-- Dreamdata: consent sentinel prevents auto-init before explicit consent is given.
-         By setting window.google_tag_data with analytics_storage.update: false, Dreamdata
-         enters its dataLayer-intercept mode and waits for a consent signal rather than
-         initialising immediately. -->
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      if (!window.google_tag_data) {
-        window.google_tag_data = { ics: { entries: { analytics_storage: { update: false } } } };
-      }
-    </script>
-
-    <!-- Dreamdata Analytics (consent-aware init) -->
-    <script id="init-dreamdata" is:inline>
-      !function(){"use strict";var a="dreamdata",t="dreamdata-analytics",e=!1;function i(a){if(function(){try{var a=window&&window.localStorage&&window.localStorage.getItem("DD_DEBUGGER");return"true"===a||"1"===a}catch(a){return!1}}())try{var t=window.console,e=Array.prototype.slice.call(arguments,1),i=t&&t[a]?t[a]:t&&t.log?t.log:null;i&&i.apply(t,e)}catch(a){return}}var dreamdata=window[a]=window[a]||[];if(!dreamdata.initialize)if(dreamdata.invoked)i("warn","Dreamdata snippet included twice.");else{dreamdata.invoked=!0,dreamdata.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"],dreamdata.factory=function(t){return function(){if(window[a].initialized)return window[a][t].apply(window[a],arguments);var e=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(t)>-1){var i=document.querySelector("link[rel='canonical']");e.push({__t:"bpc",c:i&&i.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}return e.unshift(t),dreamdata.push(e),dreamdata}};for(var r=0;r<dreamdata.methods.length;r++){var n=dreamdata.methods[r];dreamdata[n]=dreamdata.factory(n)}dreamdata.load=function(e,i){var r=document.createElement("script");r.id=t,r.type="text/javascript",r.async=!0,r.setAttribute("data-global-dreamdata-analytics-key",a),r.src="https://cdn.dreamdata.cloud/scripts/analytics/next/dreamdata.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(r,n),dreamdata._loadOptions=i},dreamdata._writeKey="9012df46-e34f-460c-b512-e80da56dbfbf",dreamdata.SNIPPET_VERSION="dreamdata-2.2.6",dreamdata.init=function(){try{if(e)return void i("warn","Dreamdata already initialized, skipping duplicate initialization");dreamdata.load("9012df46-e34f-460c-b512-e80da56dbfbf", {"googleEnhancedConversions":true,"formTracking":{"html":true,"hubspot":true},"intentSources":{"autoGroup":true}}),dreamdata.page(),e=!0}catch(a){i("error","Failed to initialize Dreamdata:",a&&a.message)}},function(){try{if(e)return;if(i("log","✅ dataLayer",window.dataLayer),i("log","✅ google_tag_data",window.google_tag_data),!window.dataLayer||!window.google_tag_data)return void dreamdata.init();if(window.google_tag_data&&window.google_tag_data.ics&&window.google_tag_data.ics.entries&&window.google_tag_data.ics.entries.analytics_storage&&!0===window.google_tag_data.ics.entries.analytics_storage.update||function(){try{var a=localStorage.getItem("framerCookiesConsentMode");if(!a)return!1;var t=JSON.parse(a);return!!t&&!0===t.analytics}catch(a){return!1}}())return i("log","✅ Consent with GTM analytics_storage in google_tag_data granted, initializing Dreamdata"),void dreamdata.init();var a=window.dataLayer.push;window.dataLayer.push=function(){var r=Array.prototype.slice.call(arguments);i("log","✅ DataLayer Change Detected:",r[0]);var n=r[0];return n&&3===n.length&&"consent"===n[0]&&n[2]&&n[2].analytics_storage&&("denied"===n[2].analytics_storage&&(i("log","❌ Consent with GTM analytics_storage in dataLayer denied, removing Dreamdata script"),function(){e=!1;var a=document.getElementById(t);a&&a.remove()}()),"granted"===n[2].analytics_storage&&(i("log","✅ Consent with GTM analytics_storage in dataLayer granted, initializing Dreamdata"),dreamdata.init())),a.apply(this,r)}}catch(a){i("error","Error in initialization logic, falling back to basic init:",a&&a.message),dreamdata.init()}}()}}();
-    </script>
-  </head>
-  
+  <SiteHead {...Astro.props}>
+    <slot name="head" slot="head" />
+  </SiteHead>
   <body class="font-sans">
     <slot />
-    <noscript>
-  <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=8301826&fmt=gif" />
-</noscript>
-    <CookieConsent />
-    <UTMTracker />
-    <!-- WebMCP: Expose structured tools to AI agents via navigator.modelContext -->
-    <script is:inline src="/webmcp.js" defer></script>
+    <SiteEnd />
   </body>
 </html>
 

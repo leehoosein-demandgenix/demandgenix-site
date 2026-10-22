@@ -68,7 +68,7 @@ export function buildSiteNodes(settings) {
 
 // Nodes for one page. `faqs` is [{ question, answer }] where answer is Portable Text or a string.
 // `services` is [{ name, description }], passed only on the page that actually presents them.
-export function buildPageNodes({ url, name, description, dateModified, breadcrumbs, faqs, services, type = 'WebPage' }) {
+export function buildPageNodes({ url, name, description, abstract, dateModified, breadcrumbs, faqs, services, type = 'WebPage' }) {
   const pageId = `${url}#webpage`
   const nodes = []
 
@@ -81,6 +81,7 @@ export function buildPageNodes({ url, name, description, dateModified, breadcrum
     inLanguage: 'en-GB',
     isPartOf: { '@id': id('website') },
     about: { '@id': id('organization') },
+    ...(abstract ? { abstract } : {}),
     ...(dateModified ? { dateModified } : {})
   }
 

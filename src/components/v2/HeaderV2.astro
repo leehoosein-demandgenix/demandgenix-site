@@ -1,0 +1,30 @@
+---
+export interface Props {
+  settings: any;
+}
+const { settings } = Astro.props;
+const links: { label: string; href: string }[] = settings.navLinks || [];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => {
+  const h = href.split('#')[0].replace(/\/$/, '') || '/';
+  return !href.includes('#') && h === path;
+};
+---
+<div class="dg-wrap">
+  <header class="dg-header">
+    <a class="dg-logo" href="/">{settings.tradingName || 'DemandGenix'}</a>
+    <nav class="dg-nav" aria-label="Main">
+      {links.map((l) => <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>)}
+    </nav>
+    <div class="dg-header__end">
+      <a class="dg-btn dg-btn--sm" href={settings.ctaHref || '/contact/'}>{settings.ctaLabel}</a>
+      <details class="dg-menu">
+        <summary>Menu</summary>
+        <div class="dg-menu__panel">
+          {links.map((l) => <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>)}
+          <a href={settings.ctaHref || '/contact/'}>{settings.ctaLabel}</a>
+        </div>
+      </details>
+    </div>
+  </header>
+</div>

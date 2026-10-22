@@ -1,0 +1,63 @@
+---
+// "Where the money goes". Every tab's wording is printed into the page, so search engines and AI
+// assistants read all of it. JavaScript only turns the panels into tabs; without it, all show in full.
+export interface Props {
+  widget: {
+    title?: string;
+    footnote?: string;
+    areas?: { _key?: string; name: string; fixable: string; untraceable: string }[];
+  };
+}
+const { widget } = Astro.props;
+const areas = widget?.areas ?? [];
+---
+{areas.length > 0 && (
+  <div class="dg-widget" data-dg-widget>
+    {widget.title && <span class="dg-widget__title">{widget.title}</span>}
+    <div class="dg-tabs" role="tablist" aria-label={widget.title || 'Areas'}>
+      {areas.map((a, i) => (
+        <button type="button" class="dg-tab" role="tab" id={`dg-tab-${i}`} aria-controls={`dg-panel-${i}`}
+          aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{a.name}</button>
+      ))}
+    </div>
+    {areas.map((a, i) => (
+      <div class="dg-panel" role="tabpanel" id={`dg-panel-${i}`} aria-labelledby={`dg-tab-${i}`}>
+        <h3 class="dg-panel__name">{a.name}</h3>
+        <div class="dg-row"><span class="dg-pill dg-pill--fix">Usually fixable</span><p>{a.fixable}</p></div>
+        <div class="dg-row"><span class="dg-pill dg-pill--lost">Often can’t be tracked</span><p>{a.untraceable}</p></div>
+      </div>
+    ))}
+    {widget.footnote && <p class="dg-widget__foot">{widget.footnote}</p>}
+  </div>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-dg-widget]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    if (!tabs.length || tabs.length !== panels.length) return;
+
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+        panels[i].hidden = i !== index;
+      });
+      if (focus) tabs[index].focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (e) => {
+        const key = (e as KeyboardEvent).key;
+        if (key === 'ArrowRight') { e.preventDefault(); select((i + 1) % tabs.length, true); }
+        else if (key === 'ArrowLeft') { e.preventDefault(); select((i - 1 + tabs.length) % tabs.length, true); }
+        else if (key === 'Home') { e.preventDefault(); select(0, true); }
+        else if (key === 'End') { e.preventDefault(); select(tabs.length - 1, true); }
+      });
+    });
+
+    root.setAttribute('data-enhanced', '');
+    select(0);
+  });
+</script>

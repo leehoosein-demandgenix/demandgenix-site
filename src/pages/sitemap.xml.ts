@@ -1,4 +1,4 @@
-import { getAllBlogPosts, getHomePage } from '../lib/sanity.js';
+import { getAllBlogPosts, getHomePage, getServicesPage } from '../lib/sanity.js';
 
 export async function GET() {
   const baseUrl = 'https://demandgenix.uk';
@@ -20,8 +20,17 @@ export async function GET() {
    console.error('Error fetching home page for sitemap:', error);
  }
 
+ let servicesUpdated;
+ try {
+   const services = await getServicesPage();
+   servicesUpdated = services?._updatedAt?.split('T')[0];
+ } catch (error) {
+   console.error('Error fetching services page for sitemap:', error);
+ }
+
  const staticPages = [
    { url: '', priority: '1.0', changefreq: 'weekly', lastmod: homeUpdated },
+   { url: '/services/', priority: '0.9', changefreq: 'monthly', lastmod: servicesUpdated },
    { url: '/contact/', priority: '0.9', changefreq: 'monthly' },
    { url: '/blog/', priority: '0.8', changefreq: 'weekly' },
    { url: '/privacy-policy/', priority: '0.5', changefreq: 'yearly' },

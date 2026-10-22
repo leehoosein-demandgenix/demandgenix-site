@@ -1,0 +1,37 @@
+---
+// Renders Sanity "simpleRichText" (paragraphs with bold, italic and links) as HTML.
+// All text is escaped, and link addresses are limited to http(s), mailto, tel and on-site paths.
+export interface Props {
+  blocks?: any[];
+  class?: string;
+}
+const { blocks = [], class: className } = Astro.props;
+
+const esc = (s: string) =>
+  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const safeHref = (h: string) => (/^(https?:|mailto:|tel:|\/|#)/i.test(h || '') ? h : '#');
+
+function renderBlock(block: any): string {
+  if (!block || block._type !== 'block') return '';
+  const defs: Record<string, any> = Object.fromEntries((block.markDefs || []).map((d: any) => [d._key, d]));
+  const inner = (block.children || [])
+    .map((child: any) => {
+      let html = esc(child.text || '');
+      for (const mark of child.marks || []) {
+        if (mark === 'strong') html = `<strong>${html}</strong>`;
+        else if (mark === 'em') html = `<em>${html}</em>`;
+        else if (defs[mark]?._type === 'link') {
+          const href = safeHref(defs[mark].href);
+          const external = /^https?:/i.test(href);
+          html = `<a href="${esc(href)}"${external ? ' rel="noopener"' : ''}>${html}</a>`;
+        }
+      }
+      return html;
+    })
+    .join('');
+  return inner ? `<p>${inner}</p>` : '';
+}
+
+const html = (Array.isArray(blocks) ? blocks : []).map(renderBlock).join('');
+---
+{html && <div class={className} set:html={html} />}
