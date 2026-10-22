@@ -1,193 +1,96 @@
 ---
 ---
 
+<!-- Dims the page while the first-visit banner is open. -->
+<div id="cookie-overlay" class="dg-consent__overlay" hidden></div>
 
-<!-- Semi-transparent overlay - MUCH lighter -->
-<div id="cookie-overlay" class="fixed inset-0 bg-white/10 backdrop-blur-sm z-[45] hidden transition-opacity duration-500"></div>
-<!-- Cookie Consent Banner - Slides up from bottom -->
-<div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-50 transform translate-y-full transition-transform duration-500 ease-in-out">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-      <!-- Content -->
-      <div class="flex-1">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Cookie Preferences</h3>
-        <p class="text-sm text-gray-600 leading-relaxed">
-          We use cookies to provide essential website functionality. With your consent, 
-          we also use analytics cookies to improve our site and marketing cookies for personalization. 
-          You can accept all, decline optional cookies, or customize your choices.
-          <a href="/privacy-policy/" class="text-primary-600 hover:underline font-medium ml-1">Learn more</a>
-        </p>
-      </div>
-      
-      <!-- Buttons - EQUAL PROMINENCE with hover effects -->
-      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto lg:flex-shrink-0">
-        <button 
-          id="cookie-accept-all" 
-          class="group px-6 py-3 bg-white text-gray-900 border-2 border-gray-900 rounded-lg font-medium transition-all duration-200 text-sm whitespace-nowrap cursor-pointer hover:bg-gray-900 hover:text-white hover:shadow-lg hover:scale-105"
-        >
-          <span class="flex items-center justify-center gap-2">
-            Accept All
-            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-          </span>
-        </button>
-        <button 
-          id="cookie-essential-only" 
-          class="group px-6 py-3 bg-white text-gray-900 border-2 border-gray-900 rounded-lg font-medium transition-all duration-200 text-sm whitespace-nowrap cursor-pointer hover:bg-gray-900 hover:text-white hover:shadow-lg hover:scale-105"
-        >
-          <span class="flex items-center justify-center gap-2">
-            Essential Only
-            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
-          </span>
-        </button>
-        <button 
-          id="cookie-customize" 
-          class="group px-6 py-3 bg-white text-gray-700 border-2 border-gray-300 rounded-lg font-medium transition-all duration-200 text-sm whitespace-nowrap cursor-pointer hover:bg-gray-50 hover:border-gray-400 hover:shadow-md hover:scale-105"
-        >
-          <span class="flex items-center justify-center gap-2">
-            Customize
-            <svg class="w-4 h-4 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Cookie Settings Modal -->
-<div id="cookie-settings-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
-    <div class="p-6 sm:p-8">
-      <div class="flex items-start justify-between mb-4">
-        <h2 class="text-2xl font-bold">Customize Cookie Preferences</h2>
-        <button id="close-settings-modal" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
-      <p class="text-gray-600 mb-6">
-        Choose which types of cookies you'd like to accept. Essential cookies cannot be disabled 
-        as they're required for the website to function.
+<!-- First-visit banner. Accept and Essential only are deliberately equal in weight. -->
+<section id="cookie-consent-banner" class="dg-consent" role="region" aria-label="Cookie preferences">
+  <div class="dg-wrap dg-consent__inner">
+    <div class="dg-consent__text">
+      <h2 class="dg-consent__title">Cookie Preferences</h2>
+      <p>
+        We use cookies to provide essential website functionality. With your consent,
+        we also use analytics cookies to improve our site and marketing cookies for personalization.
+        You can accept all, decline optional cookies, or customize your choices.
+        <a href="/privacy-policy/">Learn more</a>
       </p>
-      
-      <div class="space-y-6">
-        <!-- Essential Cookies -->
-        <div class="pb-6 border-b border-gray-200">
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="font-semibold text-gray-900 mb-2">Essential Cookies</h3>
-              <p class="text-sm text-gray-600 mb-2">
-                Required for the website to function properly. Always active.
-              </p>
-              <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                <li>Cookie consent preferences</li>
-                <li>Session management and security</li>
-              </ul>
-            </div>
-            <div class="flex items-center h-6">
-              <span class="text-sm text-gray-500 font-medium">Always Active</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Analytics Cookies -->
-        <div class="pb-6 border-b border-gray-200">
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="font-semibold text-gray-900 mb-2">Analytics Cookies</h3>
-              <p class="text-sm text-gray-600 mb-2">
-                Help us understand visitor behavior to improve our website.
-              </p>
-              <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                <li>Google Analytics (anonymous statistics)</li>
-                <li>Dreamdata (marketing attribution and pipeline analytics)</li>
-                <li>Page views and user journeys</li>
-              </ul>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="analytics-cookies" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 hover:bg-gray-300 peer-checked:hover:bg-primary-700"></div>
-            </label>
-          </div>
-        </div>
-        
-        <!-- Marketing Cookies -->
-        <div>
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="font-semibold text-gray-900 mb-2">Marketing Cookies</h3>
-              <p class="text-sm text-gray-600 mb-2">
-                Enable lead tracking, form analytics, and personalized marketing.
-              </p>
-              <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                <li>HubSpot (form tracking and CRM)</li>
-                <li>Apollo.io (website visitor tracking)</li>
-                <li>LinkedIn Insights (conversion tracking)</li>
-                <li>Google Ads (campaign measurement)</li>
-                <li>Clay (web intent tracking)</li>
-                <li>RB2B (website visitor identification)</li>
-              </ul>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="marketing-cookies" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600 hover:bg-gray-300 peer-checked:hover:bg-primary-700"></div>
-            </label>
-          </div>
-        </div>
+    </div>
+    <div class="dg-consent__actions">
+      <button type="button" id="cookie-accept-all" class="dg-consent__btn">Accept All</button>
+      <button type="button" id="cookie-essential-only" class="dg-consent__btn">Essential Only</button>
+      <button type="button" id="cookie-customize" class="dg-consent__btn dg-consent__btn--quiet">Customize</button>
+    </div>
+  </div>
+</section>
+
+<!-- Settings dialog -->
+<div id="cookie-settings-modal" class="dg-modal" hidden>
+  <div class="dg-modal__box" role="dialog" aria-modal="true" aria-labelledby="cookie-modal-title">
+    <div class="dg-modal__head">
+      <h2 id="cookie-modal-title" tabindex="-1">Customize Cookie Preferences</h2>
+      <button type="button" id="close-settings-modal" class="dg-modal__close" aria-label="Close and decline optional cookies">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <p class="dg-modal__intro">
+      Choose which types of cookies you'd like to accept. Essential cookies cannot be disabled
+      as they're required for the website to function.
+    </p>
+
+    <div class="dg-cookie-cat">
+      <div class="dg-cookie-cat__body">
+        <h3>Essential Cookies</h3>
+        <p>Required for the website to function properly. Always active.</p>
+        <ul>
+          <li>Cookie consent preferences</li>
+          <li>Session management and security</li>
+        </ul>
       </div>
-      
-      <!-- Modal Buttons - EQUAL PROMINENCE with hover effects -->
-      <div class="flex flex-col sm:flex-row gap-3 mt-8">
-        <button 
-          id="save-preferences" 
-          class="group flex-1 bg-gray-900 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 cursor-pointer hover:bg-gray-800 hover:shadow-lg hover:scale-105"
-        >
-          <span class="flex items-center justify-center gap-2">
-            Save Preferences
-            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-          </span>
-        </button>
-        <button 
-          id="cancel-customize" 
-          class="group flex-1 sm:flex-initial px-6 py-3 border-2 border-gray-300 rounded-lg font-medium transition-all duration-200 cursor-pointer hover:bg-gray-50 hover:border-gray-400 hover:shadow-md"
-        >
-          <span class="flex items-center justify-center gap-2">
-            Cancel
-            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-          </span>
-        </button>
+      <span class="dg-cookie-cat__always">Always Active</span>
+    </div>
+
+    <div class="dg-cookie-cat">
+      <div class="dg-cookie-cat__body">
+        <h3 id="analytics-label">Analytics Cookies</h3>
+        <p>Help us understand visitor behavior to improve our website.</p>
+        <ul>
+          <li>Google Analytics (anonymous statistics)</li>
+          <li>Dreamdata (marketing attribution and pipeline analytics)</li>
+          <li>Page views and user journeys</li>
+        </ul>
       </div>
+      <label class="dg-switch">
+        <input type="checkbox" id="analytics-cookies" role="switch" aria-labelledby="analytics-label" />
+        <span class="dg-switch__track" aria-hidden="true"></span>
+      </label>
+    </div>
+
+    <div class="dg-cookie-cat">
+      <div class="dg-cookie-cat__body">
+        <h3 id="marketing-label">Marketing Cookies</h3>
+        <p>Enable lead tracking, form analytics, and personalized marketing.</p>
+        <ul>
+          <li>HubSpot (form tracking and CRM)</li>
+          <li>Apollo.io (website visitor tracking)</li>
+          <li>LinkedIn Insights (conversion tracking)</li>
+          <li>Google Ads (campaign measurement)</li>
+          <li>Clay (web intent tracking)</li>
+          <li>RB2B (website visitor identification)</li>
+        </ul>
+      </div>
+      <label class="dg-switch">
+        <input type="checkbox" id="marketing-cookies" role="switch" aria-labelledby="marketing-label" />
+        <span class="dg-switch__track" aria-hidden="true"></span>
+      </label>
+    </div>
+
+    <div class="dg-modal__actions">
+      <button type="button" id="save-preferences" class="dg-consent__btn dg-consent__btn--solid">Save Preferences</button>
+      <button type="button" id="cancel-customize" class="dg-consent__btn dg-consent__btn--quiet">Cancel</button>
     </div>
   </div>
 </div>
-
-<style>
-  @keyframes scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  .animate-scale-in {
-    animation: scale-in 0.2s ease-out;
-  }
-</style>
 
 <script>
   // Cookie management functionality (v2)
@@ -226,20 +129,23 @@
   function showBanner() {
     // On privacy policy page, show banner but don't block page access
     if (!isPrivacyPolicyPage()) {
-      overlay.classList.remove('hidden');
+      overlay.hidden = false;
       document.body.style.overflow = 'hidden';
     }
-    consentBanner.classList.remove('translate-y-full');
+    consentBanner.classList.add('is-visible');
   }
 
   function hideBanner() {
-    overlay.classList.add('hidden');
-    consentBanner.classList.add('translate-y-full');
+    overlay.hidden = true;
+    consentBanner.classList.remove('is-visible');
     document.body.style.overflow = '';
   }
 
+  let lastFocused = null;
+
   function showSettingsModal() {
-    settingsModal.classList.remove('hidden');
+    lastFocused = document.activeElement;
+    settingsModal.hidden = false;
     hideBanner();
     // Load current settings
     analyticsCheckbox.checked = getCookie(ANALYTICS_COOKIE) === 'true';
@@ -248,12 +154,33 @@
     if (!isPrivacyPolicyPage()) {
       document.body.style.overflow = 'hidden';
     }
+    // Move focus into the dialog so keyboard and screen reader users land in it.
+    document.getElementById('cookie-modal-title')?.focus();
   }
 
   function hideSettingsModal() {
-    settingsModal.classList.add('hidden');
+    settingsModal.hidden = true;
     document.body.style.overflow = '';
+    // The banner is dismissed along with the dialog, so only return focus to something still on screen.
+    if (lastFocused && document.contains(lastFocused) && !consentBanner.contains(lastFocused)) lastFocused.focus();
+    lastFocused = null;
   }
+
+  // Keep Tab inside the dialog while it is open.
+  settingsModal.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    const focusable = Array.from(settingsModal.querySelectorAll('button, input, a[href]')).filter((el) => !el.hasAttribute('disabled'));
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === document.getElementById('cookie-modal-title'))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 
   function loadAnalytics() {
     if (getCookie(ANALYTICS_COOKIE) === 'true') {
