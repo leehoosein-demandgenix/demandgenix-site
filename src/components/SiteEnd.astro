@@ -1,0 +1,11 @@
+---
+import CookieConsent from './CookieConsent.astro';
+import UTMTracker from './UTMTracker.astro';
+---
+<noscript>
+  <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=8301826&fmt=gif" />
+</noscript>
+    <CookieConsent />
+    <UTMTracker />
+    <!-- WebMCP: Expose structured tools to AI agents via navigator.modelContext -->
+    <script is:inline src="/webmcp.js" defer></script>

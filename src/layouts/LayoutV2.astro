@@ -1,0 +1,45 @@
+---
+// The new design. Shares its <head> (SEO, structured data, analytics) and consent code with the
+// legacy layout, but loads only the scoped v2 stylesheet's rules and its own header and footer.
+import SiteHead from '../components/SiteHead.astro';
+import SiteEnd from '../components/SiteEnd.astro';
+import HeaderV2 from '../components/v2/HeaderV2.astro';
+import FooterV2 from '../components/v2/FooterV2.astro';
+import { getSiteSettings } from '../lib/sanity.js';
+// Same base as the legacy layout (Tailwind base + the cookie banner's utilities), so dev matches the
+// production build, which bundles all CSS into one file. v2 rules override it by specificity.
+import '../styles/global.css';
+import '../styles/v2.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  schema?: {
+    type?: string;
+    dateModified?: string;
+    abstract?: string;
+    breadcrumbs?: { name: string; url: string }[];
+    faqs?: { question: string; answer: any }[];
+    services?: { name: string; description?: string }[];
+  };
+}
+
+const settings = await getSiteSettings();
+---
+
+<!DOCTYPE html>
+<html lang="en-GB">
+  <SiteHead {...Astro.props} variant="v2">
+    <slot name="head" slot="head" />
+  </SiteHead>
+  <body class="dgx">
+    <a class="dg-skip" href="#main">Skip to content</a>
+    <HeaderV2 settings={settings} />
+    <main id="main"><slot /></main>
+    <FooterV2 settings={settings} />
+    <SiteEnd />
+  </body>
+</html>

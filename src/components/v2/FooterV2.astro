@@ -1,0 +1,30 @@
+---
+export interface Props {
+  settings: any;
+}
+const { settings } = Astro.props;
+const year = new Date().getFullYear();
+const linkedin = settings.linkedinUrl || settings.sameAs?.[0];
+---
+<footer class="dg-footer">
+  <div class="dg-wrap">
+    <div>
+      <p>{settings.companyName} &middot; {settings.locality}, UK</p>
+      <p>Registered in England &amp; Wales{settings.companyNumber && <> &middot; Company No: {settings.companyNumber}</>}{settings.vatNumber && <> &middot; VAT No: {settings.vatNumber}</>}</p>
+    </div>
+    <div class="dg-footer__links">
+      {linkedin && <a href={linkedin} target="_blank" rel="noopener">LinkedIn</a>}
+      {settings.email && <a href={`mailto:${settings.email}`}>Email</a>}
+      <a href="/privacy-policy/">Privacy policy</a>
+      <a href="/cookie-policy/">Cookie policy</a>
+      <button type="button" id="dg-cookie-prefs">Cookie preferences</button>
+    </div>
+    <p class="dg-footer__legal">&copy; {year} {settings.companyName}. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('dg-cookie-prefs')?.addEventListener('click', () => {
+    (window as any).openCookiePreferences?.();
+  });
+</script>

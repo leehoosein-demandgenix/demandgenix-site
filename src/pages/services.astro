@@ -1,0 +1,145 @@
+---
+import LayoutV2 from '../layouts/LayoutV2.astro';
+import RichText from '../components/v2/RichText.astro';
+import SpendWidget from '../components/v2/SpendWidget.astro';
+import { getServicesPage, getSiteSettings } from '../lib/sanity.js';
+
+const [page, settings] = await Promise.all([getServicesPage(), getSiteSettings()]);
+const seo = page.seo;
+const cta = { label: settings.ctaLabel, href: settings.ctaHref || '/contact/' };
+
+const schema = {
+  dateModified: page._updatedAt,
+  abstract: seo.summary,
+  breadcrumbs: [
+    { name: 'Home', url: '/' },
+    { name: 'Services', url: '/services/' }
+  ],
+  faqs: page.faqs,
+  services: page.areas.map((a: any) => ({ name: a.searchName || a.name, description: a.summary }))
+};
+---
+
+<LayoutV2
+  title={seo.metaTitle}
+  description={seo.metaDescription}
+  ogImage={seo.ogImage?.url}
+  canonicalUrl={seo.canonicalUrl}
+  noindex={seo.noIndex}
+  schema={schema}
+>
+  <div class="dg-wrap">
+    <header class="dg-hero">
+      <div class="dg-hero__text">
+        {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
+        <h1>{page.heroHeadline}</h1>
+        <p class="dg-hero__sub">{page.heroSub}</p>
+        <div class="dg-hero__actions">
+          <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+          {settings.ctaNote && <span class="dg-hero__note">{settings.ctaNote}</span>}
+        </div>
+      </div>
+      <aside class="dg-familiar">
+        {page.familiarLabel && <span class="dg-familiar__label">{page.familiarLabel}</span>}
+        <blockquote>&ldquo;{page.familiarQuote}&rdquo;</blockquote>
+        {page.familiarNote && <p>{page.familiarNote}</p>}
+      </aside>
+    </header>
+  </div>
+
+  <section class="dg-block dg-band dg-who" id="who">
+    <div class="dg-wrap">
+      <h2>{page.whoHeading}</h2>
+      <ul>
+        {page.whoPoints.map((point: string) => (
+          <li>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+      {page.whoTail && <p class="dg-who__tail">{page.whoTail}</p>}
+    </div>
+  </section>
+
+  <section class="dg-block dg-areas" id="what-i-take-on">
+    <div class="dg-wrap">
+      <h2>{page.areasHeading}</h2>
+      {page.areas.map((area: any) => (
+        <div class="dg-area">
+          <div>
+            <h3>{area.name}</h3>
+            <p class="dg-area__sum">{area.summary}</p>
+          </div>
+          <div>
+            <RichText class="dg-area__what" blocks={area.whatIDo} />
+            {area.lookFirst?.length > 0 && (
+              <>
+                <span class="dg-area__first">What I look at first</span>
+                <ul>{area.lookFirst.map((item: string) => <li>{item}</li>)}</ul>
+              </>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="dg-block dg-band dg-honest" id="the-honest-bit">
+    <div class="dg-wrap dg-honest__grid">
+      <div>
+        {page.honestLabel && <div class="dg-honest__mark"><i aria-hidden="true"></i><span>{page.honestLabel}</span></div>}
+        <h2>{page.honestHeading}</h2>
+        <RichText class="dg-honest__body" blocks={page.honestBody} />
+      </div>
+      <SpendWidget widget={settings.spendWidget} />
+    </div>
+  </section>
+
+  <section class="dg-block dg-start" id="how-we-would-start">
+    <div class="dg-wrap">
+      <h2>{page.startHeading}</h2>
+      <ol class="dg-steps">
+        {page.startSteps.map((step: any, i: number) => (
+          <li class="dg-step">
+            <span class="dg-step__n" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h3>{step.title}</h3>
+              <RichText class="dg-step__body" blocks={step.body} />
+            </div>
+          </li>
+        ))}
+      </ol>
+      <RichText class="dg-need" blocks={page.startNeed} />
+    </div>
+  </section>
+
+  <section class="dg-block dg-band dg-isnt" id="what-this-isnt">
+    <div class="dg-wrap">
+      <h2>{page.isntHeading}</h2>
+      {page.isntItems.map((item: any) => <p><strong>{item.lead}</strong> {item.text}</p>)}
+    </div>
+  </section>
+
+  <section class="dg-block dg-faq" id="questions">
+    <div class="dg-wrap">
+      <h2>{page.faqHeading}</h2>
+      {page.faqs.map((faq: any) => (
+        <details>
+          <summary>{faq.question}</summary>
+          <RichText class="dg-faq__answer" blocks={faq.answer} />
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="dg-block dg-close" id="book">
+    <div class="dg-wrap">
+      <h2>{page.closingHeading}</h2>
+      <div>
+        <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+        {page.closingNote && <p class="dg-close__note">{page.closingNote}</p>}
+      </div>
+    </div>
+  </section>
+</LayoutV2>
