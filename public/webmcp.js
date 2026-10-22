@@ -36,7 +36,6 @@
         diagnostic: {
           title: 'Pipeline Diagnostic',
           duration: '3-4 weeks',
-          investment: '\u00a33,500-\u00a35,000',
           bestFor:
             'Seed to Series B companies with \u00a330k-\u00a3200k marketing budget who need clarity before committing to execution.',
           description:
@@ -58,7 +57,6 @@
         turnaround: {
           title: 'Pipeline Turnaround',
           duration: '6-12 weeks',
-          investment: '\u00a34,500-\u00a312,000 per sprint',
           bestFor:
             'Companies with identified pipeline issues who need targeted fixes delivered in 6-12 weeks.',
           description:
@@ -118,7 +116,6 @@
         leadership: {
           title: 'Fractional Demand Leadership',
           duration: 'Ongoing (rolling 90 days)',
-          investment: 'From \u00a32,500/month',
           bestFor:
             'Growing companies who need senior demand gen leadership 1-2 days/week without a full-time hire.',
           description:
@@ -127,13 +124,11 @@
             {
               name: 'Core',
               commitment: '1 day/week',
-              investment: '\u00a32,500/month',
               includes: ['Strategy & Planning', 'Hands-on Execution']
             },
             {
               name: 'Plus',
               commitment: '2 days/week',
-              investment: '\u00a34,500/month',
               includes: [
                 'Strategy & Planning',
                 'Hands-on Execution',
@@ -144,7 +139,6 @@
             {
               name: 'Enterprise',
               commitment: 'Custom',
-              investment: 'Custom',
               includes: [
                 'Strategy & Planning',
                 'Hands-on Execution',
@@ -172,7 +166,6 @@
                     return {
                       title: p.title,
                       duration: p.duration,
-                      investment: p.investment,
                       bestFor: p.bestFor
                     };
                   }),
@@ -595,17 +588,14 @@
                   {
                     name: 'Pipeline Diagnostic',
                     duration: '3-4 weeks',
-                    investment: '\u00a33,500-\u00a35,000'
                   },
                   {
                     name: 'Pipeline Turnaround',
                     duration: '6-12 weeks',
-                    investment: '\u00a34,500-\u00a312,000 per sprint'
                   },
                   {
                     name: 'Fractional Demand Leadership',
                     duration: 'Ongoing (rolling 90 days)',
-                    investment: 'From \u00a32,500/month'
                   }
                 ],
                 freeConsultation: {

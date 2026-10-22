@@ -30,7 +30,6 @@ Allow: /
 # Block unnecessary areas (when they exist)
 Disallow: /admin/
 Disallow: /wp-admin/
-Disallow: /_astro/
 Disallow: /node_modules/
 Disallow: /.git/
 Disallow: /api/

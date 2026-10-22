@@ -1,6 +1,9 @@
 ---
 import CookieConsent from '../components/CookieConsent.astro';
 import UTMTracker from '../components/UTMTracker.astro';
+import { getSiteSettings } from '../lib/sanity.js';
+import { homePageDefaults } from '../content/defaults.js';
+import { SITE_URL, buildSiteNodes, buildPageNodes, toJsonLd } from '../lib/seo.js';
 
 export interface Props {
   title: string;
@@ -8,23 +11,49 @@ export interface Props {
   keywords?: string;
   ogImage?: string;
   canonicalUrl?: string;
+  noindex?: boolean;
+  // Optional, per-page structured data. See buildPageNodes in src/lib/seo.js.
+  schema?: {
+    type?: string;
+    dateModified?: string;
+    breadcrumbs?: { name: string; url: string }[];
+    faqs?: { question: string; answer: any }[];
+    services?: { name: string; description?: string }[];
+  };
 }
 
-const { 
-  title, 
-  description = "Manchester-based demand gen consultancy helping growing companies scale efficiently. Fixed-scope sprints, fractional leadership, AI utilization.", 
-  keywords = "demand generation, B2B marketing, SaaS marketing, conversion optimization, fractional marketing, Manchester marketing agency, AI marketing, growth marketing, marketing analytics",
-  ogImage = "/og-image.jpg",
-  canonicalUrl
+const settings = await getSiteSettings();
+
+const {
+  title,
+  description = homePageDefaults.seo.metaDescription,
+  keywords,
+  ogImage,
+  canonicalUrl,
+  noindex = false,
+  schema
 } = Astro.props;
 
-// Fix canonical URL to always use production domain
-const SITE_URL = "https://demandgenix.uk";
+// Canonical URL always uses the production domain
 const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
+
+// Social image: the page's own, else the site default from the CMS. If neither exists, omit the tags
+// rather than point at a file that 404s.
+const rawImage = ogImage || settings.defaultOgImage?.url;
+const socialImage = rawImage ? (rawImage.startsWith('http') ? rawImage : `${SITE_URL}${rawImage}`) : undefined;
+
+const robots = noindex
+  ? 'noindex, nofollow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+const jsonLd = toJsonLd([
+  ...buildSiteNodes(settings),
+  ...buildPageNodes({ url: finalCanonicalUrl, name: title, description, ...schema })
+]);
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <!-- Preconnect to analytics domains -->
     <link rel="preconnect" href="https://stats.g.doubleclick.net" crossorigin>
@@ -32,11 +61,11 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
     <meta charset="UTF-8" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
+    {keywords && <meta name="keywords" content={keywords} />}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={robots} />
     <meta name="author" content="DemandGenix Limited" />
     
     <!-- Geographic Meta -->
@@ -46,16 +75,17 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={`${SITE_URL}${ogImage}`} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
     <meta property="og:url" content={finalCanonicalUrl} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
     <meta property="og:site_name" content="DemandGenix" />
-    
+
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${SITE_URL}${ogImage}`} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
 
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#059669">
@@ -82,82 +112,8 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
     <!-- Android -->
     <link rel="manifest" href="/manifest.json">
     
-   <!-- Structured Data: ProfessionalService -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "DemandGenix",
-      "legalName": "DemandGenix Limited",
-      "url": SITE_URL,
-      "description": "Specialized B2B Demand Generation agency helping UK firms scale pipeline through strategy and ditching outdated MQL models.",
-      "image": `${SITE_URL}/og-image.jpg`,
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Manchester",
-        "addressRegion": "Greater Manchester",
-        "addressCountry": "GB"
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "United Kingdom"
-      },
-      "sameAs": [
-        "https://www.linkedin.com/company/demandgenix/"
-      ],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "email": "hello@demandgenix.uk",
-        "contactType": "customer service"
-      },
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Demand Generation Services",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Demand Generation Strategy & Consulting"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Pipeline Diagnostic"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Pipeline Turnaround"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Fractional Demand Leadership"
-            }
-          }
-        ]
-      }
-    })} />
-
-    <!-- Structured Data: Organization -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "DemandGenix",
-      "alternateName": "DemandGenix Limited",
-      "url": SITE_URL,
-      "logo": `${SITE_URL}/Favicon.svg`,
-      "sameAs": [
-        "https://www.linkedin.com/company/demandgenix/",
-        "https://twitter.com/demandgenix"
-      ]
-    })} />
+    <!-- Structured data: business, founder, website and this page, built from the CMS (src/lib/seo.js) -->
+    <script type="application/ld+json" set:html={jsonLd} />
 
     <!-- Preload critical fonts -->
     <link rel="preload" href="/fonts/plus-jakarta-sans-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -194,7 +150,6 @@ const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
 </noscript>
     <CookieConsent />
     <UTMTracker />
-    <script src="https://static.claydar.com/init.v1.js?id=cgiqWQbLzO"></script>
     <!-- WebMCP: Expose structured tools to AI agents via navigator.modelContext -->
     <script is:inline src="/webmcp.js" defer></script>
   </body>
