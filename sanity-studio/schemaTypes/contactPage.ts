@@ -32,14 +32,6 @@ export default {
     },
     {name: 'successMessage', title: 'Message after sending', type: 'text', rows: 2, group: 'form'},
     {
-      name: 'noConsentMessage',
-      title: 'Message when cookies are declined',
-      type: 'text',
-      rows: 3,
-      group: 'form',
-      description: 'Shown instead of sending the form when the visitor has declined marketing cookies. Write {email} where the email link should go.',
-    },
-    {
       name: 'errorMessage',
       title: 'Message if sending fails',
       type: 'text',

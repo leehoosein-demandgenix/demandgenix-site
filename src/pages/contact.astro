@@ -11,7 +11,6 @@ const testimonials = (allTestimonials || []).filter((t: any) => t.recommendation
 
 // "{email}" in a CMS message becomes a mailto link.
 const withEmail = (text: string) => String(text || '').split('{email}');
-const noConsent = withEmail(page.noConsentMessage);
 const failed = withEmail(page.errorMessage);
 
 const schema = {
@@ -46,9 +45,6 @@ const schema = {
         {page.formIntro && <p class="dg-formcard__intro">{page.formIntro}</p>}
 
         <div id="contact-success" class="dg-alert dg-alert--ok" role="status" tabindex="-1" hidden>{page.successMessage}</div>
-        <div id="contact-noconsent" class="dg-alert dg-alert--warn" role="alert" hidden>
-          {noConsent[0]}<a href={`mailto:${email}`}>{email}</a>{noConsent[1]}
-        </div>
         <div id="contact-error" class="dg-alert dg-alert--error" role="alert" hidden>
           {failed[0]}<a href={`mailto:${email}`}>{email}</a>{failed[1]}
         </div>
@@ -132,7 +128,6 @@ const schema = {
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
   const successBox = document.getElementById('contact-success');
-  const noConsentBox = document.getElementById('contact-noconsent');
   const errorBox = document.getElementById('contact-error');
 
   const getCookie = (name: string) => document.cookie.split('; ').find((r) => r.startsWith(name + '='))?.split('=')[1];
@@ -159,17 +154,7 @@ const schema = {
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form || !submitBtn) return;
-    [noConsentBox, errorBox].forEach((box) => box && (box.hidden = true));
-
-    // Existing behaviour: the form only sends once marketing cookies are accepted, otherwise the
-    // visitor is asked to email instead.
-    if (!hasMarketingConsent()) {
-      if (noConsentBox) {
-        noConsentBox.hidden = false;
-        noConsentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      return;
-    }
+    if (errorBox) errorBox.hidden = true;
 
     let firstInvalid: HTMLElement | null = null;
     for (const id of FIELDS) {
@@ -189,7 +174,9 @@ const schema = {
     submitBtn.textContent = 'Sending...';
 
     const fd = new FormData(form);
-    const hutk = getCookie('hubspotutk');
+    // The HubSpot tracking cookie is only attached when marketing cookies were accepted. The enquiry
+    // itself is sent either way: the visitor chose to write to us, and no cookie is needed for that.
+    const hutk = hasMarketingConsent() ? getCookie('hubspotutk') : undefined;
     const payload = {
       fields: [
         { name: 'firstname', value: fd.get('firstname') || '' },
@@ -214,7 +201,7 @@ const schema = {
       }
 
       const w = window as any;
-      if (typeof w.gtag !== 'undefined') {
+      if (hasAnalyticsConsent() && typeof w.gtag !== 'undefined') {
         w.gtag('event', 'generate_lead', { event_category: 'Contact Form', event_label: 'Contact Form Submission', value: 1 });
       }
       if (hasAnalyticsConsent() && w.zaraz) {

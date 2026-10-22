@@ -301,7 +301,6 @@ export const contactPageDefaults = {
   formIntro: 'Four details, and I’ll be in touch within 24 hours.',
   privacyNote: rt('By submitting this form you agree to the [privacy policy](/privacy-policy/). I’ll only use your details to reply to your enquiry and to send relevant updates.'),
   successMessage: 'Thanks, I’ve got your details and will reply within 24 hours.',
-  noConsentMessage: 'To respect your cookie preferences, please email {email} with your enquiry instead. I’ll reply within 24 hours.',
   errorMessage: 'Sorry, something went wrong sending that. Please email {email} and I’ll pick it up.',
 
   expectHeading: 'What to expect',
