@@ -215,38 +215,25 @@
     async execute({ firstName, lastName, email, company }, client) {
       // Request explicit user confirmation before submitting personal data
       return client.requestUserInteraction(async function () {
-        // Check for marketing consent cookie
-        var marketingConsent = document.cookie
-          .split('; ')
-          .find(function (r) { return r.startsWith('marketing-consent='); });
-        var hasConsent = marketingConsent && marketingConsent.split('=')[1] === 'true';
-
-        if (!hasConsent) {
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify(
-                  {
-                    success: false,
-                    reason: 'marketing_consent_required',
-                    message:
-                      'The user has not accepted marketing cookies. They can email ' + SITE.email + ' directly, or accept marketing cookies via the cookie banner and try again.',
-                    fallbackEmail: SITE.email
-                  },
-                  null,
-                  2
-                )
-              }
-            ]
-          };
+        // The enquiry is sent either way, as on the contact form: the user chose to write to us and no
+        // cookie is needed for that. Tracking is only attached with the matching consent.
+        function hasCookie(name) {
+          var found = document.cookie
+            .split('; ')
+            .find(function (r) { return r.startsWith(name + '='); });
+          return found && found.split('=')[1] === 'true';
         }
+        var marketingConsent = hasCookie('marketing-consent');
+        var analyticsConsent = hasCookie('analytics-consent');
 
-        // Read HubSpot tracking cookie if present
-        var hutkCookie = document.cookie
-          .split('; ')
-          .find(function (r) { return r.startsWith('hubspotutk='); });
-        var hutk = hutkCookie ? hutkCookie.split('=')[1] : null;
+        // HubSpot tracking cookie, only with marketing consent
+        var hutk = null;
+        if (marketingConsent) {
+          var hutkCookie = document.cookie
+            .split('; ')
+            .find(function (r) { return r.startsWith('hubspotutk='); });
+          hutk = hutkCookie ? hutkCookie.split('=')[1] : null;
+        }
 
         var payload = {
           fields: [
@@ -296,7 +283,7 @@
           }
 
           // Fire GA4 event if available
-          if (typeof gtag !== 'undefined') {
+          if (analyticsConsent && typeof gtag !== 'undefined') {
             gtag('event', 'generate_lead', {
               event_category: 'Contact Form',
               event_label: 'WebMCP Agent Submission',
