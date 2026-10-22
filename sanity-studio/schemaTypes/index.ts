@@ -22,6 +22,9 @@ import faqItem from './faqItem'
 import spendWidget from './spendWidget'
 import homePage from './homePage'
 import servicesPage from './servicesPage'
+import contactPage from './contactPage'
+import blogPage from './blogPage'
+import fiveColumnTable from './fiveColumnTable'
 
 
-export const schemaTypes = [homePage, servicesPage, seo, simpleRichText, faqItem, spendWidget, hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, comparisonTable, twoColumnTable, calloutBox, socialProof, errorPage]
+export const schemaTypes = [homePage, servicesPage, contactPage, blogPage, seo, simpleRichText, faqItem, spendWidget, hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, comparisonTable, twoColumnTable, fiveColumnTable, calloutBox, socialProof, errorPage]
