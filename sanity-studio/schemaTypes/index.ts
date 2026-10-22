@@ -16,6 +16,12 @@ import twoColumnTable from './twoColumnTable'
 import calloutBox from './calloutBox'
 import socialProof from './socialProof'
 import errorPage from './errorPage'
+import seo from './seo'
+import simpleRichText from './simpleRichText'
+import faqItem from './faqItem'
+import spendWidget from './spendWidget'
+import homePage from './homePage'
+import servicesPage from './servicesPage'
 
 
-export const schemaTypes = [hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, comparisonTable, twoColumnTable, calloutBox, socialProof, errorPage]
+export const schemaTypes = [homePage, servicesPage, seo, simpleRichText, faqItem, spendWidget, hero, service, programme, programmesPage, servicesSection, safetyNet, about, contact, siteSettings, testimonial, blogPost, threeColumnBlock, comparisonTable, twoColumnTable, calloutBox, socialProof, errorPage]
