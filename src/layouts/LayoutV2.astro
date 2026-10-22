@@ -6,9 +6,6 @@ import SiteEnd from '../components/SiteEnd.astro';
 import HeaderV2 from '../components/v2/HeaderV2.astro';
 import FooterV2 from '../components/v2/FooterV2.astro';
 import { getSiteSettings } from '../lib/sanity.js';
-// Same base as the legacy layout (Tailwind base + the cookie banner's utilities), so dev matches the
-// production build, which bundles all CSS into one file. v2 rules override it by specificity.
-import '../styles/global.css';
 import '../styles/v2.css';
 
 export interface Props {

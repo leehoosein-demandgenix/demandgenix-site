@@ -1,6 +1,6 @@
-/* New design system ("v2"). Everything is scoped under body.dgx and uses dg- class names,
-   because build.cssCodeSplit is off: all CSS ships in one shared stylesheet, and global.css
-   sets `* { font-weight: 300 }` and a green h1 on every page. Do not add unscoped rules here. */
+/* The site's design system. Everything is scoped under body.dgx and uses dg- class names so it can
+   never leak into anything else (a lesson from when the old stylesheet forced a font weight on every
+   element). Do not add unscoped rules here, apart from the hidden-attribute rule below. */
 
 @font-face {
   font-family: 'Bricolage Grotesque';
@@ -23,7 +23,7 @@
   --dg-surface-2: #E7E5DA;
   --dg-ink: #16201B;
   --dg-ink-soft: #4F5A54;
-  --dg-ink-faint: #68716B;
+  --dg-ink-faint: #5A635D;
   --dg-accent: #1F4D3A;
   --dg-accent-dark: #163A2B;
   --dg-accent-soft: #E2EAE4;
@@ -36,6 +36,23 @@
   --dg-sans: 'IBM Plex Sans', -apple-system, 'Segoe UI', system-ui, sans-serif;
 }
 
+/* Base reset: the browser defaults the design assumes. Written with :where() so it adds no
+   specificity and every rule below overrides it freely. */
+[hidden]:where(:not([hidden='until-found'])) { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+.dgx, .dgx *, .dgx *::before, .dgx *::after { box-sizing: border-box; }
+.dgx :where(h1, h2, h3, h4, h5, h6, p, blockquote, figure, pre, dl, dd, ul, ol, menu, hr, fieldset, legend) { margin: 0; padding: 0; }
+.dgx :where(h1, h2, h3, h4, h5, h6) { font-size: inherit; font-weight: inherit; }
+.dgx :where(ul, ol, menu) { list-style: none; }
+.dgx :where(img, svg, video, canvas, audio, iframe, embed, object) { display: block; vertical-align: middle; }
+.dgx :where(img, video) { max-width: 100%; height: auto; }
+.dgx :where(button, input, select, textarea) { font: inherit; letter-spacing: inherit; color: inherit; }
+.dgx :where(button) { background: transparent; border-radius: 0; cursor: pointer; }
+.dgx :where(button:disabled) { cursor: default; }
+.dgx :where(textarea) { resize: vertical; }
+.dgx :where(table) { border-collapse: collapse; }
+.dgx ::placeholder { color: var(--dg-ink-faint); opacity: 1; }
+
 body.dgx {
   margin: 0;
   background: var(--dg-canvas);
@@ -45,9 +62,7 @@ body.dgx {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
-/* global.css sets font-weight on every element, which defeats inheritance; restore it. */
-.dgx * { font-weight: inherit; }
-.dgx strong { font-weight: 600 !important; }
+.dgx strong { font-weight: 600; }
 .dgx ::selection { background: var(--dg-accent); color: var(--dg-accent-ink); }
 .dgx :focus-visible { outline: 2px solid var(--dg-accent); outline-offset: 3px; }
 
@@ -72,6 +87,7 @@ body.dgx {
 .dgx .dg-band { background: var(--dg-surface); }
 @media (max-width: 900px) { .dgx .dg-block { padding-block: 4rem; } }
 
+.dgx .dg-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .dgx .dg-skip { position: absolute; left: -9999px; top: 0; background: var(--dg-accent); color: var(--dg-accent-ink); padding: .7rem 1rem; z-index: 100; }
 .dgx .dg-skip:focus { left: 0; }
 
@@ -153,7 +169,7 @@ body.dgx {
 
 /* "Where the money goes". Without JavaScript every panel is shown in full; with it, they become tabs. */
 .dgx .dg-widget { background: var(--dg-canvas); border: 1px solid var(--dg-rule); border-radius: 12px; padding: 1.3rem 1.4rem 1.4rem; }
-.dgx .dg-widget__title { display: block; font-size: .82rem; font-weight: 600; color: var(--dg-ink-soft); margin-bottom: .9rem; }
+.dgx .dg-widget__title { display: block; font-family: var(--dg-sans); font-size: .82rem; font-weight: 600; letter-spacing: 0; line-height: 1.5; color: var(--dg-ink-soft); margin: 0 0 .9rem; }
 .dgx .dg-tabs { display: none; gap: .4rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .dgx .dg-widget[data-enhanced] .dg-tabs { display: flex; }
 .dgx .dg-tab { flex: 1 1 0; min-width: 5.6rem; padding: .6rem .5rem; border-radius: 7px; border: 1px solid var(--dg-rule); background: var(--dg-surface); cursor: pointer; font: inherit; font-weight: 600; font-size: .88rem; color: var(--dg-ink-soft); transition: background .15s ease, border-color .15s ease, color .15s ease; }
@@ -401,6 +417,7 @@ body.dgx {
 .dgx .dg-table-wrap table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: .92rem; line-height: 1.55; }
 .dgx .dg-table-wrap caption { caption-side: top; text-align: left; font-weight: 600; padding: .8rem 1rem; border-bottom: 1px solid var(--dg-rule); }
 .dgx .dg-table-wrap th, .dgx .dg-table-wrap td { text-align: left; padding: .7rem 1rem; vertical-align: top; border-bottom: 1px solid var(--dg-rule); }
+.dgx .dg-table-wrap th { font-weight: 600; }
 .dgx .dg-table-wrap thead th { background: var(--dg-surface); font-size: .85rem; }
 .dgx .dg-table-wrap tbody tr:last-child > * { border-bottom: 0; }
 .dgx .dg-cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2.2rem 0; }
@@ -417,7 +434,49 @@ body.dgx {
 .dgx .dg-callout p { margin: .3rem 0 0; font-size: 1rem; }
 @media (max-width: 720px) { .dgx .dg-cols3 { grid-template-columns: 1fr; } .dgx .dg-prose { font-size: 1.04rem; } }
 
+/* ---- Cookie consent ---- */
+.dgx .dg-consent__overlay { position: fixed; inset: 0; z-index: 45; background: rgba(250, 250, 247, .35); backdrop-filter: blur(2px); }
+.dgx .dg-consent { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: var(--dg-canvas); border-top: 1px solid var(--dg-rule); box-shadow: 0 -12px 32px -16px rgba(22, 32, 27, .3); transform: translateY(100%); visibility: hidden; transition: transform .5s cubic-bezier(.23, 1, .32, 1), visibility 0s linear .5s; }
+.dgx .dg-consent.is-visible { transform: none; visibility: visible; transition-delay: 0s; }
+.dgx .dg-consent__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem 2.5rem; padding-block: 1.4rem; }
+.dgx .dg-consent__text { flex: 1 1 30rem; min-width: 0; }
+.dgx .dg-consent__title { font-size: 1.05rem; margin-bottom: .4rem; }
+.dgx .dg-consent__text p { font-size: .88rem; line-height: 1.55; color: var(--dg-ink-soft); margin: 0; }
+.dgx .dg-consent__text a { color: var(--dg-accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; margin-left: .2rem; }
+.dgx .dg-consent__actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+.dgx .dg-consent__btn { font-size: .9rem; font-weight: 600; line-height: 1.2; padding: .8rem 1.3rem; border-radius: 7px; border: 1.5px solid var(--dg-ink); background: var(--dg-canvas); color: var(--dg-ink); white-space: nowrap; transition: background .15s ease, color .15s ease; }
+.dgx .dg-consent__btn:hover { background: var(--dg-ink); color: var(--dg-canvas); }
+.dgx .dg-consent__btn--quiet { border-color: var(--dg-ink-faint); color: var(--dg-ink-soft); }
+.dgx .dg-consent__btn--quiet:hover { background: var(--dg-surface); color: var(--dg-ink); }
+.dgx .dg-consent__btn--solid { background: var(--dg-accent); border-color: var(--dg-accent); color: var(--dg-accent-ink); }
+.dgx .dg-consent__btn--solid:hover { background: var(--dg-accent-dark); border-color: var(--dg-accent-dark); color: var(--dg-accent-ink); }
+@media (max-width: 760px) { .dgx .dg-consent__actions { width: 100%; } .dgx .dg-consent__btn { flex: 1 1 auto; } }
+
+.dgx .dg-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(22, 32, 27, .5); }
+.dgx .dg-modal[hidden] { display: none; }
+.dgx .dg-modal__box { background: var(--dg-canvas); border-radius: 12px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; padding: 1.8rem 2rem; box-shadow: 0 24px 60px -20px rgba(22, 32, 27, .6); }
+.dgx .dg-modal__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
+.dgx .dg-modal__head h2 { font-size: 1.5rem; }
+.dgx .dg-modal__head h2:focus { outline: none; }
+.dgx .dg-modal__close { padding: .5rem; margin: -.3rem -.5rem 0 0; border: 0; border-radius: 6px; color: var(--dg-ink-soft); }
+.dgx .dg-modal__close:hover { background: var(--dg-surface); color: var(--dg-ink); }
+.dgx .dg-modal__intro { color: var(--dg-ink-soft); margin-bottom: 1.2rem; }
+.dgx .dg-cookie-cat { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.2rem; padding-block: 1.2rem; border-top: 1px solid var(--dg-rule); }
+.dgx .dg-cookie-cat h3 { font-family: var(--dg-sans); font-size: 1rem; font-weight: 600; letter-spacing: 0; margin-bottom: .35rem; }
+.dgx .dg-cookie-cat p { font-size: .9rem; color: var(--dg-ink-soft); margin: 0 0 .5rem; }
+.dgx .dg-cookie-cat ul { list-style: disc; padding-left: 1.1rem; font-size: .82rem; color: var(--dg-ink-faint); }
+.dgx .dg-cookie-cat li { margin-bottom: .2rem; }
+.dgx .dg-cookie-cat__always { font-size: .85rem; font-weight: 600; color: var(--dg-ink-soft); white-space: nowrap; padding-top: .15rem; }
+.dgx .dg-switch { position: relative; flex-shrink: 0; display: inline-block; width: 2.9rem; height: 1.6rem; }
+.dgx .dg-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.dgx .dg-switch__track { position: absolute; inset: 0; border-radius: 999px; background: var(--dg-ink-faint); transition: background .15s ease; pointer-events: none; }
+.dgx .dg-switch__track::after { content: ''; position: absolute; top: 3px; left: 3px; width: calc(1.6rem - 6px); height: calc(1.6rem - 6px); border-radius: 50%; background: var(--dg-canvas); transition: transform .15s ease; }
+.dgx .dg-switch input:checked + .dg-switch__track { background: var(--dg-accent); }
+.dgx .dg-switch input:checked + .dg-switch__track::after { transform: translateX(1.3rem); }
+.dgx .dg-switch input:focus-visible + .dg-switch__track { outline: 2px solid var(--dg-accent); outline-offset: 3px; }
+.dgx .dg-modal__actions { display: flex; flex-wrap: wrap; gap: .7rem; padding-top: 1.2rem; border-top: 1px solid var(--dg-rule); }
+
 @media (prefers-reduced-motion: reduce) {
-  .dgx .dg-btn, .dgx .dg-btn__arr, .dgx .dg-tab, .dgx .dg-faq summary::after { transition: none; }
+  .dgx .dg-btn, .dgx .dg-btn__arr, .dgx .dg-tab, .dgx .dg-faq summary::after, .dgx .dg-consent, .dgx .dg-consent__btn, .dgx .dg-switch__track, .dgx .dg-switch__track::after { transition: none; }
   .dgx .dg-btn:hover { transform: none; }
 }

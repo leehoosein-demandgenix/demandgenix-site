@@ -2,18 +2,21 @@
 // "Where the money goes". Every tab's wording is printed into the page, so search engines and AI
 // assistants read all of it. JavaScript only turns the panels into tabs; without it, all show in full.
 export interface Props {
+  // Use 'h2' when the widget sits directly under the page's H1, so headings never skip a level.
+  titleAs?: 'span' | 'h2';
   widget: {
     title?: string;
     footnote?: string;
     areas?: { _key?: string; name: string; fixable: string; untraceable: string }[];
   };
 }
-const { widget } = Astro.props;
+const { widget, titleAs = 'span' } = Astro.props;
+const Title = titleAs;
 const areas = widget?.areas ?? [];
 ---
 {areas.length > 0 && (
   <div class="dg-widget" data-dg-widget>
-    {widget.title && <span class="dg-widget__title">{widget.title}</span>}
+    {widget.title && <Title class="dg-widget__title">{widget.title}</Title>}
     <div class="dg-tabs" role="tablist" aria-label={widget.title || 'Areas'}>
       {areas.map((a, i) => (
         <button type="button" class="dg-tab" role="tab" id={`dg-tab-${i}`} aria-controls={`dg-panel-${i}`}

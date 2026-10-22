@@ -47,7 +47,8 @@ function slugify(text) {
 }
 
 function table({ caption, headers, rows, firstIsLabel = true }) {
-  const head = headers.map((h) => `<th scope="col">${esc(h)}</th>`).join('')
+  // An empty header cell is announced as nothing at all; give it a name only screen readers see.
+  const head = headers.map((h) => `<th scope="col">${h ? esc(h) : '<span class="dg-sr">Item</span>'}</th>`).join('')
   const body = rows
     .map((row) => {
       const cells = row.map((cell, i) => (i === 0 && firstIsLabel ? `<th scope="row">${esc(cell)}</th>` : `<td>${esc(cell)}</td>`))
@@ -97,7 +98,7 @@ function renderBlock(block, ctx) {
     case 'calloutBox': {
       const type = CALLOUT_LABELS[block.type] ? block.type : 'insight'
       const title = block.title ? `<p class="dg-callout__title">${esc(block.title)}</p>` : ''
-      return `<aside class="callout-box dg-callout dg-callout--${type}"><span class="dg-callout__label">${CALLOUT_LABELS[type]}</span>${title}<p>${esc(block.content)}</p></aside>`
+      return `<div class="callout-box dg-callout dg-callout--${type}" role="note"><span class="dg-callout__label">${CALLOUT_LABELS[type]}</span>${title}<p>${esc(block.content)}</p></div>`
     }
     case 'block': {
       const inner = renderChildren(block)
