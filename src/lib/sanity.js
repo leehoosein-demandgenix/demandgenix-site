@@ -509,6 +509,8 @@ export function withDefaults(defaults, doc) {
 }
 
 const imageRef = (field) => `${field}{ alt, "url": asset->url }`
+// Photos also carry their size and hotspot, so the page can crop around the face and reserve space.
+const photoRef = (field) => `${field}{ alt, hotspot, "url": asset->url, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height }`
 
 // Site settings and the two pages are read many times during a build, so fetch each once.
 // In development they are always re-fetched so edits in Studio show up on refresh.
@@ -533,7 +535,7 @@ export function getSiteSettings() {
 export function getHomePage() {
   return once('homePage', async () => {
     const doc = await fetchWithFallback(
-      `*[_type == "homePage"][0]{ ..., _updatedAt, ${imageRef('heroPhoto')}, ${imageRef('aboutPhoto')}, seo{ ..., ${imageRef('ogImage')} } }`,
+      `*[_type == "homePage"][0]{ ..., _updatedAt, ${photoRef('heroPhoto')}, ${photoRef('aboutPhoto')}, seo{ ..., ${imageRef('ogImage')} } }`,
       {},
       null
     )

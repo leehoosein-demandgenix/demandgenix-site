@@ -1,0 +1,19 @@
+---
+const logos = [
+  { src: '/logos/Allianz.png', alt: 'Allianz Business Services' },
+  { src: '/logos/Aldermore.png', alt: 'Aldermore Bank' },
+  { src: '/logos/Sorted.png', alt: 'Sorted' },
+  { src: '/logos/Diffblue.png', alt: 'Diffblue' },
+  { src: '/logos/Synthesized.png', alt: 'Synthesized', big: true }
+];
+---
+<div class="dg-logos">
+  <div class="dg-wrap dg-logos__inner">
+    <span class="dg-logos__label">Trusted by teams at</span>
+    <ul class="dg-logos__row">
+      {logos.map((l) => (
+        <li><img class={l.big ? 'dg-logo--big' : undefined} src={l.src} alt={l.alt} width="112" height="38" loading="lazy" decoding="async" /></li>
+      ))}
+    </ul>
+  </div>
+</div>

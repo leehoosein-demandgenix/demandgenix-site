@@ -1,28 +1,195 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
-import Services from '../components/Services.astro';
-import SafetyNet from '../components/SafetyNet.astro';
-import About from '../components/About.astro';
-import Contact from '../components/Contact.astro';
-import Footer from '../components/Footer.astro';
-import Testimonials from '../components/Testimonials.astro';
-import BlogPreview from '../components/BlogPreview.astro';
+import LayoutV2 from '../layouts/LayoutV2.astro';
+import RichText from '../components/v2/RichText.astro';
+import SpendWidget from '../components/v2/SpendWidget.astro';
+import Photo from '../components/v2/Photo.astro';
+import Logos from '../components/v2/Logos.astro';
+import { getHomePage, getSiteSettings, getTestimonials, getRecentBlogPosts } from '../lib/sanity.js';
 
+const [page, settings, allTestimonials, posts] = await Promise.all([
+  getHomePage(),
+  getSiteSettings(),
+  getTestimonials(),
+  getRecentBlogPosts(3)
+]);
+
+const seo = page.seo;
+const cta = { label: settings.ctaLabel, href: settings.ctaHref || '/contact/' };
+const testimonials = (allTestimonials || [])
+  .filter((t: any) => t.recommendation && t.isPublic !== false)
+  .slice(0, 3);
+const hasPhoto = !!page.heroPhoto?.url;
+const hasAboutPhoto = !!page.aboutPhoto?.url;
+
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+const schema = {
+  dateModified: page._updatedAt,
+  abstract: seo.summary,
+  faqs: page.faqs
+};
 ---
 
-<Layout 
-  title="Demand Generation and Digital Marketing in Manchester, UK | DemandGenix"
-  description="Manchester-based demand gen and digital marketing consultancy helping growing companies scale efficiently. Fixed-scope sprints, fractional leadership, AI utilization. Contact us today."
+<LayoutV2
+  title={seo.metaTitle}
+  description={seo.metaDescription}
+  ogImage={seo.ogImage?.url}
+  canonicalUrl={seo.canonicalUrl}
+  noindex={seo.noIndex}
+  schema={schema}
 >
-  <Header />
-  <Hero />
-  <Services />
-  <SafetyNet />
-  <Testimonials />
-  <BlogPreview />
-  <About />
-  <Contact />
-  <Footer />
-</Layout>
+  <div class="dg-wrap">
+    <header class="dg-hero dg-hero--home">
+      <div class="dg-hero__text">
+        {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
+        <h1>{page.heroHeadline}</h1>
+        <p class="dg-hero__sub">{page.heroSub}</p>
+        <div class="dg-hero__actions">
+          <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+          {settings.ctaNote && <span class="dg-hero__note">{settings.ctaNote}</span>}
+        </div>
+      </div>
+      <div class={`dg-visual${hasPhoto ? ' dg-visual--photo' : ''}`}>
+        {hasPhoto && (
+          <div class="dg-photo">
+            <Photo photo={page.heroPhoto} priority />
+          </div>
+        )}
+        <SpendWidget widget={settings.spendWidget} />
+      </div>
+    </header>
+  </div>
+
+  <Logos />
+
+  <section class="dg-block dg-offer" id="what-i-take-on">
+    <div class="dg-wrap dg-offer__grid">
+      <div>
+        <h2>{page.offerHeading}</h2>
+        {page.offerLede && <p class="dg-offer__lede">{page.offerLede}</p>}
+      </div>
+      <dl>
+        {page.offerItems.map((item: any) => (
+          <div>
+            <dt>{item.name}</dt>
+            <dd>{item.description}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="dg-block dg-band dg-honest dg-honest--single" id="the-honest-bit">
+    <div class="dg-wrap dg-honest__grid">
+      <div>
+        {page.honestLabel && <div class="dg-honest__mark"><i aria-hidden="true"></i><span>{page.honestLabel}</span></div>}
+        <h2>{page.honestHeading}</h2>
+        <RichText class="dg-honest__body" blocks={page.honestBody} />
+      </div>
+    </div>
+  </section>
+
+  <section class="dg-block dg-start" id="how-we-would-start">
+    <div class="dg-wrap">
+      <h2>{page.startHeading}</h2>
+      <ol class="dg-steps">
+        {page.startSteps.map((step: any, i: number) => (
+          <li class="dg-step">
+            <span class="dg-step__n" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h3>{step.title}</h3>
+              <RichText class="dg-step__body" blocks={step.body} />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="dg-block dg-proof" id="proof" style="padding-top:0">
+    <div class="dg-wrap">
+      <h2>{page.proofHeading}</h2>
+      <div class="dg-proof__grid">
+        <div class="dg-case">
+          <h3>{page.caseStudyTitle}</h3>
+          <p>{page.caseStudyBody}</p>
+          {page.caseStudyMeasured && <p class="dg-case__measured"><strong>How it was measured:</strong> {page.caseStudyMeasured}</p>}
+          {page.caseStudyLink && <a class="dg-case__link" href={page.caseStudyLink}>Read the case study</a>}
+        </div>
+        {testimonials.length > 0 && (
+          <div class="dg-feedback">
+            <h3>{page.feedbackHeading}</h3>
+            {testimonials.map((t: any) => (
+              <figure class="dg-quote">
+                <blockquote><p>&ldquo;{t.recommendation.trim()}&rdquo;</p></blockquote>
+                <figcaption>
+                  <strong>{t.name}</strong>{t.title && <>, {t.title}</>}{t.company && <> at {t.company}</>}
+                  {t.linkedinUrl && <> &middot; <a href={t.linkedinUrl} target="_blank" rel="noopener">LinkedIn recommendation</a></>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class={`dg-block dg-band dg-about${hasAboutPhoto ? '' : ' dg-about--nophoto'}`} id="about">
+    <div class="dg-wrap dg-about__grid">
+      {hasAboutPhoto && (
+        <div class="dg-photo">
+          <Photo photo={page.aboutPhoto} sizes="(max-width: 820px) 340px, 380px" />
+        </div>
+      )}
+      <div>
+        <h2>{page.aboutHeading}</h2>
+        <RichText class="dg-about__body" blocks={page.aboutBody} />
+      </div>
+    </div>
+  </section>
+
+  {page.faqs?.length > 0 && (
+    <section class="dg-block dg-faq" id="questions">
+      <div class="dg-wrap">
+        <h2>Questions people ask</h2>
+        {page.faqs.map((faq: any) => (
+          <details>
+            <summary>{faq.question}</summary>
+            <RichText class="dg-faq__answer" blocks={faq.answer} />
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {posts?.length > 0 && (
+    <section class="dg-block dg-posts" id="from-the-blog">
+      <div class="dg-wrap">
+        <h2>From the blog</h2>
+        <ul>
+          {posts.map((post: any) => (
+            <li class="dg-post">
+              <time datetime={post.publishDate}>{formatDate(post.publishDate)}</time>
+              <div>
+                <a class="dg-post__title" href={`/blog/${post.slug.current}/`}>{post.title}</a>
+                {post.excerpt && <p>{post.excerpt}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+        <a class="dg-posts__all" href="/blog/">All articles</a>
+      </div>
+    </section>
+  )}
+
+  <section class="dg-block dg-close" id="book">
+    <div class="dg-wrap">
+      <h2>{page.closingHeading}</h2>
+      <div>
+        <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+        {page.closingNote && <p class="dg-close__note">{page.closingNote}</p>}
+      </div>
+    </div>
+  </section>
+</LayoutV2>
