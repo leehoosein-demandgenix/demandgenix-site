@@ -12,8 +12,6 @@ export interface Props {
   ogImage?: string;
   canonicalUrl?: string;
   noindex?: boolean;
-  // 'legacy' = existing Tailwind pages. 'v2' = the new design, which self-hosts its own fonts.
-  variant?: 'legacy' | 'v2';
   // Optional, per-page structured data. See buildPageNodes in src/lib/seo.js.
   schema?: {
     type?: string;
@@ -21,6 +19,8 @@ export interface Props {
     breadcrumbs?: { name: string; url: string }[];
     faqs?: { question: string; answer: any }[];
     services?: { name: string; description?: string }[];
+    extra?: Record<string, any>;
+    extraNodes?: Record<string, any>[];
   };
 }
 
@@ -33,7 +33,6 @@ const {
   ogImage,
   canonicalUrl,
   noindex = false,
-  variant = 'legacy',
   schema
 } = Astro.props;
 
@@ -117,17 +116,8 @@ const jsonLd = toJsonLd([
     <script type="application/ld+json" set:html={jsonLd} />
 
     <!-- Preload critical fonts -->
-    {variant === 'v2' ? (
-      <>
-        <link rel="preload" href="/fonts/bricolage-grotesque-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="/fonts/ibm-plex-sans-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
-      </>
-    ) : (
-      <>
-        <link rel="preload" href="/fonts/plus-jakarta-sans-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="/fonts/plus-jakarta-sans-v12-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-      </>
-    )}
+    <link rel="preload" href="/fonts/bricolage-grotesque-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
     <script>
       // Add class when fonts are loaded
       document.fonts.ready.then(() => {

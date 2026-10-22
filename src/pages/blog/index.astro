@@ -1,198 +1,95 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import { getAllBlogPosts, getFeaturedBlogPosts } from '../../lib/sanity.js';
-import { formatDate, getCategoryColor, getCategoryLabel } from '../../lib/blogHelpers.js';
-import { optimizeSanityImage } from '../../lib/imageHelpers.js';
+import LayoutV2 from '../../layouts/LayoutV2.astro';
+import { getAllBlogPosts, getFeaturedBlogPosts, getBlogPage } from '../../lib/sanity.js';
+import { formatDate, getCategoryLabel } from '../../lib/blogHelpers.js';
+import { SITE_URL } from '../../lib/seo.js';
 
+const [page, allPosts, featuredPosts] = await Promise.all([
+  getBlogPage(),
+  getAllBlogPosts().catch(() => []),
+  getFeaturedBlogPosts(2).catch(() => [])
+]);
+const seo = page.seo;
 
-let allPosts = [];
-let featuredPosts = [];
-
-try {
-  allPosts = await getAllBlogPosts();
-  featuredPosts = await getFeaturedBlogPosts(2);
-} catch (error) {
-  console.error('Error fetching blog posts:', error);
-}
-
-// Create blog section structured data
-const SITE_URL = "https://demandgenix.uk";
-const blogSectionStructuredData = {
-  "@context": "https://schema.org",
-  "@type": "Blog",
-  "name": "DemandGenix Blog",
-  "description": "Expert insights on B2B demand generation, conversion optimisation, and marketing growth strategies from DemandGenix.",
-  "url": `${SITE_URL}/blog/`,
-  "publisher": {
-    "@type": "Organization",
-    "name": "DemandGenix Limited",
-    "logo": {
-      "@type": "ImageObject",
-      "url": `${SITE_URL}/favicon.svg`
-    }
-  },
-  "inLanguage": "en-GB",
-  "blogPost": allPosts.slice(0, 10).map(post => ({
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "description": post.excerpt,
-    "url": `${SITE_URL}/blog/${post.slug.current}/`,
-    "datePublished": post.publishDate,
-    "author": {
-      "@type": "Person",
-      "name": post.author,
-      "url": "https://www.linkedin.com/in/lee-hoosein/",
-      "sameAs": ["https://www.linkedin.com/in/lee-hoosein/"]
-    }
-  }))
+const schema = {
+  type: 'CollectionPage',
+  dateModified: page._updatedAt,
+  abstract: seo.summary,
+  breadcrumbs: [
+    { name: 'Home', url: '/' },
+    { name: 'Blog', url: '/blog/' }
+  ],
+  extra: {
+    '@type': ['CollectionPage', 'Blog'],
+    blogPost: (allPosts || []).slice(0, 10).map((post: any) => ({
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.excerpt,
+      url: `${SITE_URL}/blog/${post.slug.current}/`,
+      datePublished: post.publishDate,
+      author: { '@id': `${SITE_URL}/#founder` }
+    }))
+  }
 };
 ---
 
-<Layout 
-  title="Blog - Demand Gen Insights & B2B Marketing Tips | DemandGenix"
-  description="Expert insights on B2B demand generation, conversion optimisation, and marketing growth strategies from DemandGenix."
+<LayoutV2
+  title={seo.metaTitle}
+  description={seo.metaDescription}
+  ogImage={seo.ogImage?.url}
+  canonicalUrl={seo.canonicalUrl}
+  noindex={seo.noIndex}
+  schema={schema}
 >
-  <!-- Add blog section structured data -->
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(blogSectionStructuredData)}></script>
-  
-  <Header />
-  
-  <main>
-    <!-- Blog Hero -->
-    <section class="py-16 lg:py-20 bg-gray-50">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-          Demand Gen Insights
-        </h1>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-          Practical strategies, real-world case studies, and actionable insights 
-          to help scale your demand generation.
-        </p>
-      </div>
-    </section>
+  <div class="dg-wrap">
+    <header class="dg-hero dg-hero--solo">
+      {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
+      <h1>{page.heroHeadline}</h1>
+      {page.heroSub && <p class="dg-hero__sub">{page.heroSub}</p>}
+    </header>
+  </div>
 
-    <!-- Featured Posts -->
-    {featuredPosts && featuredPosts.length > 0 && (
-      <section class="py-16 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-8">Featured Articles</h2>
-          <div class="grid md:grid-cols-2 gap-8">
-            {featuredPosts.map((post) => (
-              <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow" data-blog-post>
-                {post.heroImage && (
-                  <img
-                    src={optimizeSanityImage(post.heroImage.url, {
-                      width: 800,
-                      height: 400,
-                      fit: 'crop'
-                    })}
-                    alt={post.heroImage.alt}
-                    width="800"
-                    height="400"
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="async"
-                    class="w-full h-48 object-cover"
-                  />
-                )}
-                <div class="p-6">
-                  <div class="flex items-center gap-4 mb-3">
-                    <span data-category class={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category)}`}>
-                      {getCategoryLabel(post.category)}
-                    </span>
-                    <time class="text-sm text-gray-500" datetime={post.publishDate}>
-                      {formatDate(post.publishDate)}
-                    </time>
-                    {post.readingTime && (
-                      <span class="text-sm text-gray-500">
-                        {post.readingTime} min read
-                      </span>
-                    )}
-                  </div>
-                  <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                    <a href={`/blog/${post.slug.current}/`} class="hover:text-primary-600 transition-colors">
-                      {post.title}
-                    </a>
-                  </h3>
-                  <p class="text-gray-600 mb-4" data-excerpt>{post.excerpt}</p>
-                  <a 
-                    href={`/blog/${post.slug.current}/`}
-                    class="text-primary-600 hover:text-primary-700 font-medium text-sm"
-                  >
-                    Read More →
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
+  {featuredPosts?.length > 0 && (
+    <section class="dg-block dg-band dg-postlist dg-postlist--featured" id="featured" style="padding-block:3.5rem">
+      <div class="dg-wrap">
+        <h2>{page.featuredHeading}</h2>
+        <div class="dg-postlist__items">
+          {featuredPosts.map((post: any) => (
+            <article class="dg-postrow dg-postrow--lead" data-blog-post>
+              <p class="dg-postrow__meta">
+                <span data-category>{getCategoryLabel(post.category)}</span>
+                <time datetime={post.publishDate}>{formatDate(post.publishDate)}</time>
+                {post.readingTime && <span>{post.readingTime} min read</span>}
+              </p>
+              <h3><a href={`/blog/${post.slug.current}/`}>{post.title}</a></h3>
+              <p class="dg-postrow__excerpt" data-excerpt>{post.excerpt}</p>
+            </article>
+          ))}
         </div>
-      </section>
-    )}
-
-    <!-- All Posts -->
-    <section class="py-16 bg-gray-50">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">All Articles</h2>
-        
-        {allPosts && allPosts.length > 0 ? (
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allPosts.map((post) => (
-              <article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow" data-blog-post>
-                {post.heroImage && (
-                  <img
-                    src={optimizeSanityImage(post.heroImage.url, {
-                      width: 800,
-                      height: 400,
-                      fit: 'crop'
-                    })}
-                    alt={post.heroImage.alt}
-                    width="800"
-                    height="400"
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-48 object-cover"
-                  />
-                )}
-                <div class="p-6">
-                  <div class="flex items-center gap-2 mb-3">
-                    <span data-category class={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category)}`}>
-                      {getCategoryLabel(post.category)}
-                    </span>
-                    <time class="text-sm text-gray-500" datetime={post.publishDate}>
-                      {formatDate(post.publishDate)}
-                    </time>
-                  </div>
-                  <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                    <a href={`/blog/${post.slug.current}/`} class="hover:text-primary-600 transition-colors">
-                      {post.title}
-                    </a>
-                  </h3>
-                  <p class="text-gray-600 text-sm mb-4" data-excerpt>{post.excerpt}</p>
-                  <div class="flex items-center justify-between">
-                    <a href="https://www.linkedin.com/in/lee-hoosein/" target="_blank" rel="noopener noreferrer" class="text-xs text-gray-500 hover:text-primary-600 transition-colors">
-                      By {post.author}
-                    </a>
-                    {post.readingTime && (
-                      <span class="text-xs text-gray-500">
-                        {post.readingTime} min read
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div class="text-center py-12">
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No blog posts yet</h3>
-            <p class="text-gray-600">Check back soon for insights and tips on B2B demand generation!</p>
-          </div>
-        )}
       </div>
     </section>
-  </main>
+  )}
 
-  <Footer />
-</Layout>
+  <section class="dg-block dg-postlist" id="all">
+    <div class="dg-wrap">
+      <h2>{page.allHeading}</h2>
+      {allPosts?.length > 0 ? (
+        <div class="dg-postlist__items">
+          {allPosts.map((post: any) => (
+            <article class="dg-postrow" data-blog-post>
+              <p class="dg-postrow__meta">
+                <span data-category>{getCategoryLabel(post.category)}</span>
+                <time datetime={post.publishDate}>{formatDate(post.publishDate)}</time>
+                {post.readingTime && <span>{post.readingTime} min read</span>}
+              </p>
+              <h3><a href={`/blog/${post.slug.current}/`}>{post.title}</a></h3>
+              <p class="dg-postrow__excerpt" data-excerpt>{post.excerpt}</p>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p>No articles yet. Check back soon.</p>
+      )}
+    </div>
+  </section>
+</LayoutV2>

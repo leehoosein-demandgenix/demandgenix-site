@@ -1,0 +1,26 @@
+---
+// Recommendations from people Lee has worked with. The data-testimonial* attributes are read by
+// public/webmcp.js (the getTestimonials tool), so keep them.
+export interface Props {
+  heading?: string;
+  items: { name: string; title?: string; company?: string; recommendation: string; linkedinUrl?: string }[];
+  headingLevel?: 'h2' | 'h3';
+}
+const { heading, items, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+{items.length > 0 && (
+  <div class="dg-feedback">
+    {heading && <Heading>{heading}</Heading>}
+    {items.map((t) => (
+      <figure class="dg-quote" data-testimonial>
+        <blockquote><p data-testimonial-text>&ldquo;{t.recommendation.trim()}&rdquo;</p></blockquote>
+        <figcaption>
+          <strong data-testimonial-name>{t.name}</strong>
+          {(t.title || t.company) && <span data-testimonial-title>, {t.title}{t.company && <> at {t.company}</>}</span>}
+          {t.linkedinUrl && <> &middot; <a href={t.linkedinUrl} target="_blank" rel="noopener">LinkedIn recommendation</a></>}
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+)}

@@ -4,6 +4,7 @@ import RichText from '../components/v2/RichText.astro';
 import SpendWidget from '../components/v2/SpendWidget.astro';
 import Photo from '../components/v2/Photo.astro';
 import Logos from '../components/v2/Logos.astro';
+import Feedback from '../components/v2/Feedback.astro';
 import { getHomePage, getSiteSettings, getTestimonials, getRecentBlogPosts } from '../lib/sanity.js';
 
 const [page, settings, allTestimonials, posts] = await Promise.all([
@@ -117,20 +118,7 @@ const schema = {
           {page.caseStudyMeasured && <p class="dg-case__measured"><strong>How it was measured:</strong> {page.caseStudyMeasured}</p>}
           {page.caseStudyLink && <a class="dg-case__link" href={page.caseStudyLink}>Read the case study</a>}
         </div>
-        {testimonials.length > 0 && (
-          <div class="dg-feedback">
-            <h3>{page.feedbackHeading}</h3>
-            {testimonials.map((t: any) => (
-              <figure class="dg-quote">
-                <blockquote><p>&ldquo;{t.recommendation.trim()}&rdquo;</p></blockquote>
-                <figcaption>
-                  <strong>{t.name}</strong>{t.title && <>, {t.title}</>}{t.company && <> at {t.company}</>}
-                  {t.linkedinUrl && <> &middot; <a href={t.linkedinUrl} target="_blank" rel="noopener">LinkedIn recommendation</a></>}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        )}
+        <Feedback heading={page.feedbackHeading} items={testimonials} />
       </div>
     </div>
   </section>
