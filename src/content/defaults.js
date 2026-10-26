@@ -63,6 +63,15 @@ export const siteSettingsDefaults = {
   founderBio:
     'Lee Hoosein has spent 20 years in marketing, including at Allianz Business Services, Aldermore, Sorted and Diffblue, and now runs DemandGenix on his own.',
   founderLinkedIn: 'https://www.linkedin.com/in/lee-hoosein/',
+  founderCredentials: [
+    {
+      _key: 'cred1',
+      name: 'Chartered Marketer',
+      issuer: 'Chartered Institute of Marketing',
+      issuerUrl: 'https://www.cim.co.uk/',
+      verifyUrl: 'https://www.cim.co.uk/membership/chartered-marketer-directory/?ContactName=lee+hoosein&CountryName=united+kingdom'
+    }
+  ],
   founderKnowsAbout: [
     'Demand generation',
     'Paid advertising',

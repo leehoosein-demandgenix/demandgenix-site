@@ -48,6 +48,7 @@ export async function GET() {
         name: settings.founderName,
         title: settings.founderJobTitle,
         bio: settings.founderBio,
+        credentials: (settings.founderCredentials || []).map((c: any) => ({ name: c.name, awardedBy: c.issuer, publicRecord: c.verifyUrl })),
         linkedin: settings.founderLinkedIn
       },
       howItDiffers: services.isntItems.map((i: any) => `${i.lead} ${i.text}`),

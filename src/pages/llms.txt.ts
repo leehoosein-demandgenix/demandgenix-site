@@ -28,6 +28,13 @@ export async function GET() {
       `It is run by ${settings.founderName}, ${settings.founderJobTitle}. ${oneLine(settings.founderBio)}`,
     ''
   );
+  for (const c of settings.founderCredentials || []) {
+    if (!c?.name) continue;
+    lines.push(
+      `${settings.founderName} is a ${c.name}, awarded by the ${c.issuer}.${c.verifyUrl ? ` Public record: ${c.verifyUrl}` : ''}`,
+      ''
+    );
+  }
 
   lines.push('## What DemandGenix takes on', '');
   lines.push(oneLine(services.seo.summary), '');

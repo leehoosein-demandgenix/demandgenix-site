@@ -42,6 +42,8 @@ export function buildSiteNodes(settings) {
   }
   if (s.defaultOgImage?.url) organization.image = s.defaultOgImage.url
 
+  const credentials = (s.founderCredentials || []).filter((c) => c && c.name && c.issuer)
+
   const founder = {
     '@type': 'Person',
     '@id': id('founder'),
@@ -51,7 +53,23 @@ export function buildSiteNodes(settings) {
     url: SITE_URL,
     worksFor: { '@id': id('organization') },
     ...(s.founderLinkedIn ? { sameAs: [s.founderLinkedIn] } : {}),
-    ...(s.founderKnowsAbout?.length ? { knowsAbout: s.founderKnowsAbout } : {})
+    ...(s.founderKnowsAbout?.length ? { knowsAbout: s.founderKnowsAbout } : {}),
+    ...(credentials.length
+      ? {
+          hasCredential: credentials.map((c) => ({
+            '@type': 'EducationalOccupationalCredential',
+            name: c.name,
+            credentialCategory: 'Professional status',
+            recognizedBy: { '@type': 'Organization', name: c.issuer, ...(c.issuerUrl ? { url: c.issuerUrl } : {}) },
+            ...(c.verifyUrl ? { url: c.verifyUrl } : {})
+          })),
+          memberOf: credentials.map((c) => ({
+            '@type': 'Organization',
+            name: c.issuer,
+            ...(c.issuerUrl ? { url: c.issuerUrl } : {})
+          }))
+        }
+      : {})
   }
 
   const website = {
