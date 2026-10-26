@@ -56,12 +56,13 @@ export function buildSiteNodes(settings) {
     ...(s.founderKnowsAbout?.length ? { knowsAbout: s.founderKnowsAbout } : {}),
     ...(credentials.length
       ? {
-          hasCredential: credentials.map((c) => ({
+          hasCredential: credentials.map((c, i) => ({
             '@type': 'EducationalOccupationalCredential',
             name: c.name,
             credentialCategory: 'Professional status',
             recognizedBy: { '@type': 'Organization', name: c.issuer, ...(c.issuerUrl ? { url: c.issuerUrl } : {}) },
-            ...(c.verifyUrl ? { url: c.verifyUrl } : {})
+            ...(c.verifyUrl ? { url: c.verifyUrl } : {}),
+            ...(i === 0 && s.founderBadge?.url ? { image: absolute(s.founderBadge.url) } : {})
           })),
           memberOf: credentials.map((c) => ({
             '@type': 'Organization',
@@ -84,24 +85,51 @@ export function buildSiteNodes(settings) {
   return [organization, founder, website]
 }
 
+// Page kinds that may carry a `breadcrumb` (schema.org defines it on WebPage and its subtypes only).
+// Anything else, an article for example, gets its own node linked to a separate WebPage node that holds
+// the breadcrumb, which is the shape Google and schema.org's validator expect.
+const WEBPAGE_TYPES = ['WebPage', 'ContactPage', 'CollectionPage', 'AboutPage', 'ItemPage', 'ProfilePage']
+
 // Nodes for one page. `faqs` is [{ question, answer }] where answer is Portable Text or a string.
 // `services` is [{ name, description }], passed only on the page that actually presents them.
 export function buildPageNodes({ url, name, description, abstract, dateModified, breadcrumbs, faqs, services, extra, extraNodes, type = 'WebPage' }) {
   const pageId = `${url}#webpage`
+  const articleId = `${url}#article`
   const nodes = []
 
-  const page = {
-    '@type': type,
-    '@id': pageId,
+  const finalType = (extra && extra['@type']) || type
+  const isWebPage = [].concat(finalType).some((t) => WEBPAGE_TYPES.includes(t))
+
+  const shared = {
     url,
     name,
     description,
     inLanguage: 'en-GB',
     isPartOf: { '@id': id('website') },
-    about: { '@id': id('organization') },
-    ...(abstract ? { abstract } : {}),
-    ...(dateModified ? { dateModified } : {}),
-    ...(extra || {})
+    ...(dateModified ? { dateModified } : {})
+  }
+
+  let page
+  let article = null
+  if (isWebPage) {
+    page = {
+      '@type': type,
+      '@id': pageId,
+      ...shared,
+      about: { '@id': id('organization') },
+      ...(abstract ? { abstract } : {}),
+      ...(extra || {})
+    }
+  } else {
+    page = { '@type': 'WebPage', '@id': pageId, ...shared, mainEntity: { '@id': articleId } }
+    article = {
+      '@type': type,
+      '@id': articleId,
+      ...shared,
+      ...(abstract ? { abstract } : {}),
+      mainEntityOfPage: { '@id': pageId },
+      ...(extra || {})
+    }
   }
 
   if (breadcrumbs?.length) {
@@ -119,7 +147,10 @@ export function buildPageNodes({ url, name, description, abstract, dateModified,
   }
 
   if (faqs?.length) {
-    page.mainEntity = { '@id': `${url}#faq` }
+    // A page's main entity is the FAQ itself; for an article the main entity is the article, so the
+    // FAQ is a part of the page instead.
+    if (isWebPage) page.mainEntity = { '@id': `${url}#faq` }
+    else page.hasPart = [{ '@id': `${url}#faq` }]
     nodes.push({
       '@type': 'FAQPage',
       '@id': `${url}#faq`,
@@ -144,7 +175,7 @@ export function buildPageNodes({ url, name, description, abstract, dateModified,
     })
   }
 
-  return [page, ...nodes, ...(extraNodes || [])]
+  return [page, ...(article ? [article] : []), ...nodes, ...(extraNodes || [])]
 }
 
 export const toJsonLd = (nodes) => JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes })
