@@ -135,15 +135,29 @@ const schema = {
         <h2>{page.aboutHeading}</h2>
         <RichText class="dg-about__body" blocks={page.aboutBody} />
         {credentials.length > 0 && (
-          <ul class="dg-credentials">
-            {credentials.map((c: any) => (
-              <li>
-                <strong>{c.name}</strong>
-                {c.issuer && <>, {c.issuerUrl ? <a href={c.issuerUrl} target="_blank" rel="noopener">{c.issuer}</a> : c.issuer}</>}
-                {c.verifyUrl && <> &middot; <a href={c.verifyUrl} target="_blank" rel="noopener">Check the public record</a></>}
-              </li>
-            ))}
-          </ul>
+          <div class="dg-credential-block">
+            {settings.founderBadge?.url && (
+              <a class="dg-credential__badge" href={credentials[0].verifyUrl || credentials[0].issuerUrl} target="_blank" rel="noopener">
+                <img
+                  src={settings.founderBadge.url}
+                  alt={settings.founderBadge.alt || ''}
+                  width={settings.founderBadge.width || 236}
+                  height={settings.founderBadge.height || 280}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
+            <ul class="dg-credentials">
+              {credentials.map((c: any) => (
+                <li>
+                  <strong>{c.name}</strong>
+                  {c.issuer && <>, {c.issuerUrl ? <a href={c.issuerUrl} target="_blank" rel="noopener">{c.issuer}</a> : c.issuer}</>}
+                  {c.verifyUrl && <> &middot; <a href={c.verifyUrl} target="_blank" rel="noopener">Check the public record</a></>}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>

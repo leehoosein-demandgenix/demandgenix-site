@@ -476,10 +476,14 @@ body.dgx {
 .dgx .dg-switch input:focus-visible + .dg-switch__track { outline: 2px solid var(--dg-accent); outline-offset: 3px; }
 .dgx .dg-modal__actions { display: flex; flex-wrap: wrap; gap: .7rem; padding-top: 1.2rem; border-top: 1px solid var(--dg-rule); }
 
-.dgx .dg-credentials { list-style: none; margin: 1.4rem 0 0; padding: 1.1rem 0 0; border-top: 1px solid var(--dg-rule); font-size: .95rem; color: var(--dg-ink-soft); max-width: 54ch; }
+.dgx .dg-credential-block { display: flex; align-items: center; gap: 1.3rem; margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--dg-rule); max-width: 54ch; }
+.dgx .dg-credential__badge { flex-shrink: 0; display: block; }
+.dgx .dg-credential__badge img { width: 5.5rem; height: auto; }
+.dgx .dg-credentials { list-style: none; margin: 0; padding: 0; font-size: .95rem; color: var(--dg-ink-soft); }
 .dgx .dg-credentials li + li { margin-top: .4rem; }
 .dgx .dg-credentials strong { color: var(--dg-ink); }
 .dgx .dg-credentials a { color: var(--dg-accent); text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 480px) { .dgx .dg-credential__badge img { width: 4.5rem; } }
 
 @media (prefers-reduced-motion: reduce) {
   .dgx .dg-btn, .dgx .dg-btn__arr, .dgx .dg-tab, .dgx .dg-faq summary::after, .dgx .dg-consent, .dgx .dg-consent__btn, .dgx .dg-switch__track, .dgx .dg-switch__track::after { transition: none; }

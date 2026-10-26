@@ -118,6 +118,24 @@ export default {
     },
     {name: 'founderLinkedIn', title: 'Your LinkedIn address', type: 'url', group: 'person'},
     {
+      name: 'founderBadge',
+      title: 'Credential badge',
+      type: 'image',
+      group: 'person',
+      description:
+        'The official digital badge, shown beside your credentials on the Home page. Use the image exactly as issued: do not recolour or restyle it. It links to the first credential\u2019s public record.',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt text',
+          description: 'For example "CIM Chartered Member (CMCIM) digital badge".',
+          validation: (Rule: any) =>
+            Rule.custom((alt: string, ctx: any) => (ctx.parent?.asset && !alt ? 'Add alt text for the badge' : true)),
+        },
+      ],
+    },
+    {
       name: 'founderCredentials',
       title: 'Your credentials',
       type: 'array',
