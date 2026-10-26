@@ -19,6 +19,7 @@ const cta = { label: settings.ctaLabel, href: settings.ctaHref || '/contact/' };
 const testimonials = (allTestimonials || [])
   .filter((t: any) => t.recommendation && t.isPublic !== false)
   .slice(0, 3);
+const credentials = (settings.founderCredentials || []).filter((c: any) => c?.name);
 const hasPhoto = !!page.heroPhoto?.url;
 const hasAboutPhoto = !!page.aboutPhoto?.url;
 
@@ -133,6 +134,31 @@ const schema = {
       <div>
         <h2>{page.aboutHeading}</h2>
         <RichText class="dg-about__body" blocks={page.aboutBody} />
+        {credentials.length > 0 && (
+          <div class="dg-credential-block">
+            {settings.founderBadge?.url && (
+              <a class="dg-credential__badge" href={credentials[0].verifyUrl || credentials[0].issuerUrl} target="_blank" rel="noopener">
+                <img
+                  src={settings.founderBadge.url}
+                  alt={settings.founderBadge.alt || ''}
+                  width={settings.founderBadge.width || 236}
+                  height={settings.founderBadge.height || 280}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
+            <ul class="dg-credentials">
+              {credentials.map((c: any) => (
+                <li>
+                  <strong>{c.name}</strong>
+                  {c.issuer && <>, {c.issuerUrl ? <a href={c.issuerUrl} target="_blank" rel="noopener">{c.issuer}</a> : c.issuer}</>}
+                  {c.verifyUrl && <> &middot; <a href={c.verifyUrl} target="_blank" rel="noopener">Check the public record</a></>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   </section>

@@ -118,6 +118,49 @@ export default {
     },
     {name: 'founderLinkedIn', title: 'Your LinkedIn address', type: 'url', group: 'person'},
     {
+      name: 'founderBadge',
+      title: 'Credential badge',
+      type: 'image',
+      group: 'person',
+      description:
+        'The official digital badge, shown beside your credentials on the Home page. Use the image exactly as issued: do not recolour or restyle it. It links to the first credential\u2019s public record.',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt text',
+          description: 'For example "CIM Chartered Member (CMCIM) digital badge".',
+          validation: (Rule: any) =>
+            Rule.custom((alt: string, ctx: any) => (ctx.parent?.asset && !alt ? 'Add alt text for the badge' : true)),
+        },
+      ],
+    },
+    {
+      name: 'founderCredentials',
+      title: 'Your credentials',
+      type: 'array',
+      group: 'person',
+      description:
+        'Professional qualifications or chartered status. Shown on the Home page, and published to search engines and AI assistants as verifiable credentials. Only list ones you can point to a public record for.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {name: 'name', title: 'Credential', type: 'string', description: 'For example "Chartered Marketer".', validation: (Rule: any) => Rule.required()},
+            {name: 'issuer', title: 'Awarded by', type: 'string', validation: (Rule: any) => Rule.required()},
+            {name: 'issuerUrl', title: 'Awarding body website', type: 'url'},
+            {
+              name: 'verifyUrl',
+              title: 'Public record',
+              type: 'url',
+              description: 'A page where anyone can check it, such as the awarding body\u2019s member directory.',
+            },
+          ],
+          preview: {select: {title: 'name', subtitle: 'issuer'}},
+        },
+      ],
+    },
+    {
       name: 'founderKnowsAbout',
       title: 'Topics you are an authority on',
       type: 'array',

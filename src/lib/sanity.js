@@ -66,7 +66,7 @@ function once(name, load) {
 export function getSiteSettings() {
   return once('siteSettings', async () => {
     const doc = await fetchWithFallback(
-      `*[_type == "siteSettings"][0]{ ..., ${imageRef('defaultOgImage')} }`,
+      `*[_type == "siteSettings"][0]{ ..., ${imageRef('defaultOgImage')}, ${photoRef('founderBadge')} }`,
       {},
       null
     )

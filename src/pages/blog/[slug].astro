@@ -86,7 +86,6 @@ const schema = {
     author: isFounder ? { '@id': `${SITE_URL}/#founder` } : { '@type': 'Person', name: post.author },
     publisher: { '@id': `${SITE_URL}/#organization` },
     datePublished: toIsoDateTime(post.publishDate),
-    mainEntityOfPage: url,
     articleSection: getCategoryLabel(post.category),
     keywords: post.tags || [],
     wordCount,

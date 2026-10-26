@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check:schema": "node scripts/validate-jsonld.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.10.0",
