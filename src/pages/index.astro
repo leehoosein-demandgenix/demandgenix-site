@@ -51,6 +51,7 @@ const schema = {
           <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
           {settings.ctaNote && <span class="dg-hero__note">{settings.ctaNote}</span>}
         </div>
+        {settings.writeNote && <p class="dg-hero__note"><a href={`mailto:${settings.email}`}>{settings.writeNote}</a></p>}
       </div>
       <div class={`dg-visual${hasPhoto ? ' dg-visual--photo' : ''}`}>
         {hasPhoto && (
@@ -203,6 +204,7 @@ const schema = {
       <div>
         <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
         {page.closingNote && <p class="dg-close__note">{page.closingNote}</p>}
+        {settings.writeNote && <p class="dg-close__note"><a href={`mailto:${settings.email}`}>{settings.writeNote}</a></p>}
       </div>
     </div>
   </section>
