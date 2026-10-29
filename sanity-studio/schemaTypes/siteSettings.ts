@@ -28,6 +28,13 @@ export default {
       group: 'cta',
     },
     {
+      name: 'writeNote',
+      title: 'Line for people who would rather write',
+      type: 'string',
+      group: 'cta',
+      description: 'Shown under the Home page button and in its closing section. It links to your email address.',
+    },
+    {
       name: 'ctaHref',
       title: 'Where the button goes',
       type: 'string',

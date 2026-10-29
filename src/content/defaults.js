@@ -42,6 +42,7 @@ export const siteSettingsDefaults = {
 
   ctaLabel: 'Book a free intro call',
   ctaNote: '30 minutes. An honest read on whether I can help.',
+  writeNote: 'Prefer to write? Send me a few lines about what you’re spending and what you’re seeing.',
   ctaHref: '/contact/',
   navLinks: [
     { _key: 'nav1', label: 'Services', href: '/services/' },
@@ -138,7 +139,7 @@ export const homePageDefaults = {
   startHeading: 'How we’d start',
   startSteps: [
     { _key: 's1', title: 'A free intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing. I tell you honestly whether I can help.') },
-    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s actually happening and what I’d do over the next 90 days. Scoped and agreed in writing first, and delivered live, not as a PDF.') },
+    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s actually happening and what I’d do over the next 90 days. Scoped and agreed in writing first.') },
     { _key: 's3', title: 'Then you decide', body: rt('Take it from there yourselves, or ask me to carry on. No obligation either way.') }
   ],
 
@@ -239,7 +240,7 @@ export const servicesPageDefaults = {
   startHeading: 'How we’d start',
   startSteps: [
     { _key: 's1', title: 'A free intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing. I tell you honestly whether I can help. If I can’t, I’ll say so.') },
-    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s actually happening and what I’d do over the next 90 days. It’s scoped and agreed in writing first, and you get it live, in a conversation, not as a PDF. I’ll talk you through what it involves and costs on the intro call.') },
+    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s actually happening and what I’d do over the next 90 days. It’s scoped and agreed in writing first. I’ll talk you through what it involves and costs on the intro call.') },
     { _key: 's3', title: 'Then you decide', body: rt('Take it from there yourselves, or ask me to carry on. No obligation either way.') }
   ],
   startNeed: rt('**What I’ll need from you:** access to the ad accounts, analytics and CRM you already have, and a little of your time. I’ll agree exactly which in writing before I start.'),
@@ -300,7 +301,7 @@ export const servicesPageDefaults = {
     metaDescription:
       'Manchester marketing consultant who runs your ads, website and follow-up, and tells you straight what works and what can’t be tracked. Free intro call.',
     summary:
-      'Lee Hoosein runs paid advertising, website improvements and enquiry follow-up for companies that spend on marketing but cannot tell what it returns. Work starts with a free 30-minute intro call, then a scoped first piece of work delivered live, before any ongoing commitment.',
+      'Lee Hoosein runs paid advertising, website improvements and enquiry follow-up for companies that spend on marketing but cannot tell what it returns. Work starts with a free 30-minute intro call, then a scoped first piece of work, before any ongoing commitment.',
     searchIntent:
       'People searching for a marketing consultant, a PPC or Google Ads consultant, or asking how to tell whether marketing spend is working. FAQ questions are written the way people ask them so they can be quoted by AI assistants.'
   }
