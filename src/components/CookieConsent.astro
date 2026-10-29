@@ -1,9 +1,6 @@
 ---
 ---
 
-<!-- Dims the page while the first-visit banner is open. -->
-<div id="cookie-overlay" class="dg-consent__overlay" hidden></div>
-
 <!-- First-visit banner. Accept and Essential only are deliberately equal in weight. -->
 <section id="cookie-consent-banner" class="dg-consent" role="region" aria-label="Cookie preferences">
   <div class="dg-wrap dg-consent__inner">
@@ -72,11 +69,8 @@
         <p>Enable lead tracking, form analytics, and personalized marketing.</p>
         <ul>
           <li>HubSpot (form tracking and CRM)</li>
-          <li>Apollo.io (website visitor tracking)</li>
           <li>LinkedIn Insights (conversion tracking)</li>
           <li>Google Ads (campaign measurement)</li>
-          <li>Clay (web intent tracking)</li>
-          <li>RB2B (website visitor identification)</li>
         </ul>
       </div>
       <label class="dg-switch">
@@ -100,7 +94,6 @@
   const COOKIE_DURATION = 365; // days
 
   // Get elements
-  const overlay = document.getElementById('cookie-overlay');
   const consentBanner = document.getElementById('cookie-consent-banner');
   const settingsModal = document.getElementById('cookie-settings-modal');
   const acceptAllBtn = document.getElementById('cookie-accept-all');
@@ -126,19 +119,13 @@
     return window.location.pathname.includes('/privacy-policy');
   }
 
+  // The banner sits at the foot of the page and never blocks it: no overlay, no scroll lock.
   function showBanner() {
-    // On privacy policy page, show banner but don't block page access
-    if (!isPrivacyPolicyPage()) {
-      overlay.hidden = false;
-      document.body.style.overflow = 'hidden';
-    }
     consentBanner.classList.add('is-visible');
   }
 
   function hideBanner() {
-    overlay.hidden = true;
     consentBanner.classList.remove('is-visible');
-    document.body.style.overflow = '';
   }
 
   let lastFocused = null;
@@ -182,23 +169,36 @@
     }
   });
 
+  // Google Consent Mode v2. SiteHead.astro declares gtag() and sets every signal to denied before
+  // anything else runs; this maps the stored choices onto it. Analytics drives analytics_storage,
+  // Marketing drives the three ad signals. The same push is what Dreamdata's interceptor listens for.
+  function updateGoogleConsent() {
+    const analytics = getCookie(ANALYTICS_COOKIE) === 'true' ? 'granted' : 'denied';
+    const marketing = getCookie(MARKETING_COOKIE) === 'true' ? 'granted' : 'denied';
+    (window as any).gtag('consent', 'update', {
+      analytics_storage: analytics,
+      ad_storage: marketing,
+      ad_user_data: marketing,
+      ad_personalization: marketing
+    });
+  }
+
+  // gtag.js is still held back until analytics consent is given (basic mode), so nothing
+  // reaches Google before a choice is made. Queue js/config first, then load the library.
+  let analyticsLoaded = false;
   function loadAnalytics() {
-    if (getCookie(ANALYTICS_COOKIE) === 'true') {
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4KS1WFE7DG';
-      script.async = true;
-      document.head.appendChild(script);
-      
-      script.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-4KS1WFE7DG', {
-          'anonymize_ip': true,
-          'cookie_flags': 'SameSite=Lax;Secure'
-        });
-      };
-    }
+    if (getCookie(ANALYTICS_COOKIE) !== 'true' || analyticsLoaded) return;
+    analyticsLoaded = true;
+    const gtag = (window as any).gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-4KS1WFE7DG', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=Lax;Secure'
+    });
+    const script = document.createElement('script');
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4KS1WFE7DG';
+    script.async = true;
+    document.head.appendChild(script);
   }
 
   function loadHubSpot() {
@@ -217,38 +217,6 @@
       };
     }
   }
-
-  function loadApollo() {
-  if (getCookie(MARKETING_COOKIE) === 'true') {
-    // Load Apollo tracker script
-    const apolloScript = document.createElement('script');
-    const cacheKey = Math.random().toString(36).substring(7);
-    apolloScript.src = `https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=${cacheKey}`;
-    apolloScript.async = true;
-    apolloScript.defer = true;
-    
-    apolloScript.onload = function() {
-      // Initialize Apollo after script loads
-      setTimeout(() => {
-        if (window.trackingFunctions && typeof window.trackingFunctions.onLoad === 'function') {
-          try {
-            window.trackingFunctions.onLoad({
-              appId: "6991cb2770812f0011b5edc0"
-            });
-          } catch (error) {
-            console.error('Apollo initialization error:', error);
-          }
-        }
-      }, 100);
-    };
-    
-    apolloScript.onerror = function() {
-      console.error('Failed to load Apollo tracking script');
-    };
-    
-    document.head.appendChild(apolloScript);
-  }
-}
 
 function loadLinkedIn() {
   if (getCookie(MARKETING_COOKIE) === 'true') {
@@ -274,35 +242,6 @@ function loadLinkedIn() {
   }
 }
 
-function loadClay() {
-  if (getCookie(MARKETING_COOKIE) === 'true') {
-    const script = document.createElement('script');
-    script.src = 'https://static.claydar.com/init.v1.js?id=cgiqWQbLzO';
-    script.async = true;
-    document.head.appendChild(script);
-  }
-}
-
-function loadRB2B() {
-  if (getCookie(MARKETING_COOKIE) === 'true') {
-    if (window.reb2b) return;
-    window.reb2b = { loaded: true };
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = "https://ddwl4m2hdecbv.cloudfront.net/b/Z6PVLHQGDP6R/Z6PVLHQGDP6R.js.gz";
-    document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);
-  }
-}
-
-  // Signal Dreamdata (loaded in <head>) to initialise via its dataLayer interceptor.
-  // The sentinel in Layout.astro sets google_tag_data so Dreamdata waits for this signal.
-  function loadDreamdata() {
-    if (getCookie(ANALYTICS_COOKIE) === 'true') {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push(['consent', 'update', { analytics_storage: 'granted' }]);
-    }
-  }
-
   // Load Dreamdata CL (client-side attribution fallback) only after analytics consent.
   function loadDreamdataCL() {
     if (getCookie(ANALYTICS_COOKIE) !== 'true') return;
@@ -313,14 +252,13 @@ function loadRB2B() {
     document.head.appendChild(s);
   }
 
-  function loadAllScripts() {
+  // Push the current choices to Google (and, through the same dataLayer push, to Dreamdata's
+  // interceptor set up in SiteHead.astro), then load whatever those choices allow.
+  function applyConsent() {
+    updateGoogleConsent();
     loadAnalytics();
     loadHubSpot();
-    loadApollo();
     loadLinkedIn();
-    loadClay();
-    loadRB2B();
-    loadDreamdata();
     loadDreamdataCL();
   }
 
@@ -330,7 +268,7 @@ function loadRB2B() {
     setCookie(ANALYTICS_COOKIE, 'true');
     setCookie(MARKETING_COOKIE, 'true');
     hideBanner();
-    loadAllScripts();
+    applyConsent();
     window.dispatchEvent(new CustomEvent('cookie-consent-changed', { detail: { all: true } }));
   });
 
@@ -339,9 +277,7 @@ function loadRB2B() {
     setCookie(ANALYTICS_COOKIE, 'false');
     setCookie(MARKETING_COOKIE, 'false');
     hideBanner();
-    // Signal Dreamdata that analytics consent was denied
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push(['consent', 'update', { analytics_storage: 'denied' }]);
+    applyConsent();
     window.dispatchEvent(new CustomEvent('cookie-consent-changed', { detail: { all: false } }));
   });
 
@@ -353,8 +289,7 @@ function loadRB2B() {
     setCookie(MARKETING_COOKIE, 'false');
     hideSettingsModal();
     hideBanner();
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push(['consent', 'update', { analytics_storage: 'denied' }]);
+    applyConsent();
     window.dispatchEvent(new CustomEvent('cookie-consent-changed', { detail: { all: false } }));
   }
 
@@ -366,12 +301,7 @@ function loadRB2B() {
     setCookie(ANALYTICS_COOKIE, analyticsCheckbox.checked.toString());
     setCookie(MARKETING_COOKIE, marketingCheckbox.checked.toString());
     hideSettingsModal();
-    // Propagate analytics consent decision to Dreamdata's dataLayer interceptor
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push(['consent', 'update', {
-      analytics_storage: analyticsCheckbox.checked ? 'granted' : 'denied'
-    }]);
-    loadAllScripts();
+    applyConsent();
     window.dispatchEvent(new CustomEvent('cookie-consent-changed', { 
       detail: { 
         analytics: analyticsCheckbox.checked,
@@ -386,8 +316,8 @@ function loadRB2B() {
     // Show banner after 800ms - visible but not jarring
     setTimeout(showBanner, 800);
   } else {
-    // Load scripts based on existing preferences
-    loadAllScripts();
+    // Restore the stored choices before any tag is loaded
+    applyConsent();
   }
 
   // Expose function to allow users to change preferences later

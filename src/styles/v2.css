@@ -435,7 +435,6 @@ body.dgx {
 @media (max-width: 720px) { .dgx .dg-cols3 { grid-template-columns: 1fr; } .dgx .dg-prose { font-size: 1.04rem; } }
 
 /* ---- Cookie consent ---- */
-.dgx .dg-consent__overlay { position: fixed; inset: 0; z-index: 45; background: rgba(250, 250, 247, .35); backdrop-filter: blur(2px); }
 .dgx .dg-consent { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: var(--dg-canvas); border-top: 1px solid var(--dg-rule); box-shadow: 0 -12px 32px -16px rgba(22, 32, 27, .3); transform: translateY(100%); visibility: hidden; transition: transform .5s cubic-bezier(.23, 1, .32, 1), visibility 0s linear .5s; }
 .dgx .dg-consent.is-visible { transform: none; visibility: visible; transition-delay: 0s; }
 .dgx .dg-consent__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem 2.5rem; padding-block: 1.4rem; }

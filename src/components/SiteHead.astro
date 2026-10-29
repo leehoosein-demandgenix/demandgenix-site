@@ -126,12 +126,23 @@ const jsonLd = toJsonLd([
     </script>
     <slot name="head" />
 
-    <!-- Dreamdata: consent sentinel prevents auto-init before explicit consent is given.
+    <!-- Google Consent Mode v2: gtag() is declared here, and every signal starts denied. CookieConsent.astro
+         sends the 'update' once a choice exists. This default is pushed before the Dreamdata snippet below
+         wraps dataLayer.push, so Dreamdata only ever sees the later updates.
+
+         Dreamdata: consent sentinel prevents auto-init before explicit consent is given.
          By setting window.google_tag_data with analytics_storage.update: false, Dreamdata
          enters its dataLayer-intercept mode and waits for a consent signal rather than
          initialising immediately. -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
       if (!window.google_tag_data) {
         window.google_tag_data = { ics: { entries: { analytics_storage: { update: false } } } };
       }
