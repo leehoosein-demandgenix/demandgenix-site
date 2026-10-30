@@ -1,12 +1,13 @@
 {
   "version": 1,
-  "include": ["/*"],
+  "include": [
+    "/*"
+  ],
   "exclude": [
     "/_astro/*",
     "/fonts/*",
     "/images/*",
     "/logos/*",
-    "/*.md",
     "/*.png",
     "/*.svg",
     "/*.ico",
