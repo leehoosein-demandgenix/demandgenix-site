@@ -39,10 +39,13 @@ const {
 // Canonical URL always uses the production domain
 const finalCanonicalUrl = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
 
-// Social image: the page's own, else the site default from the CMS. If neither exists, omit the tags
-// rather than point at a file that 404s.
-const rawImage = ogImage || settings.defaultOgImage?.url;
-const socialImage = rawImage ? (rawImage.startsWith('http') ? rawImage : `${SITE_URL}${rawImage}`) : undefined;
+// Social image: the page's own, else the site default from the CMS, else the branded card in
+// public/og-image.png. Always emit one: with no og:image, LinkedIn and others pick the first image
+// they find on the page, which on the home page is the Allianz logo in the client strip.
+const FALLBACK_OG_IMAGE = '/og-image.png';
+const rawImage = ogImage || settings.defaultOgImage?.url || FALLBACK_OG_IMAGE;
+const socialImage = rawImage.startsWith('http') ? rawImage : `${SITE_URL}${rawImage}`;
+const isFallbackImage = rawImage === FALLBACK_OG_IMAGE;
 
 const robots = noindex
   ? 'noindex, nofollow'
@@ -75,17 +78,20 @@ const jsonLd = toJsonLd([
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta property="og:image" content={socialImage} />
+    {isFallbackImage && <meta property="og:image:width" content="1200" />}
+    {isFallbackImage && <meta property="og:image:height" content="630" />}
+    {isFallbackImage && <meta property="og:image:alt" content="DemandGenix: You’re spending on marketing and can’t say what it brings back." />}
     <meta property="og:url" content={finalCanonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_GB" />
     <meta property="og:site_name" content="DemandGenix" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    <meta name="twitter:image" content={socialImage} />
 
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#1F4D3A">
