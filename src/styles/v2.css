@@ -308,6 +308,15 @@ body.dgx {
 .dgx .dg-notfound { max-width: 640px; padding-block: 5rem 7rem; }
 .dgx .dg-notfound h1 { font-size: clamp(2.2rem, 4.6vw, 3.4rem); margin: .6rem 0 1.2rem; }
 
+/* ---- For agencies: one canvas background, all text in ink, one thin rule between sections ---- */
+.dgx .dg-plain { --dg-ink-soft: var(--dg-ink); }
+.dgx .dg-plain .dg-block { border-top: 1px solid var(--dg-rule); }
+.dgx .dg-plain .dg-prose > :last-child { margin-bottom: 0; }
+/* The call to action has no heading, so it sits in the same column as the text above it. */
+.dgx .dg-agency-cta { grid-column: 2; }
+.dgx .dg-agency-cta .dg-btn { margin-top: 1.6rem; }
+@media (max-width: 900px) { .dgx .dg-agency-cta { grid-column: 1; } }
+
 /* ---- Contact ---- */
 .dgx .dg-contact { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3.5rem; align-items: start; padding-bottom: 5rem; }
 .dgx .dg-formcard { background: var(--dg-surface); border-radius: 12px; padding: 2rem 2.1rem; }
