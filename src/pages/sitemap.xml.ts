@@ -33,6 +33,7 @@ export async function GET() {
     { url: '/services/', priority: '0.9', changefreq: 'monthly', lastmod: day(services?._updatedAt) },
     { url: '/contact/', priority: '0.9', changefreq: 'monthly', lastmod: day(contact?._updatedAt) },
     { url: '/blog/', priority: '0.8', changefreq: 'weekly', lastmod: blogUpdated },
+    { url: '/agencies/', priority: '0.6', changefreq: 'monthly', lastmod: undefined },
     { url: '/privacy-policy/', priority: '0.5', changefreq: 'yearly', lastmod: undefined },
     { url: '/cookie-policy/', priority: '0.5', changefreq: 'yearly', lastmod: undefined },
     ...posts.map((post: any) => ({

@@ -1,0 +1,75 @@
+---
+// For marketing agencies hiring white-label capacity. Linked from the footer only, not the main nav.
+// The wording lives here rather than in Sanity, so edit it in this file.
+import LayoutV2 from '../layouts/LayoutV2.astro';
+
+const schema = {
+  breadcrumbs: [
+    { name: 'Home', url: '/' },
+    { name: 'For agencies', url: '/agencies/' }
+  ]
+};
+---
+
+<LayoutV2
+  title="Extra paid search, LinkedIn and HubSpot capacity for agencies | DemandGenix"
+  description="White-label paid search, LinkedIn ads and HubSpot support for agencies, from a Chartered Marketer with 20 years’ experience. Under your brand, never approaching your clients."
+  schema={schema}
+>
+  <div class="dg-plain">
+    <div class="dg-wrap">
+      <header class="dg-hero dg-hero--solo">
+        <h1>Extra hands on paid search, LinkedIn ads and HubSpot, under your brand</h1>
+        <p class="dg-hero__sub">When a client wants ads or tracking your team doesn’t cover, or you’re simply stretched, I can pick up the work. You stay the agency. I do the work behind you.</p>
+      </header>
+    </div>
+
+    <section class="dg-block">
+      <div class="dg-wrap dg-offer__grid">
+        <h2>What I can take on</h2>
+        <div class="dg-prose">
+          <ul>
+            <li><strong>Paid search:</strong> Google and Microsoft Ads, from new builds to taking over accounts that have drifted</li>
+            <li><strong>LinkedIn ads:</strong> campaign setup, targeting and day-to-day running</li>
+            <li><strong>HubSpot and tracking:</strong> forms, lead routing, GA4 and conversion tracking, so ads report into the CRM properly</li>
+            <li><strong>Reviews:</strong> a written read on an account you’ve inherited or a client who’s asking hard questions about results</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="dg-block">
+      <div class="dg-wrap dg-offer__grid">
+        <h2>How I work with agencies</h2>
+        <div class="dg-prose">
+          <ul>
+            <li><strong>Your brand, your client.</strong> I work under your name, on your email or Slack if you prefer, and never approach your clients directly, during or after the work.</li>
+            <li><strong>Written first.</strong> Briefs and updates in writing, so nothing gets lost between me, you and the client.</li>
+            <li><strong>Day rate or fixed price.</strong> Whichever suits the job. I’ll tell you upfront what’s in scope.</li>
+            <li><strong>Straight about results.</strong> If something isn’t working, or can’t be measured, I’ll tell you before the client asks.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="dg-block">
+      <div class="dg-wrap dg-offer__grid">
+        <h2>Who you’d be working with</h2>
+        <div class="dg-prose">
+          <p>I’m Lee Hoosein, a Chartered Marketer with 20 years in marketing, including at Allianz Business Services, Aldermore, Sorted and Diffblue. DemandGenix is just me, so the person you brief is the person who does the work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dg-block">
+      <div class="dg-wrap dg-offer__grid">
+        <div class="dg-agency-cta">
+          <div class="dg-prose">
+            <p>Send me a few lines about the client and what they need, and I’ll reply with whether I can help and roughly what it would take.</p>
+          </div>
+          <a class="dg-btn" href="/contact/">Get in touch <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+  </div>
+</LayoutV2>
