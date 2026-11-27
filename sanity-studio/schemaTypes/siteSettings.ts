@@ -32,7 +32,7 @@ export default {
       title: 'Line for people who would rather write',
       type: 'string',
       group: 'cta',
-      description: 'Shown under the Home page button and in its closing section. It links to your email address.',
+      description: 'Shown in the closing section of the Home page. It links to your email address.',
     },
     {
       name: 'ctaHref',

@@ -26,7 +26,7 @@ export default {
   groups: [
     {name: 'hero', title: '1. Hero', default: true},
     {name: 'offer', title: '2. What I take on'},
-    {name: 'honest', title: '3. The honest bit'},
+    {name: 'honest', title: '3. What can and can’t be tracked'},
     {name: 'start', title: '4. How we’d start'},
     {name: 'proof', title: '5. Proof'},
     {name: 'about', title: '6. About'},
@@ -77,8 +77,8 @@ export default {
       ],
     },
 
-    // The honest bit
-    {name: 'honestLabel', title: 'Small label', type: 'string', group: 'honest'},
+    // What can and can't be tracked. The label is no longer shown on the site.
+    {name: 'honestLabel', title: 'Small label', type: 'string', group: 'honest', hidden: true},
     {name: 'honestHeading', title: 'Heading', type: 'string', group: 'honest'},
     {
       name: 'honestBody',
@@ -90,9 +90,12 @@ export default {
 
     // How we'd start
     {name: 'startHeading', title: 'Heading', type: 'string', group: 'start'},
+    {name: 'startBody', title: 'Text and link', type: 'simpleRichText', group: 'start'},
+    // No longer shown on the Home page. Hidden rather than deleted so the saved wording is kept.
     {
       name: 'startSteps',
       title: 'Steps, in order',
+      hidden: true,
       type: 'array',
       group: 'start',
       of: [

@@ -31,16 +31,14 @@ const schema = {
   <div class="dg-wrap">
     <header class="dg-hero">
       <div class="dg-hero__text">
-        {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
         <h1>{page.heroHeadline}</h1>
         <p class="dg-hero__sub">{page.heroSub}</p>
         <div class="dg-hero__actions">
-          <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+          <a class="dg-btn" href={cta.href}>{cta.label}</a>
           {settings.ctaNote && <span class="dg-hero__note">{settings.ctaNote}</span>}
         </div>
       </div>
       <aside class="dg-familiar">
-        {page.familiarLabel && <span class="dg-familiar__label">{page.familiarLabel}</span>}
         <blockquote>&ldquo;{page.familiarQuote}&rdquo;</blockquote>
         {page.familiarNote && <p>{page.familiarNote}</p>}
       </aside>
@@ -85,13 +83,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="dg-block dg-band dg-honest" id="the-honest-bit">
-    <div class="dg-wrap dg-honest__grid">
-      <div>
-        {page.honestLabel && <div class="dg-honest__mark"><i aria-hidden="true"></i><span>{page.honestLabel}</span></div>}
-        <h2>{page.honestHeading}</h2>
-        <RichText class="dg-honest__body" blocks={page.honestBody} />
-      </div>
+  <section class="dg-block dg-honest" id="what-can-be-tracked">
+    <span id="the-honest-bit"></span>
+    <div class="dg-wrap">
+      <h2>{page.honestHeading}</h2>
+      <RichText class="dg-honest__body" blocks={page.honestBody} />
       <SpendWidget widget={settings.spendWidget} />
     </div>
   </section>
@@ -117,7 +113,7 @@ const schema = {
   <section class="dg-block dg-band dg-isnt" id="what-this-isnt">
     <div class="dg-wrap">
       <h2>{page.isntHeading}</h2>
-      {page.isntItems.map((item: any) => <p><strong>{item.lead}</strong> {item.text}</p>)}
+      <RichText class="dg-isnt__body" blocks={page.isntBody} />
     </div>
   </section>
 
@@ -137,7 +133,7 @@ const schema = {
     <div class="dg-wrap">
       <h2>{page.closingHeading}</h2>
       <div>
-        <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+        <a class="dg-btn" href={cta.href}>{cta.label}</a>
         {page.closingNote && <p class="dg-close__note">{page.closingNote}</p>}
       </div>
     </div>

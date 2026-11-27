@@ -34,7 +34,6 @@ const schema = {
 >
   <div class="dg-wrap">
     <header class="dg-hero dg-hero--solo">
-      {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
       <h1>{page.heroHeadline}</h1>
       <p class="dg-hero__sub">{page.heroSub}</p>
     </header>
@@ -90,17 +89,7 @@ const schema = {
       <aside class="dg-contact__side">
         <section class="dg-expect" aria-labelledby="expect-heading">
           <h2 id="expect-heading">{page.expectHeading}</h2>
-          <ol class="dg-steps dg-steps--compact">
-            {page.expectSteps.map((step: any, i: number) => (
-              <li class="dg-step">
-                <span class="dg-step__n" aria-hidden="true">{i + 1}</span>
-                <div>
-                  <h3>{step.title}</h3>
-                  <RichText class="dg-step__body" blocks={step.body} />
-                </div>
-              </li>
-            ))}
-          </ol>
+          <RichText class="dg-expect__body" blocks={page.expectBody} />
         </section>
 
         <section class="dg-details" aria-labelledby="details-heading">
