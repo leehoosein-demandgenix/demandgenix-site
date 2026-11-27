@@ -59,8 +59,6 @@ function table({ caption, headers, rows, firstIsLabel = true }) {
   return `<div class="dg-table-wrap" role="region" tabindex="0" aria-label="${esc(caption || 'Table')}"><table>${cap}<thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`
 }
 
-const CALLOUT_LABELS = { insight: 'Insight', warning: 'Warning', tip: 'Tip' }
-
 function renderBlock(block, ctx) {
   switch (block._type) {
     case 'code':
@@ -96,9 +94,8 @@ function renderBlock(block, ctx) {
         rows: (block.rows || []).map((r) => [r.col1, r.col2, r.col3, r.col4, r.col5])
       })
     case 'calloutBox': {
-      const type = CALLOUT_LABELS[block.type] ? block.type : 'insight'
       const title = block.title ? `<p class="dg-callout__title">${esc(block.title)}</p>` : ''
-      return `<div class="callout-box dg-callout dg-callout--${type}" role="note"><span class="dg-callout__label">${CALLOUT_LABELS[type]}</span>${title}<p>${esc(block.content)}</p></div>`
+      return `<div class="callout-box dg-callout" role="note">${title}<p>${esc(block.content)}</p></div>`
     }
     case 'block': {
       const inner = renderChildren(block)

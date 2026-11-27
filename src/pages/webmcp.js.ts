@@ -51,7 +51,7 @@ export async function GET() {
         credentials: (settings.founderCredentials || []).map((c: any) => ({ name: c.name, awardedBy: c.issuer, publicRecord: c.verifyUrl })),
         linkedin: settings.founderLinkedIn
       },
-      howItDiffers: services.isntItems.map((i: any) => `${i.lead} ${i.text}`),
+      howItDiffers: blocksToPlain(services.isntBody),
       services: services.areas.map((a: any) => a.name),
       pricing,
       freeIntroCall: {

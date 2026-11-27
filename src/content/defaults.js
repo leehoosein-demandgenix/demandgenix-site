@@ -34,14 +34,14 @@ export const rt = (...paragraphs) => paragraphs.map(toBlock)
 export const siteSettingsDefaults = {
   siteTitle: 'DemandGenix',
   siteDescription:
-    'DemandGenix is a one-person marketing practice in Manchester run by Lee Hoosein. It takes on the ads, website and follow-up that are meant to bring in new business, and says plainly what they return and what can’t be tracked.',
+    'DemandGenix is a one-person marketing practice in Manchester run by Lee Hoosein. It takes on the ads, website and follow-up that are meant to bring in new business, and reports what they return and what can’t be tracked.',
   companyName: 'DemandGenix Limited',
   companyNumber: '16660290',
   vatNumber: '501 3963 18',
   linkedinUrl: 'https://www.linkedin.com/company/demandgenix/',
 
   ctaLabel: 'Book a free intro call',
-  ctaNote: '30 minutes. An honest read on whether I can help.',
+  ctaNote: '30 minutes, free, to see whether I can help.',
   writeNote: 'Prefer to write? Send me a few lines about what you’re spending and what you’re seeing.',
   ctaHref: '/contact/',
   navLinks: [
@@ -96,7 +96,7 @@ export const siteSettingsDefaults = {
         _key: 'w1',
         name: 'Ads',
         fixable: 'Spend going to audiences and search terms that were never going to buy.',
-        untraceable: 'Someone sees an ad, searches your name a week later, and it all shows up as direct.'
+        untraceable: 'A colleague recommends you, and the enquiry arrives with no source at all.'
       },
       {
         _key: 'w2',
@@ -116,34 +116,33 @@ export const siteSettingsDefaults = {
 
 // --- Home page -------------------------------------------------------------
 export const homePageDefaults = {
-  heroKicker: 'Lee Hoosein · Manchester',
+  heroKicker: 'Lee Hoosein, Manchester',
   heroHeadline: 'You’re spending on marketing and can’t say what it brings back.',
-  heroSub: 'I run the ads, website and follow-up that bring in new business. First, I work out what’s actually happening.',
+  heroSub: 'I run the ads, website and follow-up that bring in new business. First, I work out what’s happening.',
 
   offerHeading: 'What I take on',
-  offerLede: 'The marketing that’s meant to bring in new business, often called demand generation. I run it, and I make it earn its keep.',
+  offerLede: 'The marketing that’s meant to bring in new business, run by me and judged on what it brings in.',
   offerItems: [
-    { _key: 'o1', name: 'The ads', description: 'Who they’re aimed at, what they say, and whether they’re paying for themselves.' },
-    { _key: 'o2', name: 'The website', description: 'Whether it says what you sell, whether the forms work, and whether a visitor knows what to do next.' },
-    { _key: 'o3', name: 'The follow-up', description: 'What happens after someone gets in touch: how quickly, how well, and whether anyone can tell where it came from.' }
+    { _key: 'o1', name: 'The ads', description: 'Whether the ads reach the right people and pay for themselves.' },
+    { _key: 'o2', name: 'The website', description: 'Whether it’s clear what you sell and the forms work, so visitors know what to do next.' },
+    { _key: 'o3', name: 'The follow-up', description: 'What happens after someone gets in touch, including how fast they hear back and whether anyone records where they came from.' }
   ],
 
-  honestLabel: 'The honest bit',
-  honestHeading: 'Some of it can be fixed. Some of it can’t even be tracked.',
+  honestLabel: '',
+  honestHeading: 'What can be fixed, and what can’t be tracked',
   honestBody: rt(
-    'Most companies I start with are spending money and can’t tell what’s coming back from it. So I work that out first.',
-    'Some of it turns out to be fixable: a form that quietly fails, ads aimed at the wrong people, enquiries left waiting. Some of it genuinely can’t be traced any more. Someone sees an ad, searches your name a week later, and it all shows up as direct. With a few dozen deals a quarter, no test will settle it either.',
-    '**I’ll tell you which is which,** rather than sell you a dashboard that pretends otherwise.'
+    'Most companies I start with are spending money and can’t tell what’s coming back from it, so I work that out first.',
+    'Some problems turn out to be fixable: a form that stopped sending enquiries, ads aimed at the wrong people, enquiries left waiting. Others can’t be traced any more, like a recommendation in a private Slack group, and with a few dozen deals a quarter no test will settle it either.',
+    'I’ll tell you early which is which, so you’re not paying for a report that claims more than the data shows.'
   ),
 
   startHeading: 'How we’d start',
-  startSteps: [
-    { _key: 's1', title: 'A free intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing. I tell you honestly whether I can help.') },
-    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s actually happening and what I’d do over the next 90 days. Scoped and agreed in writing first.') },
-    { _key: 's3', title: 'Then you decide', body: rt('Take it from there yourselves, or ask me to carry on. No obligation either way.') }
-  ],
+  startBody: rt(
+    'First there’s a free 30-minute call about what you’re spending and what you’re seeing. If it’s a fit, I agree a first piece of work with you in writing, and once it’s done you decide whether I carry on.',
+    '[Here’s how working together starts.](/services/#how-we-would-start)'
+  ),
 
-  proofHeading: 'What’s been said, and what’s been done',
+  proofHeading: 'Work and feedback',
   caseStudyTitle: 'From spray and pray to 111% more pipeline value',
   caseStudyBody: 'Targeting 140 named accounts with intent data, rather than everyone, doubled pipeline value in a single quarter.',
   caseStudyMeasured: '',
@@ -152,12 +151,12 @@ export const homePageDefaults = {
 
   aboutHeading: 'I’m Lee.',
   aboutBody: rt(
-    'I’ve spent 20 years in marketing, including at Allianz Business Services, Aldermore, Sorted and Diffblue. DemandGenix is just me, on purpose: you get me doing the work, not an account manager passing it on.',
-    'I take on a small number of clients at a time, and I’ll tell you straight if I’m not the right fit.'
+    'I’ve spent 20 years in marketing, including at Allianz Business Services, Aldermore, Sorted and Diffblue. DemandGenix is just me, on purpose, so the person you speak to is the person doing the work.',
+    'I take on a small number of clients at a time, and I’ll tell you if I’m not the right fit.'
   ),
 
-  closingHeading: 'Want a straight answer on where your marketing money goes?',
-  closingNote: 'Thirty minutes, free. If I can’t help, I’ll say so.',
+  closingHeading: 'Want to know where your marketing money goes?',
+  closingNote: 'Thirty minutes, free.',
 
   faqs: [],
 
@@ -177,7 +176,7 @@ export const homePageDefaults = {
 export const servicesPageDefaults = {
   heroKicker: 'Services',
   heroHeadline: 'I take on the marketing that’s meant to bring in new business.',
-  heroSub: 'The ads, website and follow-up, run by me. First, I work out what’s actually happening.',
+  heroSub: 'The ads, website and follow-up, run by me. First, I work out what’s happening.',
   familiarLabel: 'Sound familiar?',
   familiarQuote: 'We’re spending, leads arrive, sales says they’re rubbish, and nobody can settle the argument.',
   familiarNote: 'If that’s where you are, this page is for you.',
@@ -188,7 +187,7 @@ export const servicesPageDefaults = {
     'You have a sales team, or you’re taking the calls yourself.',
     'You can’t tell which of that spend produced revenue.'
   ],
-  whoTail: 'Sector doesn’t matter. The situation does.',
+  whoTail: 'That can be a company in any sector.',
 
   areasHeading: 'What I take on',
   areas: [
@@ -197,10 +196,10 @@ export const servicesPageDefaults = {
       name: 'The ads',
       searchName: 'Paid advertising management (search and social)',
       summary: 'Who they’re aimed at, what they say, and whether they’re paying for themselves.',
-      whatIDo: rt('I run the paid ads. That means the targeting, the wording, the budget and the judgement about what to switch off. If something shouldn’t be running, I’ll say so.'),
+      whatIDo: rt('I run the paid ads. That means the targeting, the wording, the budget and the judgement about what to switch off. If something shouldn’t be running, I’ll switch it off or tell you why.'),
       lookFirst: [
         'What’s being spent, and where',
-        'Which campaigns produce enquiries a salesperson actually wants',
+        'Which campaigns produce enquiries a salesperson wants',
         'Where the tracking is broken, or was never set up'
       ]
     },
@@ -211,7 +210,7 @@ export const servicesPageDefaults = {
       summary: 'Whether it says what you sell, and whether a visitor knows what to do next.',
       whatIDo: rt('I make sure the site does its job as the place people land: clear about what you offer, forms that work, and a next step that’s obvious.'),
       lookFirst: [
-        'Whether the enquiry form actually reaches you',
+        'Whether enquiries from the form reach you',
         'Whether the page matches the ad that sent someone there',
         'What your analytics can and can’t tell you'
       ]
@@ -230,27 +229,22 @@ export const servicesPageDefaults = {
     }
   ],
 
-  honestLabel: 'The honest bit',
-  honestHeading: 'Some of it can be fixed. Some of it can’t even be tracked.',
+  honestLabel: '',
+  honestHeading: 'What can and can’t be tracked',
   honestBody: rt(
-    'The part of a buyer’s journey you can actually see is shrinking. So I tell you early which is which, **rather than sell you a dashboard that pretends otherwise.**',
-    'Click through the three areas to see the kind of thing I mean.'
+    'Less of a buyer’s journey shows up in your analytics each year, so I’ll tell you early which problems can be fixed and which can’t be measured. Here’s the kind of thing I find in each area.'
   ),
 
   startHeading: 'How we’d start',
   startSteps: [
-    { _key: 's1', title: 'A free intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing. I tell you honestly whether I can help. If I can’t, I’ll say so.') },
-    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s actually happening and what I’d do over the next 90 days. It’s scoped and agreed in writing first. I’ll talk you through what it involves and costs on the intro call.') },
+    { _key: 's1', title: 'A free intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing. I’ll tell you whether I can help.') },
+    { _key: 's2', title: 'A first piece of work', body: rt('If it’s a fit, I go into your accounts and come back with what’s happening and what I’d do over the next 90 days. It’s scoped and agreed in writing first, and I talk you through the findings in a meeting. I’ll explain what it involves and costs on the intro call.') },
     { _key: 's3', title: 'Then you decide', body: rt('Take it from there yourselves, or ask me to carry on. No obligation either way.') }
   ],
   startNeed: rt('**What I’ll need from you:** access to the ad accounts, analytics and CRM you already have, and a little of your time. I’ll agree exactly which in writing before I start.'),
 
-  isntHeading: 'What this isn’t',
-  isntItems: [
-    { _key: 'i1', lead: 'It isn’t a dashboard.', text: 'If something can’t be tracked, I’ll say so rather than draw a chart that pretends it can.' },
-    { _key: 'i2', lead: 'It isn’t a pitch for everything.', text: 'If your marketing is mostly working, I’ll tell you that too.' },
-    { _key: 'i3', lead: 'It isn’t a team.', text: 'It’s me, doing the work, on purpose.' }
-  ],
+  isntHeading: 'What you get',
+  isntBody: rt('Plain reporting on what can be measured, and a clear note on what can’t. If most of your marketing is working, I’ll tell you that too. And it’s me doing the work from start to finish.'),
 
   faqHeading: 'Questions people ask',
   faqs: [
@@ -258,13 +252,13 @@ export const servicesPageDefaults = {
       _key: 'f1',
       _type: 'faqItem',
       question: 'What does a marketing consultant actually do?',
-      answer: rt('I run the marketing that’s meant to bring in new business: the ads, the website, and the follow-up when someone gets in touch. I start by working out what’s really happening, fix what can be fixed, and tell you plainly what can’t be tracked.')
+      answer: rt('I run the marketing that’s meant to bring in new business: the ads, the website, and the follow-up when someone gets in touch. I start by working out what’s happening, fix what I can, and tell you what can’t be tracked.')
     },
     {
       _key: 'f2',
       _type: 'faqItem',
       question: 'Can you measure what my marketing is actually returning?',
-      answer: rt('Some of it, yes. Some of it genuinely can’t be tracked any more: someone sees an ad, searches your name later, and it shows up as direct. I’ll show you which is which, early, rather than draw a chart that pretends everything is measurable.')
+      answer: rt('Some of it, yes. Some of it can’t be tracked any more. Someone sees an ad, searches your name a week later, and it shows up as direct traffic. I’ll show you early which parts can be measured.')
     },
     {
       _key: 'f3',
@@ -276,7 +270,7 @@ export const servicesPageDefaults = {
       _key: 'f4',
       _type: 'faqItem',
       question: 'How is this different from a marketing agency?',
-      answer: rt('It’s me doing the work. DemandGenix is a one-person practice, on purpose, so you won’t be handed to an account manager or a team you never meet.')
+      answer: rt('It’s me doing the work. DemandGenix is a one-person practice, so you won’t be handed to an account manager or a team you never meet.')
     },
     {
       _key: 'f5',
@@ -292,8 +286,8 @@ export const servicesPageDefaults = {
     }
   ],
 
-  closingHeading: 'Want a straight answer on where your marketing money goes?',
-  closingNote: 'Thirty minutes, free. If I can’t help, I’ll say so.',
+  closingHeading: 'Want to know where your marketing money goes?',
+  closingNote: 'Thirty minutes, free.',
 
   seo: {
     _type: 'seo',
@@ -310,8 +304,8 @@ export const servicesPageDefaults = {
 // --- Contact page ----------------------------------------------------------
 export const contactPageDefaults = {
   heroKicker: 'Contact',
-  heroHeadline: 'Let’s have a straight conversation about where your marketing money goes.',
-  heroSub: 'Book a free 30-minute intro call. You tell me what you’re spending and what you’re seeing, and I tell you honestly whether I can help.',
+  heroHeadline: 'Let’s talk about where your marketing money goes.',
+  heroSub: 'Book a free 30-minute intro call. You tell me what you’re spending and what you’re seeing, and I’ll tell you whether I can help.',
 
   formHeading: 'Book your free intro call',
   formIntro: 'Four details, and I’ll be in touch within 24 hours.',
@@ -320,11 +314,7 @@ export const contactPageDefaults = {
   errorMessage: 'Sorry, something went wrong sending that. Please email {email} and I’ll pick it up.',
 
   expectHeading: 'What to expect',
-  expectSteps: [
-    { _key: 'e1', title: 'A reply within 24 hours', body: rt('Usually much faster during UK business hours.') },
-    { _key: 'e2', title: 'The intro call', body: rt('Thirty minutes. You tell me what you’re spending and what you’re seeing, and I tell you honestly whether I can help.') },
-    { _key: 'e3', title: 'What happens next', body: rt('If it’s a fit, I’ll explain what a first piece of work involves and costs, in writing, before you commit to anything. If it isn’t, I’ll say so.') }
-  ],
+  expectBody: rt('I’ll reply within 24 hours, usually sooner during UK business hours. If it’s a fit after the call, I’ll set out in writing what a first piece of work involves and costs before you commit to anything.'),
 
   detailsHeading: 'Get in touch',
   responseTime: 'I reply within 24 hours, usually much faster during UK business hours.',

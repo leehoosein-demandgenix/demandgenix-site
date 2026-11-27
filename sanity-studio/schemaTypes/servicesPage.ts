@@ -8,9 +8,9 @@ export default {
     {name: 'hero', title: '1. Hero', default: true},
     {name: 'who', title: '2. Who it’s for'},
     {name: 'areas', title: '3. What I take on'},
-    {name: 'honest', title: '4. The honest bit'},
+    {name: 'honest', title: '4. What can and can’t be tracked'},
     {name: 'start', title: '5. How we’d start'},
-    {name: 'isnt', title: '6. What this isn’t'},
+    {name: 'isnt', title: '6. What you get'},
     {name: 'faq', title: '7. Questions'},
     {name: 'closing', title: '8. Closing'},
     {name: 'seo', title: 'Search and sharing'},
@@ -90,15 +90,15 @@ export default {
       ],
     },
 
-    // The honest bit
-    {name: 'honestLabel', title: 'Small label', type: 'string', group: 'honest'},
+    // What can and can't be tracked. The label is no longer shown on the site.
+    {name: 'honestLabel', title: 'Small label', type: 'string', group: 'honest', hidden: true},
     {name: 'honestHeading', title: 'Heading', type: 'string', group: 'honest'},
     {
       name: 'honestBody',
       title: 'Text',
       type: 'simpleRichText',
       group: 'honest',
-      description: 'The "Where the money goes" interactive sits beside this. Its wording is under Site settings.',
+      description: 'The "Where the money goes" columns sit below this. Their wording is under Site settings.',
     },
 
     // How we'd start
@@ -121,11 +121,14 @@ export default {
     },
     {name: 'startNeed', title: 'What I’ll need from you', type: 'simpleRichText', group: 'start'},
 
-    // What this isn't
+    // What you get
     {name: 'isntHeading', title: 'Heading', type: 'string', group: 'isnt'},
+    {name: 'isntBody', title: 'Text', type: 'simpleRichText', group: 'isnt'},
+    // No longer shown on the site. Hidden rather than deleted so the saved wording is kept.
     {
       name: 'isntItems',
       title: 'Points',
+      hidden: true,
       type: 'array',
       group: 'isnt',
       of: [

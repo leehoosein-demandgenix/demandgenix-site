@@ -1,7 +1,6 @@
 ---
 import LayoutV2 from '../layouts/LayoutV2.astro';
 import RichText from '../components/v2/RichText.astro';
-import SpendWidget from '../components/v2/SpendWidget.astro';
 import Photo from '../components/v2/Photo.astro';
 import Logos from '../components/v2/Logos.astro';
 import Feedback from '../components/v2/Feedback.astro';
@@ -42,25 +41,23 @@ const schema = {
   schema={schema}
 >
   <div class="dg-wrap">
-    <header class="dg-hero dg-hero--home">
+    <header class={`dg-hero ${hasPhoto ? 'dg-hero--home' : 'dg-hero--solo'}`}>
       <div class="dg-hero__text">
         {page.heroKicker && <span class="dg-kicker">{page.heroKicker}</span>}
         <h1>{page.heroHeadline}</h1>
         <p class="dg-hero__sub">{page.heroSub}</p>
         <div class="dg-hero__actions">
-          <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+          <a class="dg-btn" href={cta.href}>{cta.label}</a>
           {settings.ctaNote && <span class="dg-hero__note">{settings.ctaNote}</span>}
         </div>
-        {settings.writeNote && <p class="dg-hero__note"><a href={`mailto:${settings.email}`}>{settings.writeNote}</a></p>}
       </div>
-      <div class={`dg-visual${hasPhoto ? ' dg-visual--photo' : ''}`}>
-        {hasPhoto && (
+      {hasPhoto && (
+        <div class="dg-visual">
           <div class="dg-photo">
             <Photo photo={page.heroPhoto} priority />
           </div>
-        )}
-        <SpendWidget widget={settings.spendWidget} titleAs="h2" />
-      </div>
+        </div>
+      )}
     </header>
   </div>
 
@@ -83,30 +80,18 @@ const schema = {
     </div>
   </section>
 
-  <section class="dg-block dg-band dg-honest dg-honest--single" id="the-honest-bit">
-    <div class="dg-wrap dg-honest__grid">
-      <div>
-        {page.honestLabel && <div class="dg-honest__mark"><i aria-hidden="true"></i><span>{page.honestLabel}</span></div>}
-        <h2>{page.honestHeading}</h2>
-        <RichText class="dg-honest__body" blocks={page.honestBody} />
-      </div>
+  <section class="dg-block dg-band dg-honest dg-honest--single" id="what-can-be-tracked">
+    <span id="the-honest-bit"></span>
+    <div class="dg-wrap">
+      <h2>{page.honestHeading}</h2>
+      <RichText class="dg-honest__body" blocks={page.honestBody} />
     </div>
   </section>
 
-  <section class="dg-block dg-start" id="how-we-would-start">
-    <div class="dg-wrap">
+  <section class="dg-block dg-start dg-start--brief" id="how-we-would-start">
+    <div class="dg-wrap dg-offer__grid">
       <h2>{page.startHeading}</h2>
-      <ol class="dg-steps">
-        {page.startSteps.map((step: any, i: number) => (
-          <li class="dg-step">
-            <span class="dg-step__n" aria-hidden="true">{i + 1}</span>
-            <div>
-              <h3>{step.title}</h3>
-              <RichText class="dg-step__body" blocks={step.body} />
-            </div>
-          </li>
-        ))}
-      </ol>
+      <RichText class="dg-start__body" blocks={page.startBody} />
     </div>
   </section>
 
@@ -152,9 +137,8 @@ const schema = {
             <ul class="dg-credentials">
               {credentials.map((c: any) => (
                 <li>
-                  <strong>{c.name}</strong>
-                  {c.issuer && <>, {c.issuerUrl ? <a href={c.issuerUrl} target="_blank" rel="noopener">{c.issuer}</a> : c.issuer}</>}
-                  {c.verifyUrl && <> &middot; <a href={c.verifyUrl} target="_blank" rel="noopener">Check the public record</a></>}
+                  <strong>{c.name}</strong>{c.issuer && <>, {c.issuerUrl ? <a href={c.issuerUrl} target="_blank" rel="noopener">{c.issuer}</a> : c.issuer}</>}
+                  {c.verifyUrl && <><br /><a href={c.verifyUrl} target="_blank" rel="noopener">Check the public record</a></>}
                 </li>
               ))}
             </ul>
@@ -202,7 +186,7 @@ const schema = {
     <div class="dg-wrap">
       <h2>{page.closingHeading}</h2>
       <div>
-        <a class="dg-btn" href={cta.href}>{cta.label} <span class="dg-btn__arr" aria-hidden="true">&rarr;</span></a>
+        <a class="dg-btn" href={cta.href}>{cta.label}</a>
         {page.closingNote && <p class="dg-close__note">{page.closingNote}</p>}
         {settings.writeNote && <p class="dg-close__note"><a href={`mailto:${settings.email}`}>{settings.writeNote}</a></p>}
       </div>

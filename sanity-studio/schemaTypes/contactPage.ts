@@ -41,9 +41,12 @@ export default {
     },
 
     {name: 'expectHeading', title: 'Heading', type: 'string', group: 'expect'},
+    {name: 'expectBody', title: 'Text', type: 'simpleRichText', group: 'expect'},
+    // No longer shown on the site. Hidden rather than deleted so the saved wording is kept.
     {
       name: 'expectSteps',
       title: 'Steps, in order',
+      hidden: true,
       type: 'array',
       group: 'expect',
       of: [
